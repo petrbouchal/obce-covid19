@@ -1,17 +1,17 @@
 name: Obce a COVID-19
 output_dir: docs
 include: []
-exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv"]
+exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "archive"]
 navbar:
   title: "Veřejné finance obcí v kontextu COVID-19"
   left:
   - text: rozpočty
     icon: fa-file-invoice-dollar
     menu:
-    - text: Načtení dat
-      href: nacteni-dat.html
     - text: Kontrola součtů pro náhodnou obec
       href: nahodna-obec.html
+    - text: Závislost obcí  na RUD
+      href: podily-prijmy.html
   right:
   - icon: fa-github fa-lg
     href: https://github.com/petrbouchal/obce-covid19
