@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(statnipokladna)
-source("load_orgs.R")
+orgs <- read_rds("data-processed/orgs_selected.rds")
 ```
 
 
@@ -23,6 +23,7 @@ b19_all_coded <- b19_all %>%
   select(-kraj) %>% 
   sp_add_codelist(orgs) %>% 
   sp_add_codelist("polozka", dest_dir = "data-input") %>% 
+  select(-kraj) %>% 
   sp_add_codelist("nuts", dest_dir = "data-input")
 ```
 
