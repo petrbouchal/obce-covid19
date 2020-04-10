@@ -11,13 +11,13 @@ druhove_annual <- bb %>%
 
 nrow(druhove_annual)
 
-write_rds(obce_druhove_annual,
+write_rds(druhove_annual,
           "data-processed/budgets_druhove_annual.rds", compress = "gz")
-write_rds(obce_druhove_annual %>%
+write_rds(druhove_annual %>%
             filter(vtab == "000100"),
           "data-processed/budgets_druhove_prijmy_annual.rds",
           compress = "gz")
-write_rds(obce_druhove_annual %>%
+write_rds(druhove_annual %>%
             filter(vtab == "000200"),
           "data-processed/budgets_druhove_vydaje_annual.rds",
           compress = "gz")
@@ -37,4 +37,3 @@ write_rds(druhove %>%
             filter(vtab == "000200"),
           "data-processed/budgets_druhove_vydaje.rds",
           compress = "gz")
-rm("obce_druhove")
