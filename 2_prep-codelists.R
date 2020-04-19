@@ -1,6 +1,8 @@
 polozka_raw <- sp_get_codelist("polozka", dest_dir = "data-input/")
 polozka <- polozka_raw %>%
-  mutate(for2018 = (end_date >=
+  # fix codes where end date is before start date
+  mutate(end_date = if_else(polozka %in% c("1381", "2326") & end_date == "2018-09-30",
+                            as.Date("9999-12-31"), end_date),
                       "2018-12-31" & start_date <= "2018-12-31")) %>%
   group_by(polozka, for2018) %>%
   mutate(n = n(),
