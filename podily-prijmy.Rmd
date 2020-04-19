@@ -9,32 +9,21 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(statnipokladna)
+library(ptrr)
 ```
 
 ```{r data}
-budgets <- read_rds("data-input/budgets_all_bare.rds")
+# budget <- read_rds("data-processed/budgets_druhove_annual.rds")
+budget <- read_rds("data-input/budgets_income_bare.rds")
 ```
-
 
 ```{r metadata}
-polozka <- read_rds("data-processed/polozka.rds")
-orgs <- read_rds("data-processed/orgs_selected.rds")
-katobyv <- sp_get_codelist("katobyv")
-ico_obce <- read_rds("data-processed/ico_obce.rds")
+source("shared.R")
 ```
-
-```{r selectors}
-# kody polozek prijmu z dani rozdelovanych pres RUD
-polozky_rud <- c("1111", "1112", "1113", "1119", "1121", "1123", "1129", "1219")
-# kod polozky dane z nemovitosti
-polozky_dzn <- c("1511")
-```
-
 ```{r subset-encode}
-obce_income_endyear_polozka_cons <- budgets %>%
+obce_income_endyear_polozka_cons <- budget %>%
   filter(ico %in% ico_obce & per_m == "12") %>%
   # filter to keep only income
-  filter(str_detect(polozka, "^1")) %>%
   sp_add_codelist(polozka) %>%
   # konsolidovat na urovni ucetni jednotky
   filter(!kon_pol)
@@ -62,10 +51,13 @@ b_rud <- obce_income_endyear_polozka_cons %>%
 
 ```{r graf-rud}
 b_rud %>%
-  filter(podil_rud > 0) %>%
+  filter(podil_rud > 0 & per_yr == 2019) %>%
   ggplot(aes(per_yr, podil_rud)) +
   geom_boxplot(alpha = .1) +
-  facet_wrap(~ katobyv_nazev)
+  # facet_wrap(~ katobyv_nazev) + 
+  theme_ptrr("both", multiplot = T) +
+  scale_y_percent_cz(limits = c(0, 1)) +
+  scale_x_discrete(breaks = c(2010, 2013, 2016, 2019))
 ```
 
 ## Daň z nemovitosti
@@ -93,7 +85,10 @@ b_dzn %>%
   filter(podil_rud > 0) %>%
   ggplot(aes(per_yr, podil_rud)) +
   geom_boxplot(alpha = .1) +
-  facet_wrap(~ katobyv_nazev)
+  facet_wrap(~ katobyv_nazev) + 
+  theme_ptrr("both", multiplot = T) +
+  scale_y_percent_cz(limits = c(0, 1)) +
+  scale_x_discrete(breaks = c(2010, 2013, 2016, 2019))
 ```
 
 
