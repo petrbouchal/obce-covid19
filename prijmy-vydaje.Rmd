@@ -1,0 +1,73 @@
+---
+title: "Příjmy a výdaje"
+author: "Petr Bouchal"
+date: "4/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(statnipokladna)
+library(ptrr)
+```
+
+```{r data}
+# created in 5_budget-balance.R
+obce_bilance <- read_rds("data-processed/budgets_bilance.rds")
+```
+
+```{r metadata}
+source("shared.R")
+```
+
+```{r}
+obce_endyear_polozka_cons <- budget %>%
+  ungroup() %>% 
+  filter(ico %in% ico_obce) %>% 
+  sp_add_codelist(polozka) %>%
+  sp_add_codelist(orgs) %>%
+  sp_add_codelist("katobyv", dest_dir = "data-input") %>%
+  # konsolidovat na urovni ucetni jednotky
+  filter(!kon_pol)
+```
+
+```{r}
+obce_bilance <- obce_endyear_polozka_cons %>% 
+  group_by(per_yr, ico, druh, katobyv_nazev, katobyv_id) %>%
+  summarise(rslt = sum(budget_spending, na.rm = T)) %>% 
+  pivot_wider(names_from = druh, values_from = rslt) %>% 
+  ungroup() %>% 
+  mutate(bilance = Příjmy - Výdaje,
+         bilance_rel = bilance/Příjmy,
+         katobyv_nazev = fct_reorder(katobyv_nazev, as.numeric(katobyv_id)))
+```
+
+
+```{r}
+obce_bilance
+```
+
+```{r}
+rnd_obec <- sample(ico_obce, size = 1)
+rnd_obec
+```
+
+```{r}
+obce_bilance[obce_bilance$ico == rnd_obec,]
+```
+
+```{r}
+obce_bilance %>% 
+  ggplot(aes(as.numeric(per_yr), bilance_rel, group = per_yr)) +
+  geom_boxplot(alpha = .1) +
+  facet_wrap(~ katobyv_nazev) +
+  scale_y_continuous(limits = c(-1,1)) +
+  ptrr::theme_ptrr("y", multiplot = T) +
+  scale_x_continuous(breaks = seq(2010, 2019, 3))
+```
+
+```{r}
+write_rds(obce_bilance, "data-processed/budgets_bilance.rds")
+```
+
