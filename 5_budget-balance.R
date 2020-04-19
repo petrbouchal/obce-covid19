@@ -9,12 +9,15 @@ obce_endyear_polozka_cons <- budget %>%
   filter(ico %in% ico_obce) %>%
   sp_add_codelist(polozka) %>%
   sp_add_codelist(orgs) %>%
+  select(-kraj) %>%
+  sp_add_codelist(nuts, by = "nuts_id") %>%
   sp_add_codelist("katobyv", dest_dir = "data-input") %>%
   # konsolidovat na urovni ucetni jednotky
   filter(!kon_pol)
 
 obce_bilance <- obce_endyear_polozka_cons %>%
-  group_by(per_yr, ico, druh, katobyv_nazev, katobyv_id) %>%
+  group_by(per_yr, ico, druh, katobyv_nazev, katobyv_id, nuts_id, orgs_ucjed_nazev,
+           obec, pocob, zuj, kod_pou, kod_rp, kraj, okres) %>%
   summarise(rslt = sum(budget_spending, na.rm = T)) %>%
   pivot_wider(names_from = druh, values_from = rslt) %>%
   ungroup() %>%
