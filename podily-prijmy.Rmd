@@ -49,6 +49,19 @@ b_rud <- obce_income_endyear_polozka_cons %>%
   filter(TRUE)
 ```
 
+```{r}
+b_rud_summary <- obce_income_endyear_polozka_cons %>%
+  mutate(rud = polozka %in% polozky_rud) %>%
+  group_by(rud, period_vykaz, per_yr) %>%
+  summarise_at(vars(starts_with("budget_")), sum, na.rm = T) %>%
+  group_by(period_vykaz, per_yr) %>%
+  mutate(podil_rud = budget_spending/sum(budget_spending)) %>%
+  filter(rud) %>%
+  filter(TRUE)  
+b_rud_summary
+```
+
+
 ```{r graf-rud}
 b_rud %>%
   filter(podil_rud > 0 & per_yr == 2019) %>%
