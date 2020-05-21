@@ -1,0 +1,15 @@
+---
+title: "index"
+author: "Petr Bouchal"
+date: "4/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, child="README.md"}
+
+```
+
