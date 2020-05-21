@@ -1,5 +1,5 @@
 ---
-title: "Scénáře dopadu ekonomického vývoje na obecní finance"
+title: "Scénáře dopadu krize na finance obcí a měst"
 output: html_document
 ---
 
