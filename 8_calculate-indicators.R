@@ -49,9 +49,8 @@ indik_base <- rozp %>%
   left_join(aktiva_brutto) %>%
   left_join(obezna_aktiva) %>%
   left_join(kratkodobe_zavazky) %>%
-  left_join(dluh)
+  left_join(kratkodoby_fin_majetek) %>%
+  left_join(dluh) %>%
+  ungroup()
 
-dluh %>%
-  ggplot(aes(per_yr, dluh)) +
-  geom_bar(stat = "sum") +
-  facet_wrap(~ katobyv_nazev)
+write_rds(indik_base, "data-processed/indikatory.rds")
