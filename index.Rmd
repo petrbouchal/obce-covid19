@@ -10,8 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 source("shared.R")
 ```
 
-> ## Pracovní verze 
-
 [Word dokument ke komentování](index.docx)
+
+#### Pracovní verze {.bs-callout .bs-callout-red} 
+
 
 Naposledy aktualizováno `r format(Sys.time(), "%d. %B %Y, %H:%M")`
