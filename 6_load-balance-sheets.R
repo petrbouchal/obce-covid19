@@ -10,6 +10,7 @@ rozvaha_1 <- statnipokladna::sp_get_table("balance-sheet",
 
 rozvaha_1_processed <- rozvaha_1 %>%
   sp_add_codelist("polvyk") %>%
+  select(-kraj) %>%
   sp_add_codelist(orgs, by = "ico")
 
 rozvaha_2 <- statnipokladna::sp_get_table("balance-sheet-2",
@@ -27,6 +28,7 @@ rozvaha_2 %>%
 
 rozvaha_2_processed <- rozvaha_2 %>%
   sp_add_codelist("polvyk") %>%
+  select(-kraj) %>%
   sp_add_codelist(orgs, by = "ico")
 
 rozvaha_processed <- bind_rows(rozvaha_1_processed, rozvaha_2_processed) %>%
