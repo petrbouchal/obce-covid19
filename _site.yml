@@ -1,28 +1,20 @@
-name: Obce a COVID-19
+name: Rozpočty obcí a měst v krizi
 output_dir: docs
 include: []
 exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh"]
 navbar:
-  title: "Obecní finance v kontextu COVID-19"
+  title: "Rozpočty obcí a měst v krizi"
   left:
-  - text: "Kondice obecních financí"
+  - text: "Stav před krizí (2019)"
     href: stav.html
-  - text: "Stress testy"
+  - text: "Dopady krize (2020)"
     href: scenare.html
-  - text: Předběžné propočty
+  - text: Dokumentace
     menu:
-    - text: Náhledy scénářů
-      href: scenare-nahledy.html
-    - text: Kontrola součtů pro náhodnou obec
-      href: nahodna-obec.html
-    - text: Závislost obcí na RUD
-      href: podily-prijmy.html
-    - text: Bilance rozpočtů obcí
-      href: prijmy-vydaje.html
-  - text: "Zdroje a poznámky"
-    href: notes.html
-  - text: "Dokumentace"
-    href: meta.html
+    - text: "Zdroje a poznámky"
+      href: notes.html
+    - text: "Technická dokumentace"
+      href: meta.html
   right:
   - icon: fa-github fa-lg
     href: https://github.com/petrbouchal/obce-covid19
