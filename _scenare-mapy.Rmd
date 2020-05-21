@@ -1,0 +1,173 @@
+---
+title: "scenare-mapy"
+author: "Petr Bouchal"
+date: "5/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ptrr)
+library(sf)
+library(CzechData)
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r metadata}
+source("shared.R")
+```
+
+```{r data}
+indikatory <- read_rds("data-processed/scenare_vysledky.rds")
+scenarios <- read_rds("data-processed/scenarios.rds")
+scenarios_by_year <- read_rds("data-processed/scenarios_by_year.rds")
+```
+
+```{r}
+scenarios
+```
+
+
+```{r geodata}
+obce_poly <- CzechData::load_RUIAN_state("obce") %>% 
+  select(kod, ruian_nazev = nazev)
+```
+
+```{r join}
+indik_with_polygons <- obce_poly %>% 
+  crossing(scenarios_by_year) %>% 
+  filter(per_yr == 2020) %>% 
+  left_join(indikatory %>% 
+               filter(per_yr == 2020) %>% 
+               rename(kod = zuj)) %>% 
+  st_as_sf()
+```
+
+```{r}
+indik_with_polygons
+```
+
+
+```{r}
+table(indikatory$scenario[indikatory$per_yr == 2020])
+```
+
+
+```{r}
+table(indik_with_polygons$scenario, useNA = "always")
+```
+
+
+```{r}
+table(indik_with_polygons$scenario, 
+      st_is_empty(indik_with_polygons), 
+      useNA = "always")
+```
+
+```{r}
+indik_with_polygons %>% 
+  filter(st_is_empty(geometry)) %>% 
+  select(kod)
+```
+
+
+```{r}
+# pdf(height = 10, width = 30)
+# indik_with_polygons %>% 
+#   filter(scenario == "R0-D33-res") %>% 
+#   ggplot(aes(fill = rozp_odp, colour = NA)) +
+#   geom_sf() +
+#   facet_wrap(~scenario) +
+#   scale_fill_binned(type = "viridis") +
+#   theme_void()
+# dev.off()
+```
+
+```{r}
+indik_for_plot <- indik_with_polygons %>% 
+  # filter(scenario %in% c("R0", "R30-D66-res")) %>%
+  filter(TRUE)
+```
+
+```{r}
+indik_for_plot %>% 
+  filter(str_detect(ruian_nazev, "Libav")) %>% 
+  select(kod, ruian_nazev, geometry, per_yr, rozp_odp) %>% 
+  mutate(emptygeom = st_is_empty(geometry)) %>% 
+  plot(max.plot = 1)
+```
+
+
+```{r}
+library(colorspace)
+ragg::agg_png(filename = "map-bilance.png",
+              width = 80, height = 40, units = "cm", res = 300)
+indik_for_plot %>% 
+  filter(str_detect(scenario, "R[1-3]0-D[\\d]{1,2}-res") | scenario == "R0") %>% 
+  ggplot() +
+  geom_sf(aes(fill = bilance_rel), colour = NA) +
+  facet_grid(rud_change~dph_change) +
+  guides(fill = guide_coloursteps(show.limits = F, even.steps = T)) +
+  # scale_fill_viridis_b(limits = c(min(indik_for_plot$rozp_odp, na.rm = T),
+  #                                 max(indik_for_plot$rozp_odp, na.rm = T)) %>%
+  #                        round(1), 
+  #                      breaks = c(0.8, 1.6, 2.4, 3.2)) +
+  scale_fill_continuous_diverging(palette = "Blue-Red 2", rev = TRUE,
+                                  limits = c(-1, 1),
+                                  oob = scales::squish,
+                                  breaks = c(-1, -0.5, -0.25,
+                                             0,
+                                             0.25, 0.5, 1, 5)) +
+  theme_void()
+dev.off()
+```
+
+```{r}
+library(colorspace)
+ragg::agg_png(filename = "map-rozpodp-gradient.png",
+              width = 80, height = 40, units = "cm", res = 300)
+indik_for_plot %>% 
+  filter(str_detect(scenario, "R[1-3]0-D[\\d]{1,2}-mix") | scenario == "R0") %>% 
+  ggplot() +  
+  geom_sf(aes(fill = rozp_odp), colour = NA, lwd = 0) +
+  facet_wrap(~scenario) +
+  guides(fill = guide_coloursteps(show.limits = F, even.steps = T)) +
+  # scale_fill_viridis_b(limits = c(min(indik_for_plot$rozp_odp, na.rm = T),
+  #                                 max(indik_for_plot$rozp_odp, na.rm = T)) %>%
+  #                        round(1), 
+  #                      breaks = c(0.8, 1.6, 2.4, 3.2)) +
+  scale_fill_continuous_sequential(palette = "Red-Blue", rev = TRUE,
+                                  # limits = c(0, 1),
+                                  # oob = scales::squish,
+                                  breaks = c(0, 0.4, 0.8, 1.2, 1.6,
+                                             2.2, 2.6, 3.2, 3.6)) +
+  theme_void()
+dev.off()
+```
+
+```{r}
+library(colorspace)
+ragg::agg_png(filename = "map-rozpodp-binary.png",
+              width = 80, height = 40, units = "cm", res = 300, )
+indik_for_plot %>% 
+  # filter(str_detect(scenario, "R[1-3]0-D[\\d]{1,2}-mix") | scenario == "R0") %>% 
+  mutate(breaking = rozp_odp > 1.6,
+         breaking_text = ifelse(breaking, "yes", "no")) %>% 
+  ggplot() +  geom_sf(aes(fill = breaking_text), colour = NA) +
+  facet_wrap(~scenario) +
+  scale_fill_manual(values = c(yes = "red", no = "grey")) +
+  # guides(fill = guide_coloursteps(show.limits = F, even.steps = T)) +
+  # scale_fill_viridis_b(limits = c(min(indik_for_plot$rozp_odp, na.rm = T),
+  #                                 max(indik_for_plot$rozp_odp, na.rm = T)) %>%
+  #                        round(1), 
+  #                      breaks = c(0.8, 1.6, 2.4, 3.2)) +
+  # scale_fill_continuous_sequential(palette = "Red-Blue", rev = TRUE,
+  #                                 # limits = c(0, 1),
+  #                                 # oob = scales::squish,
+  #                                 breaks = c(0, 0.4, 0.8, 1.2, 1.6,
+  #                                            2.2, 2.6, 3.2, 3.6)) +
+  theme_void()
+dev.off()
+```
+
+
