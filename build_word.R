@@ -1,0 +1,5 @@
+rmarkdown::render("index.Rmd", output_format = redoc::redoc())
+rmarkdown::render("stav.Rmd", output_format = redoc::redoc())
+rmarkdown::render("meta.Rmd", output_format = redoc::redoc())
+rmarkdown::render("notes.Rmd", output_format = redoc::redoc())
+rmarkdown::render("scenare.Rmd", output_format = redoc::redoc())
