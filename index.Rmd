@@ -1,15 +1,17 @@
 ---
-title: "index"
-author: "Petr Bouchal"
-date: "4/8/2020"
-output: html_document
+title: "Shrnutí a rozcestník"
+output:
+  html_document:
+    toc: no
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+source("shared.R")
 ```
 
-```{r, child="README.md"}
+> ## Pracovní verze 
 
-```
+[Word dokument ke komentování](index.docx)
 
+Naposledy aktualizováno `r format(Sys.time(), "%d. %B %Y, %H:%M")`
