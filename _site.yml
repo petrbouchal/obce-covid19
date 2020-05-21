@@ -1,27 +1,37 @@
 name: Obce a COVID-19
 output_dir: docs
 include: []
-exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "archive"]
+exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh"]
 navbar:
-  title: "Veřejné finance obcí v kontextu COVID-19"
+  title: "Obecní finance v kontextu COVID-19"
   left:
-  - text: rozpočty
-    icon: fa-file-invoice-dollar
+  - text: "Kondice obecních financí"
+    href: stav.html
+  - text: "Stress testy"
+    href: scenare.html
+  - text: Předběžné propočty
     menu:
+    - text: Náhledy scénářů
+      href: scenare-nahledy.html
     - text: Kontrola součtů pro náhodnou obec
       href: nahodna-obec.html
-    - text: Závislost obcí  na RUD
+    - text: Závislost obcí na RUD
       href: podily-prijmy.html
+    - text: Bilance rozpočtů obcí
+      href: prijmy-vydaje.html
+  - text: "Zdroje a poznámky"
+    href: notes.html
+  - text: "Dokumentace"
+    href: meta.html
   right:
   - icon: fa-github fa-lg
     href: https://github.com/petrbouchal/obce-covid19
 output:
   html_document:
+    css: extra.css
     toc: true
     toc_float: true
-    code_folding: hide
     mathjax: null
     df_print: paged
-    code_download: T
     includes:
       in_header: gaheader.html
