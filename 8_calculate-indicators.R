@@ -27,10 +27,17 @@ kratkodobe_zavazky <- rozvaha  %>%
   rename(kratkodobe_zavazky = current_net) %>%
   select(ico, per_yr, kratkodobe_zavazky)
 
+kratkodoby_fin_majetek <- rozvaha  %>%
+  filter(polvyk_polvyk_nazev == "Krátkodobý finanční majetek") %>%
+  rename(kratkodoby_fin_majetek = current_net) %>%
+  select(ico, per_yr, kratkodoby_fin_majetek)
+
 dluh <- rozvaha %>%
   filter(synuc %in% synuc_dluh) %>%
   group_by(ico, per_yr) %>%
   summarise(dluh = sum(current_net))
+
+# Put measures together ---------------------------------------------------
 
 indik_base <- rozp %>%
   left_join(cizi_zdroje) %>%
