@@ -1,0 +1,19 @@
+---
+title: "Poznámky a zdroje"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[Word dokument ke komentování](notes.docx) | [edit na Githubu]()
+
+TO DO
+
+### Odkazy na (skryté) pracovní dokumenty {.bs-callout .bs-callout-grey}
+
+- [Náhledy scénářů](scenare-nahledy.html)
+- [Kontrola součtů pro náhodnou obec](nahodna-obec.html)
+- [Závislost obcí na RUD](podily-prijmy.html)
+- [Bilance rozpočtů obcí](prijmy-vydaje.html)
