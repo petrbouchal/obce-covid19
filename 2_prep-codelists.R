@@ -14,6 +14,9 @@ polozka <- polozka_raw %>%
   # filter duplicates out
   filter(!(for2018 & duplicate & latest)) %>%
   ungroup() %>%
+  # fix lines where no relevant code line exists for 2019 data because the *_date columns are wrong
+  mutate(end_date = ifelse(start_date == "2019-01-01" & start_date > end_date,
+                           as.Date("9999-12-31"), end_date)) %>%
   select(-for2018, -duplicate, -latest, -n)
 
 write_rds(polozka, "data-processed/polozka.rds")
