@@ -1,0 +1,663 @@
+---
+title: "Scénáře dopadu COVID-19: rychlé náhledy"
+author: "Petr Bouchal"
+date: "4/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ptrr)
+library(kableExtra)
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r metadata}
+source("shared.R")
+```
+
+```{r data}
+indikatory <- read_rds("data-processed/scenare_vysledky.rds")
+scenarios <- read_rds("data-processed/scenarios.rds")
+scenarios_by_year <- read_rds("data-processed/scenarios_by_year.rds")
+```
+
+## Scénáře
+
+S0 je baseline, R je historický vývoj.
+
+```{r scen-show}
+scenarios
+```
+
+### Scénáře po letech
+
+```{r scen-yr-show}
+scenarios_by_year
+```
+## Podíly obcí podle scénářů {.tabset}
+
+### Obce porušující pravidlo rozpočtové odpovědnosti
+
+Pravidlo: dluh < 60 % průměru příjmů za poslední 4 roky
+
+```{r rozp-odp, results="asis"}
+library(gt)
+
+indikatory %>%
+  filter(per_yr %in% 2019:2022) %>%
+  ungroup() %>%
+  count(scenar = scenario_name, scenario, per_yr, wt = (rozp_odp_1yr > .6)/n(),
+        name = "var") %>%
+  spread(per_yr, var) %>% 
+  gt() %>% 
+  fmt_missing(columns = 1:6, missing_text = "-") %>% 
+  fmt_percent(3:6, incl_space = T, decimals = 0, dec_mark = ",") %>% 
+  cols_align(align = "left", columns = 1) %>% 
+  cols_label(scenar = "Popis scénáře", scenario = "Kód scénáře")
+```
+
+### Obce s deficitním rozpočtem
+
+```{r bilance}
+indikatory %>%
+  bind_rows(indikatory %>%
+              filter(per_yr == 2019) %>%
+              select(-scenario_name) %>%
+              crossing(scenario_name = scenarios$scenario_name)) %>%
+  filter(per_yr %in% 2019:2020 & scenario %in% c("R0",
+                                                 "R10-D0-debt",
+                                                 "R20-D0-debt", "R30-D0-debt")) %>%
+  ungroup() %>%
+  count(scenario_name, scenario, per_yr, wt = (bilance < 0)/n()) %>%
+  spread(per_yr, n) %>% 
+  gt() %>% 
+  fmt_missing(columns = 1:3, missing_text = "-") %>% 
+  fmt_percent(columns = 3, incl_space = T, dec_mark = ",", decimals = 0) %>% 
+  cols_align(align = "left", columns = 1) %>% 
+  cols_label(scenario_name = "Popis scénáře", scenario = "Kód scénáře")
+```
+```{r scen-list, include=F}
+unique(indikatory$scenario)
+```
+
+
+```{r fns}
+plot_multi_percent <- function(data, category, expression, 
+                               scen_include = c("R", scenarios$scenario)) {
+  data %>%
+    bind_rows(data %>%
+                filter(per_yr == 2019) %>%
+                select(-scenario, -scenario_name) %>%
+                crossing(scenarios %>% select(scenario, scenario_name))) %>%
+    ungroup() %>%
+    filter(scenario %in% scen_include) %>%
+    group_by(per_yr, scenario_name, {{category}}) %>%
+    mutate(highratio = {{expression}}) %>%
+    summarise(perc_breach = mean(highratio, na.rm = T)) %>% 
+    ggplot(aes(per_yr, perc_breach, colour = scenario_name)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 0.8) +
+    # scale_color_manual(values = c("black", cols[c(7, 1:6)]), drop = T) +
+    facet_wrap(facets = vars({{category}})) +
+    scale_y_percent_cz() +
+    scale_x_continuous(n.breaks = 6,
+                       labels = scales::label_number(accuracy = 1,
+                                                     big.mark = "")) +
+    theme_ptrr("y", multiplot = T, 
+                   family = "IBM Plex Sans Condensed")
+}
+
+plot_percent <- function(data, expression,
+                         scen_include = c("R", scenarios$scenario)) {
+  data %>%
+    bind_rows(data %>%
+                filter(per_yr == 2019) %>%
+                select(-scenario, -scenario_name) %>%
+                crossing(scenarios %>% select(scenario, scenario_name))) %>%
+    ungroup() %>%
+    filter(scenario %in% scen_include) %>%
+    group_by(per_yr, scenario_name) %>%
+    mutate(highratio = {{expression}}) %>%
+    summarise(perc_breach = mean(highratio, na.rm = T)) %>% 
+    ggplot(aes(per_yr, perc_breach, colour = scenario_name)) +
+    geom_line(size = 1) +
+    geom_point() +
+    # scale_color_manual(values = c("black", cols[c(7, 1:6)]), drop = T) +
+    scale_y_percent_cz() +
+    scale_x_continuous(n.breaks = 6,
+                       labels = scales::label_number(accuracy = 1,
+                                                     big.mark = "")) +
+    theme_ptrr("y", multiplot = F, 
+                   family = "IBM Plex Sans Condensed")
+}
+```
+
+## Bilance obcí {.tabset}
+
+Otázka: kolik % obcí by v různých scénářích mělo deficitní rozpočet?
+
+### Scénáře v čase {.tabset .tabset-pills} 
+
+#### Celkem
+
+```{r bilance-scen-all}
+plot_percent(indikatory %>% 
+               filter(per_yr < 2021), 
+             bilance < 0, scen_include = c("R0",
+                                           "R10-D0-debt",
+                                           "R20-D0-debt",
+                                           "R30-D0-debt"))
+```
+
+#### Rozdělení
+
+```{r bilance-scen-distr}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         scenario %in% c("R0",
+                         "R10-D0-debt",
+                         "R20-D0-debt",
+                         "R30-D0-debt", "R"),
+         bilance_rel < 2.5) %>%
+  ggplot(aes(scenario_name, bilance_rel, fill = scenario)) +
+  geom_hline(yintercept = 0) +
+  geom_violin(colour = NA) +
+  scale_x_discrete(labels = scales::label_wrap(15), drop = T) +
+  coord_flip() +
+  scale_fill_manual(values = c("black", cols[c(7, 1:3)]), guide = "none") +
+  ptrr::theme_ptrr("scatter", legend.position = "bottom", 
+                   family = "IBM Plex Sans Condensed") +
+  ptrr::scale_y_percent_cz(expand = ptrr::flush_axis,
+                           n.breaks = 8)
+```
+
+
+
+#### Podle krajů
+
+
+```{r bilance-scen-kraj}
+plot_multi_percent(indikatory %>% 
+                     filter(per_yr < 2021),
+                   kraj, bilance < 0, scen_include = c("R0",
+                         "R10-D0-debt",
+                         "R20-D0-debt",
+                         "R30-D0-debt", "R"))
+```
+
+#### Podle velikosti obcí
+
+```{r bilance-scen-pop}
+plot_multi_percent(indikatory %>% 
+                     filter(per_yr < 2021), 
+                   katobyv_nazev, bilance < 0, 
+                   scen_include = c("R0",
+                         "R10-D0-debt",
+                         "R20-D0-debt",
+                         "R30-D0-debt", "R"))
+```
+
+#### Podle druhu obcí
+
+```{r bilance-scen-typ}
+plot_multi_percent(indikatory %>% 
+                     filter(per_yr < 2021), 
+                   typobce, bilance < 0, 
+                   scen_include = c("R10-D0-debt","R20-D0-debt", "R30-D0-debt",
+                                    "R", "R0"))
+```
+
+### Rok 2020 oproti baseline {.tabset .tabset-pills}
+
+#### Celkem
+
+```{r bilance-impact-all, fig.asp = 0.5}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         scenario %in% c("R0", "R10-D0-debt", "R20-D0-debt", "R30-D0-debt"),
+         ) %>%
+  mutate(bilance_neg = bilance < 0) %>%
+  group_by(scenario) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[0-3]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-3]"), names_to = "scenario") %>% 
+  ggplot(aes(value, scenario)) +
+  geom_col() +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("x", multiplot = T)
+```
+
+#### Podle kraje
+
+```{r bilance-impact-kraj, fig.asp = 0.5}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         scenario %in% c("R0", "R10-D0-debt", "R20-D0-debt", "R30-D0-debt"),
+         ) %>%
+  mutate(bilance_neg = bilance < 0) %>%
+  group_by(scenario, grp = kraj) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[0-3]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-3]"), names_to = "scenario") %>% 
+  mutate(grp = fct_reorder(grp, value)) %>% 
+  ggplot(aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario)  +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("x", multiplot = T)
+```
+
+#### Podle velikosti obce
+
+
+```{r bilance-impact-size, fig.asp = 0.5}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         scenario %in% c("R0", "R10-D0-debt", "R20-D0-debt", "R30-D0-debt"),
+         ) %>%
+  mutate(bilance_neg = bilance < 0) %>%
+  group_by(scenario, grp = katobyv_nazev) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[0-3]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-3]"), names_to = "scenario") %>% 
+  # mutate(grp = fct_reorder(grp, value)) %>% 
+  ggplot(aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario)  +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("x", multiplot = T)
+```
+
+#### Podle druhu obce
+
+
+```{r bilance-impact-type-data, fig.asp = 0.5}
+dt_impact_typ <- indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         scenario %in% c("R0", "R10-D0-debt", "R20-D0-debt", "R30-D0-debt"),
+         ) %>%
+  mutate(bilance_neg = bilance < 0) %>%
+  group_by(scenario, grp = typobce) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[0-3]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-3]"), names_to = "scenario") %>% 
+  # mutate(grp = fct_reorder(grp, value)) %>%
+  filter(TRUE)
+```
+
+
+```{r bilance-impact-type-bar, fig.asp = 0.5}
+ggplot(dt_impact_typ, aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario)  +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("x", multiplot = T)
+```
+
+```{r bilance-impact-type-dots}
+ggplot(dt_impact_typ, aes(value, grp)) +
+  geom_point(aes(colour = scenario)) +
+  # facet_wrap(~scenario) +
+  scale_color_discrete() +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("x", multiplot = T)
+```
+
+```{r bilance-scen-type-dots}
+indikatory %>%
+  filter(per_yr %in% 2019:2020 & scenario %in% c("R0", "R10-D0-debt",
+                                                 "R20-D0-debt", "R30-D0-debt")) %>%
+  mutate(bilance_neg = bilance < 0) %>%
+  group_by(per_yr, scenario_name, typobce) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>%
+  ggplot(aes(typobce, perc_minus, colour = scenario_name)) +
+  geom_point() +
+  coord_flip() +
+  ptrr::theme_ptrr("scatter", legend.position = "bottom",
+                   legend.title = element_blank(), 
+                   family = "IBM Plex Sans Condensed") +
+  ptrr::scale_y_percent_cz()
+```
+
+
+```{r, include=FALSE}
+indikatory %>%
+  filter(per_yr %in% 2019:2022) %>%
+  mutate(grp = str_c(per_yr, scenario)) %>%
+  ggplot(aes(rozp_odp, fill = scenario)) +
+  geom_density(alpha = 1, colour = NA) +
+  geom_vline(xintercept = .6) +
+  facet_grid(scenario~per_yr) +
+  scale_x_continuous(limits = c(0, 2)) +
+  ptrr::theme_ptrr("both", multiplot = T)
+```
+
+
+## Rozpočtová odpovědnost {.tabset}
+
+Otázka: kolik procent obcí by v různých scénářích porušoval pravidlo rozpočtové odpovědnosti? (dluh > 60 % průměrů příjmů z posledních 4 let)
+
+### Scénáře v čase {.tabset .tabset-pills}
+
+#### Celkem
+
+```{r rozp-all}
+plot_percent(indikatory %>% filter(per_yr > 2012,
+                                   str_detect(scenario, "D0-")),
+             rozp_odp > 0.6) +
+    expand_limits(y = c(0, 0.35))
+```
+
+```{r, include=F}
+scenarios$scenario
+```
+
+
+#### Rozdělení
+
+```{r, odp-dist}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         str_detect(scenario, "D0"),
+         rozp_odp < 2.5) %>%
+  ggplot(aes(scenario, rozp_odp, fill = scenario)) +
+  geom_hline(yintercept = 0.6) +
+  # stat_ecdf(geom = "step", ) +
+  geom_violin(colour = NA) +
+  scale_x_discrete(labels = scales::label_wrap(15), drop = T) +
+  coord_flip() +
+  # scale_fill_manual(values = c("black", cols[c(7, 1:6)]), guide = "none") +
+  ptrr::theme_ptrr("scatter", legend.position = "bottom", 
+                   family = "IBM Plex Sans Condensed", multiplot = T) +
+  ptrr::scale_y_percent_cz(expand = ptrr::flush_axis,
+                           n.breaks = 8)
+```
+
+
+#### Podle kraje
+
+```{r odp-kraj}
+plot_multi_percent(indikatory %>% filter(per_yr > 2012,
+                                         str_detect(scenario, "D0-mix")),
+                   kraj, rozp_odp > 0.6) +
+  expand_limits(y = c(0, 0.45)) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(colour = guide_legend(nrow = 4))
+```
+
+#### Podle velikosti obcí
+
+```{r odp-size}
+scend0 <- scenarios[str_detect(scenarios$scenario, "^R$|D0"),] %>% pull(scenario)
+
+plot_multi_percent(indikatory, katobyv_nazev, rozp_odp > 0.6, 
+                   scen_include = scend0) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(colour = guide_legend(nrow = 4))
+```
+
+#### Podle druhu obcí
+
+```{r odp-type}
+plot_multi_percent(indikatory %>% 
+                     filter(per_yr > 2012,
+                            str_detect(scenario, "D0-")),
+                   typobce, rozp_odp > 0.6) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(colour = guide_legend(nrow = 4)) +
+  scale_colour_discrete()
+```
+
+### Rok 2020 oproti baseline {.tabset .tabset-pills}
+
+#### Celkem
+
+```{r odp-impact-all, fig.asp = .5}
+indikatory %>%
+  filter(per_yr %in% c(2019:2020),
+         # scenario %in% c("S1", "S4", "S0"),
+         ) %>%
+  mutate(bilance_neg = rozp_odp > 0.6) %>%
+  group_by(scenario) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[1-9]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-3]"), names_to = "scenario") %>% 
+  ggplot(aes(value, scenario)) +
+  geom_col() +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("x", multiplot = T)
+```
+
+#### Podle kraje
+
+```{r odp-impact-kraj}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         # scenario %in% c("S1", "S4", "S0"),
+         ) %>%
+  mutate(bilance_neg = rozp_odp > .6) %>%
+  filter(str_detect(scenario, "R(0|10|20|30)*(\\-(0|33|66))*")) %>% 
+  group_by(scenario, grp = kraj) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>%
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("^R[0-9]")), ~./R0) %>% 
+  select(-R0, -R) %>% 
+  pivot_longer(cols = starts_with("R"), names_to = "scenario") %>% 
+  # mutate(grp = fct_reorder(grp, value)) %>% 
+  ggplot(aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario) +
+  # scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("both", multiplot = T)
+```
+
+#### Podle velikosti obce
+
+```{r odp-impact-size}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         # scenario %in% c("S1", "S4", "S0"),
+         ) %>%
+  mutate(bilance_neg = rozp_odp > .6) %>%
+  filter(str_detect(scenario, "R(0|10|20|30)*(\\-(0|33|66))*")) %>% 
+  group_by(scenario, grp = katobyv_nazev) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>%
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("^R[0-9]")), ~./R0) %>% 
+  select(-R0, -R) %>% 
+  pivot_longer(cols = starts_with("R"), names_to = "scenario") %>% 
+  # mutate(grp = fct_reorder(grp, value)) %>% 
+  ggplot(aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario) +
+  # scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("both", multiplot = T)
+```
+
+#### Podle typu obce
+
+```{r odp-impact-type}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         # scenario %in% c("S1", "S4", "S0"),
+         ) %>%
+  mutate(bilance_neg = rozp_odp > .6) %>%
+  filter(str_detect(scenario, "R(0|10|20|30)*(\\-(0|33|66))*")) %>% 
+  group_by(scenario, grp = typobce) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>%
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("^R[0-9]")), ~./R0) %>% 
+  select(-R0, -R) %>% 
+  pivot_longer(cols = starts_with("R"), names_to = "scenario") %>% 
+  # mutate(grp = fct_reorder(grp, value)) %>% 
+  ggplot(aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario) +
+  # scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("both", multiplot = T)
+```
+
+
+
+### V čase: zjednodušený indikátor {.tabset .tabset-pills}
+
+Zjednodušení pouze na příjmy v posledním roce, abychom eliminovali artefakt, kdy se okno čtyřletého průměru posouvá do roků s vyššími příjmy.
+
+#### Celkem
+
+```{r odp-scen-simple-all}
+plot_percent(indikatory %>% filter(per_yr > 2012), rozp_odp_1yr > 0.6) +
+    expand_limits(y = c(0, 0.35)) +
+  scale_colour_discrete()
+```
+
+#### Rozdělení
+
+```{r odp-scen-simple-dist}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         # scenario %in% c("S1", "S0", "S4", "R"),
+         rozp_odp_1yr < 2.5) %>%
+  ggplot(aes(scenario, rozp_odp_1yr, fill = scenario)) +
+  geom_hline(yintercept = 0.6) +
+  # stat_ecdf(geom = "step", ) +
+  geom_violin(colour = NA) +
+  scale_x_discrete(labels = scales::label_wrap(15), drop = T) +
+  coord_flip() +
+  # scale_fill_manual(values = c("black", cols[c(7, 1:6)]), guide = "none") +
+  ptrr::theme_ptrr("scatter", legend.position = "bottom", 
+                   family = "IBM Plex Sans Condensed", multiplot = T) +
+  ptrr::scale_y_percent_cz(expand = ptrr::flush_axis,
+                           n.breaks = 8)
+```
+
+
+#### Podle kraje
+
+```{r odp-scen-simple-kraj}
+plot_multi_percent(indikatory %>% filter(per_yr > 2012), 
+                   kraj, rozp_odp_1yr > 0.6) +
+  expand_limits(y = c(0, 0.45)) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(colour = guide_legend(nrow = 4))
+```
+
+#### Podle velikosti obcí
+
+```{r odp-scen-simple-size}
+plot_multi_percent(indikatory, katobyv_nazev, rozp_odp_1yr > 0.6) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(colour = guide_legend(nrow = 4))
+```
+
+#### Podle typu obcí
+
+```{r odp-scen-simple-type}
+plot_multi_percent(indikatory, typobce, rozp_odp_1yr > 0.6) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(colour = guide_legend(nrow = 4)) +
+  scale_colour_discrete()
+```
+
+### 2020 x baseline: zjednodušený indikátor {.tabset .tabset-pills}
+
+Zjednodušení pouze na příjmy v posledním roce, abychom eliminovali artefakt, kdy se okno čtyřletého průměru posouvá do roků s vyššími příjmy.
+
+#### Celkem
+
+```{r odp-impact-simple-all, fig.asp = .5}
+indikatory %>%
+  filter(per_yr %in% c(2019:2020),
+         # scenario %in% c("S1", "S4", "S0"),
+         ) %>%
+  mutate(bilance_neg = rozp_odp_1yr > 0.6) %>%
+  group_by(scenario) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[1-3]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-9]"), names_to = "scenario") %>% 
+  ggplot(aes(value, scenario)) +
+  geom_col() +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("x", multiplot = T)
+```
+
+#### Podle kraje
+
+```{r odp-impact-simple-kraj}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         # scenario %in% c("S1", "S4", "S0"),
+         ) %>%
+  mutate(bilance_neg = rozp_odp_1yr > .6) %>%
+  group_by(scenario, grp = kraj) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[0-3]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-9]"), names_to = "scenario") %>% 
+  mutate(grp = fct_reorder(grp, value)) %>% 
+  ggplot(aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario) +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("x", multiplot = T)
+```
+
+#### Podle velikosti obce
+
+```{r odp-impact-simple-size}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         # scenario %in% c("S1", "S4", "S0"),
+         ) %>%
+  mutate(bilance_neg = rozp_odp_1yr > .6) %>%
+  group_by(scenario, grp = katobyv_nazev) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[1-9]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-9]"), names_to = "scenario") %>% 
+  # mutate(grp = fct_reorder(grp, value)) %>% 
+  ggplot(aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario) +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("both", multiplot = T)
+```
+
+#### Podle typu obce
+
+```{r odp-impact-simple-type}
+indikatory %>%
+  filter(per_yr %in% 2019:2020,
+         # scenario %in% c("S1", "S4", "S0"),
+         ) %>%
+  mutate(bilance_neg = rozp_odp_1yr > .6) %>%
+  group_by(scenario, grp = typobce) %>%
+  summarise(perc_minus = mean(bilance_neg, na.rm = T)) %>% 
+  spread(scenario, perc_minus) %>% 
+  mutate_at(vars(matches("R[0-3]")), ~.-R0) %>% 
+  select(-R0) %>% 
+  pivot_longer(cols = matches("R[0-9]"), names_to = "scenario") %>% 
+  # mutate(grp = fct_reorder(grp, value)) %>% 
+  ggplot(aes(value, grp)) +
+  geom_col() +
+  facet_wrap(~scenario) +
+  scale_x_percent_cz(suffix = " pp", prefix = " +") +
+  theme_ptrr("both", multiplot = T)
+```
+
+
