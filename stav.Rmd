@@ -1,0 +1,231 @@
+---
+title: "Stav obecních financí v roce 2019"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      include = F,
+                      warning = F,
+                      message = F)
+Sys.setlocale(locale = "cs_CZ.UTF-8")
+
+library(tidyverse)
+```
+
+```{r shared}
+source("shared.R")
+```
+
+
+```{r load-data}
+indikatory <- read_rds("data-processed/scenare_vysledky.rds")
+indik_2019 <- indikatory %>% 
+  filter(per_yr == 2019)
+```
+
+[Word dokument ke komentování](stav.docx)
+
+## Příjmy a výdaje
+
+```{r nums-basic}
+spend <- sum(indik_2019$rozp_p_celkem/1e9)
+rud <- sum(indik_2019$rozp_p_rud/1e9)
+
+income <- sum(indik_2019$rozp_v_celkem/1e9)
+
+rud_share <- (sum(indik_2019$rozp_p_rud/1e9)/sum(indik_2019$rozp_p_celkem/1e9))
+
+rezervy <- sum(indik_2019$kratkodoby_fin_majetek/1e9, na.rm = T)
+bilance <- sum(indik_2019$bilance/1e9)
+
+kap <- sum(indik_2019$rozp_v_kap/1e9, na.rm = T)
+kap_share_mean <- mean(indik_2019$rozp_v_kap_share, na.rm = T)
+kap_share_total <- kap/spend
+```
+
+### Příjmy
+
+Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
+
+#### Rozpočtové určení daní (RUD) {.bs-callout .bs-callout-blue}
+
+Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týká se daně z příjmu fyzických i právnických osob a DPH. Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní.
+
+### Výdaje
+
+Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_total)` všech výdajů; v součtu šlo o `r nm(spend - kap)` miliard Kč. Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
+
+
+```{r}
+indik_2019 %>% 
+  count(typobce, wt = (bilance < 0)/n())
+```
+
+```{r}
+indik_2019 %>% 
+  count(katobyv_nazev, wt = (bilance < 0)/n())
+```
+
+```{r}
+indik_2019 %>% 
+  count(kraj, wt = (bilance < 0)/n())
+```
+
+## Bilance rozpočtů
+
+```{r nums-balance}
+
+bilance_sum <- sum(indik_2019$bilance/1e9, na.rm = T)
+bilance_avg <- mean(indik_2019$bilance_rel, na.rm = T)
+bilance_med <- median(indik_2019$bilance_rel, na.rm = T)
+bilance_avg_total <- bilance_sum / spend
+
+bil_neg <- indik_2019 %>% 
+  filter(bilance < 0)
+
+bil_neg_sum <- bil_neg %>% 
+  count(wt = bilance/1e9) %>% pull() %>% abs()
+
+bil_neg_avg <- bil_neg %>% 
+  summarise(m = mean(bilance_rel, na.rm = T)) %>% pull() %>% abs()
+
+bil_neg_median <- bil_neg %>% 
+  summarise(m = median(bilance_rel, na.rm = T)) %>% pull() %>% abs()
+
+bil_pos_share <- indik_2019 %>% 
+  count(wt = (bilance >= 0)/n()) %>% pull()
+
+bil_pos_count <- indik_2019 %>% 
+  count(wt = bilance >= 0) %>% pull()
+bil_neg_count <- indik_2019 %>% 
+  count(wt = bilance < 0) %>% pull()
+```
+
+Deficitní rozpočet mělo `r bil_neg_count` z `r n_distinct(indik_2019$ico)` (`r pc(1 - bil_pos_share)`) obcí. Průměrný deficit u těchto obcí byl `r pc(bil_neg_avg)`, mediánový pak `r pc(bil_neg_median)`.
+
+Celkový deficit obcí s deficitním financováním byl `r nm(bil_neg_sum)` mld. korun.
+
+Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance_sum)` mld. korun. 
+
+## Dluh
+
+```{r nums-debt}
+dluh <- sum(indik_2019$dluh/1e9, na.rm = T)
+
+dluh_pos_share <- indik_2019 %>% 
+  count(wt = (dluh > 0)/n()) %>% pull()
+
+dluh_pos_count <- indik_2019 %>% 
+  count(wt = dluh > 0) %>% pull()
+
+dluh_breach_share <- indik_2019 %>% 
+  count(wt = (rozp_odp >= 0.6)/n()) %>% pull()
+
+dluh_breach_count <- indik_2019 %>% 
+  count(wt = rozp_odp >= 0.6) %>% pull()
+
+dluh_breach_median <- mean(indik_2019$rozp_odp, na.rm = T)
+dluh_breach_mean <- mean(indik_2019$rozp_odp, na.rm = T)
+
+dluh_pos_mean <- indik_2019 %>% 
+  filter(dluh > 0) %>% 
+  summarise(n = mean(rozp_odp_1yr, na.rm = T)) %>% pull()
+    
+dluh_pos_mean_last4 <- indik_2019 %>% 
+  filter(dluh > 0) %>% 
+  summarise(n = mean(rozp_odp, na.rm = T)) %>% pull()
+     
+```
+
+Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_2019$ico)` (`r pc(dluh_pos_share)`) obcí a v součtu tento dluh činil `r nm(dluh)` miliard Kč. Mezi obcemi s nenulovým dluhem dosahoval dluh v průměru `r pc(dluh_pos_mean)` příjmů (a `r pc(dluh_pos_mean_last4)` průměru příjmů za poslední čtyři roky, tj. 2016-2019).
+
+### Rozpočtová odpovědnost
+
+Ministerstvo financí pro monitorování finančního zdraví obcí používá mimo jiné i indikátor rozpočtové odpovědnosti, vypočtený jako podíl dluhu obce k průměrným příjmům obce za poslední 4 roky. Finance obce jsou považovány za problematické, pokud tento poměr přesáhne 60 %.
+
+V roce 2019 tento práh přesáhlo `r dluh_breach_count` (`r pc(dluh_breach_share)`) obcí.
+
+```{r}
+ggplot(indik_2019) +
+  geom_histogram(aes(rozp_odp, y = stat(width * density)), binwidth = .05) +
+  geom_vline(xintercept = .6) +
+  facet_wrap(~typobce)
+```
+
+```{r}
+indik_2019 %>% 
+  count(typobce, wt = (rozp_odp > .6)/n())
+
+```
+
+```{r}
+indik_2019 %>% 
+  count(kraj, wt = (rozp_odp > .6)/n())
+```
+
+## Rezervy
+
+```{r nums-reserves}
+rez <- sum(indik_2019$kratkodoby_fin_majetek/1e9, na.rm = T)
+
+rez_to_spend_mean <- indik_2019 %>% 
+  mutate(share = kratkodoby_fin_majetek/rozp_p_celkem) %>% 
+  summarise(m = mean(share, na.rm = T)) %>% pull()
+
+rez_to_spend_median <- indik_2019 %>% 
+  mutate(share = kratkodoby_fin_majetek/rozp_p_celkem) %>% 
+  summarise(m = median(share, na.rm = T)) %>% pull()
+
+rez_10pc_spend <- indik_2019 %>% 
+  count(wt = (kratkodoby_fin_majetek > rozp_v_celkem * 0.1)/n()) %>% pull()
+
+rez_2xkap <- indik_2019 %>% 
+  count(wt = (kratkodoby_fin_majetek > rozp_v_kap * 2)/n()) %>% pull()
+
+rez_pha <- indik_2019 %>% 
+  filter(ico == "00064581") %>% pull(kratkodoby_fin_majetek) %>% {./1e9}
+
+rez_krajska <- indik_2019 %>% 
+  filter(ico != "00064581" & typobce == "Krajské město/Praha") %>%
+  count(wt = kratkodoby_fin_majetek/1e9) %>% 
+  pull()
+
+rez_pha_share <- rez_pha/rez
+rez_krajska_share <- rez_krajska/rez
+
+kzav <- sum(indik_2019$kratkodobe_zavazky/1e9, na.rm = T)
+```
+
+Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech.
+
+Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalších `r pc(rez_krajska_share)` připadá na krajská města.
+
+Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné.
+
+```{r top-cash}
+indik_2019 %>% 
+  mutate(var_perc = kratkodoby_fin_majetek/sum(kratkodoby_fin_majetek, na.rm = T)) %>%
+  mutate(pocob = as.numeric(pocob), rnk = rank(desc(pocob))) %>% 
+  ungroup() %>% 
+  arrange(desc(pocob)) %>% 
+  mutate(cs = cumsum(var_perc)) %>% 
+  select(orgs_ucjed_nazev, pocob, cs, rnk)
+```
+
+
+```{r, fig.height=2}
+indik_2019 %>% 
+  group_by(grp = typobce) %>% 
+  summarise(var = sum(kratkodoby_fin_majetek, na.rm = T)) %>% 
+  ungroup() %>% 
+  mutate(var_perc = var/sum(var, na.rm = T)) %>% 
+  ggplot(aes(y = var, fill = grp)) + 
+  geom_col(aes(x = 1), position = "fill") +
+  coord_flip()
+```
+
+
+
+##
