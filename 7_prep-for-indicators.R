@@ -5,7 +5,9 @@ source("shared.R")
 
 # this file created in 5_budget-balance.R
 spending <- read_rds("data-processed/budgets_bilance.rds") %>%
-  rename(rozp_v_celkem = Výdaje) %>% select(-Příjmy, -bilance, -bilance_rel)
+  select(rozp_v_celkem = Výdaje, ico, per_yr)
+
+spending_capital <- read_rds("data-processed/budgets_capital.rds")
 
 spending %>% count(per_yr)
 
@@ -24,7 +26,8 @@ income <- income0 %>%
   # konsolidace
   filter(!kon_pol & ico %in% ico_obce) %>%
   # vyrobit novou kategorizaci prijmu
-  mutate(kat_new = case_when(polozka %in% polozky_rud ~ "rud",
+  mutate(kat_new = case_when(polozka == "1211" ~ "rud_dph",
+                             polozka %in% polozky_rud ~ "rud_exc_dph",
                              trida == "Daňové příjmy" ~ "other_tax",
                              trida == "Nedaňové příjmy" ~ "non_tax",
                              trida == "Přijaté transfery" ~ "transfers",
@@ -36,7 +39,8 @@ income <- income0 %>%
   pivot_wider(names_from = kat_new, values_from = rozp_p,
               names_prefix = "rozp_p_", values_fill = list(rozp_p = 0)) %>%
   # spocitat celkove vydaje
-  mutate(rozp_p_celkem = rozp_p_rud + rozp_p_non_tax + rozp_p_other_tax + rozp_p_transfers + rozp_p_capital)
+  mutate(rozp_p_rud = rozp_p_rud_dph + rozp_p_rud_exc_dph,
+         rozp_p_celkem = rozp_p_rud + rozp_p_non_tax + rozp_p_other_tax + rozp_p_transfers + rozp_p_capital)
 
 income %>% group_by(per_yr) %>% count(per_yr, .drop = T)
 
@@ -45,9 +49,12 @@ income %>% group_by(per_yr) %>% count(per_yr, .drop = T)
 
 rozp <- income %>%
   left_join(spending) %>%
-  mutate(bilance = rozp_p_celkem - rozp_v_celkem)
+  ungroup() %>%
+  mutate(per_yr = as.numeric(per_yr)) %>%
+  left_join(spending_capital) %>%
+  mutate(bilance = rozp_p_celkem - rozp_v_celkem) %>%
+  ungroup()
 
 rozp %>% ungroup() %>% count(per_yr)
-rozp %>% ungroup() %>% count(kraj, per_yr) %>% spread(per_yr, n)
 
 write_rds(rozp, "data-processed/budget_for_scenarios.rds")
