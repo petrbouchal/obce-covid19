@@ -37,4 +37,5 @@ budgets_expenditure_bare <- budgets_all_bare %>%
 write_rds(budgets_expenditure_bare, "data-input/budgets_expenditure_bare.rds", compress = "gz")
 rm("budgets_expenditure_bare")
 
-
+budgets2020 <- sp_get_table("budget-local", 2020, 2, dest_dir = "data-input")
+unique(budgets2020$ico) %>% length()
