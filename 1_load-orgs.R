@@ -47,10 +47,15 @@ mesta_iti <- c("Praha", "Brno", "Olomouc", "Ostrava", "Pardubice", "Hradec Král
 obce_typy <- orgs %>%
   filter(druhuj_id == "4") %>%
   select(zuj, ico) %>%
-  mutate(typobce = case_when(zuj %in% krajska_mesta ~ "Krajské město/Praha",
+  mutate(typobce = case_when(zuj %in% krajska_mesta ~ "Krajská města a Praha",
                              zuj %in% orp ~ "S rozšířenou působností",
-                             zuj %in% pou ~ "S pověřeným OÚ",
-                             TRUE ~ "běžná obec")) %>%
-  distinct()
+                             zuj %in% pou ~ "S pověřeným obecním úřadem",
+                             TRUE ~ "Běžná obec") %>%
+           as_factor() %>% fct_relevel("Běžná obec", after = Inf)) %>%
+  distinct() %>%
+  mutate(typobce_wrapped = fct_relabel(typobce, ~str_wrap(.x, 14)))
+levels(obce_typy$typobce)
+levels(obce_typy$typobce_wrapped)
+
 obce_typy %>% distinct() %>% count(typobce)
 write_rds(obce_typy, "data-processed/obce_typy.rds", compress = "gz")
