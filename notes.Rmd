@@ -1,13 +1,22 @@
 ---
 title: "Poznámky a zdroje"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, include = T)
 ```
 
-[Word dokument ke komentování](notes.docx) | [edit na Githubu]()
+[Word dokument ke komentování](notes.docx)
+
+
+Blah `r 3 * 4`
+
+```{r}
+3 * 4
+```
 
 TO DO
 
@@ -34,3 +43,5 @@ TO DO
 - https://www.info.cz/cesko/bude-nam-chybet-nejmene-miliarda-od-vlady-stale-nemame-informace-rika-primatorka-brna-45051.html
 
 - https://archiv.ihned.cz/c1-66766760-obce-a-kraje-ponesou-az-tretinu-nakladu-na-pomoc-osvc-postup-statu-nedava-ekonomicky-smysl
+
+- https://nazory.aktualne.cz/komentare/obce-nejsou-kasicka-nemohou-za-stat-platit-krizi/r~517e36ea99b111ea8972ac1f6b220ee8/
