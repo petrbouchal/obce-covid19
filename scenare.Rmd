@@ -9,10 +9,13 @@ output:
 library(tidyverse)
 library(ptrr)
 library(Hmisc)
+library(ggridges)
+
 knitr::opts_chunk$set(echo = FALSE, 
                       warning = FALSE,
                       message = FALSE,
                       include = FALSE)
+options(knitr.duplicate.label = "allow")
 ```
 
 ```{r metadata}
@@ -69,13 +72,26 @@ iscn <- indikatory %>%
   filter(per_yr %in% 2019:2020)
 ```
 
+```{r plot-transfer-fns}
+plot_save <- function(plot, id) {
+  pth <- file.path("charts-storage", 
+                   paste0(scen_stub, "_", outcome_stub, "_", id, ".rds"))
+  write_rds(plot, pth)
+}
+
+plot_load <- function(id) {
+  pth <- file.path("charts-storage", 
+                   paste0(scen_stub, "_", outcome_stub, "_", id, ".rds"))
+  read_rds(pth)
+}
+```
 
 
 [Word dokument ke komentování](scenare.docx)
 
 # {.tabset .tabset-pills}
 
-## *Úvod ke scénářům* 
+## *Co scénáře znamenají* 
 
 ### Scénáře a předpoklady
 
@@ -123,185 +139,311 @@ U těchto indikátorů nás zajímají
 - rozložení těchto dopadů mezi kraje a velikostní a funkční skupiny obcí
 - agregátní dopady na celý "obecní sektor", tj. např. o kolik klesne úhrn daňových příjmů obcí
 
+## Optimistický {.tabset}
+
+```{r scen-subsets-optimistic}
+scto <- c(sc_opt, sc_base) 
+rud_drop_perc <- "10 %"
+scen_stub <- "opt"
+```
+
+```{r generate-charts-optimistic, include=FALSE}
+rmarkdown::render("_scen_pt1.Rmd")
+```
+
+### Příjmy {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "prijmy"
+```
+
+#### Typy obcí
+
+```{r opt-prijem-typ-bar, include=T, fig.asp=.4}
+plot_load("typ-bar")
+```
+
+```{r opt-prijem-typ-fillbar, include=T, fig.asp=.4}
+plot_load("typ-fillbar")
+```
+
+```{r opt-prijmy-typy, include=T}
+plot_load("typ-hist")
+```
+
+```{r opt-prijmy-typy-ridge, include=T}
+plot_load("typ-ridge")
+```
+
+#### Kraje
+
+```{r opt-prijem-kraj-bar, include=T, fig.asp=.5}
+plot_load("kraj-bar")
+```
+
+```{r opt-prijem-kraje-hist, include=T}
+plot_load("kraj-hist")
+```
+
+
+```{r opt-prijem-kraje-ridge, include=T}
+plot_load("kraj-ridge")
+```
+
+#### Velikosti obcí
+
+```{r opt-prijem-vel-bar, include=T, fig.asp=.5}
+plot_load("vel-bar")
+```
+
+```{r opt-prijem-vel-hist, include=T}
+plot_load("vel-hist")
+```
+
+#### Celkem
+
+```{r opt-prijmy-celkem}
+iscn %>% 
+  filter(scenario %in% scto, per_yr == 2020) %>% 
+  count(per_yr, scenario, wt = rozp_p_celkem, name = "outcome") %>%
+  spread(scenario, outcome) %>% 
+  mutate_at(vars(matches("^R[1-3]")), ~.-R0) %>% 
+  # select(-R0) %>% 
+  gather("scenario", "value", -per_yr, -R0)
+```
+
+### Bilance rozpočtů {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "bilance"
+```
+
+#### Typy obcí
+
+```{r opt-bil-typ-bar, include=T, fig.asp=0.4}
+plot_load("typ-bar")
+```
+
+```{r opt-bil-typ-hist, include=T}
+plot_load("typ-hist")
+```
+
+#### Kraje
+
+```{r opt-bil-kraj-bar, include=T, fig.asp = .5}
+plot_load("kraj-bar")
+```
+
+```{r opt-bil-kraj-hist, include=T}
+plot_load("kraj-hist")
+```
+
+#### Velikost obcí
+
+```{r opt-bil-vel-bar, include=T, fig.asp=0.5}
+plot_load("vel-bar")
+```
+
+#### Celkem
+
+
+
 ## **Realistický** {.tabset}
 
 ```{r scen-subsets}
 scto <- c(sc_real_mid, sc_base) 
 scta <- c(sc_real, sc_base) 
+
+rud_drop_perc <- "20 %"
+scen_stub <- "real"
 ```
-
-
-### Příjmy {.tabset .tabset-pills .tabset-fade}
 
 ```{r num-rud}
 rud <- sum(indik_2019$rozp_p_rud/1e9)
 rud_share <- rud/sum(indik_2019$rozp_p_celkem/1e9)
 ```
 
+```{r generate-charts-realistic, include=FALSE}
+rmarkdown::render("_scen_pt1.Rmd")
+```
+
+### Příjmy {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "prijmy"
+```
+
 #### Typy obcí
 
-```{r diff-fun}
-scen_diffs_abs <- function(data, scens, var, grpvar) {
-  dto <- data %>% 
-    filter(scenario %in% {{scens}}, per_yr == 2020) %>% 
-    select(ico, orgs_ucjed_nazev, scenario, {{grpvar}},
-           per_yr, {{var}}) %>% 
-    spread(scenario, {{var}}) %>% 
-    select(orgs_ucjed_nazev, R0, matches("^R[1-3]"),
-           grp = {{grpvar}}) %>% 
-    mutate_at(vars(matches("^R[1-3]")),
-              list(abs = ~.-R0, rel = ~(.-R0)/R0)) %>% 
-    pivot_longer(cols = matches("abs$|rel$")) %>%
-    select(-matches("^R[1-3]")) %>%
-    filter(TRUE)
-  
-  # print(length(scens))
-  
-  scen_sim <- scens[str_detect(scens, "^R[1-3]")]
-  
-  if(length(scen_sim) == 1) {
-    dto <- dto %>%
-      mutate(scenario = scen_sim) %>%
-      rename(change_type = name)
-  } else {
-    dto <- dto %>%
-      separate(name, into = c("scenario", "change_type"),
-               sep = "_")
-  }
-}
 
-iscn_p_typ <- scen_diffs_abs(iscn, scto, rozp_p_celkem, typobce)
+```{r prijem-typ-bar, include=T, fig.asp=.4}
+plot_load("typ-bar")
 ```
 
 
-```{r r20-prijem-typ-bar, include=T, fig.asp=.4}
-iscn_p_typ %>% 
-  filter(change_type == "rel") %>%
-  group_by(grp) %>% 
-  summarise(value = mean(value)) %>% 
-  ggplot() +
-  geom_col(aes(-value, grp)) +
-  theme_ptrr(multiplot = F, gridlines = "x") +
-  # scale_y_percent_cz() +
-  scale_x_percent_cz(expand = flush_axis) +
-  labs(title = "Průměrný pokled obecních příjmů podle typu obce",
-       subtitle = "Scénář: pokles RUD o 20 %")
+```{r prijem-typ-fillbar, include=T, fig.asp=.4}
+plot_load("typ-fillbar")
+```
+
+```{r real-prijmy-typy, include=T}
+plot_load("typ-hist")
 ```
 
 
-```{r r20-prijem-typ-fillbar, include=T, fig.asp=.4}
-iscn_p_typ %>% 
-  filter(change_type == "rel") %>%
-  mutate(value_grp = cut2(-value, cuts = seq(0, 0.2, .05),
-                          formatfun = label_percent_cz(1)) %>% 
-           fct_rev()) %>% 
-  ggplot() +
-  geom_bar(aes(x = grp, fill = value_grp), position = "fill",
-           colour = NA) +
-  theme_ptrr(multiplot = F, gridlines = "y", legend.position = "bottom") +
-  coord_flip() +
-  scale_fill_brewer(direction = -1, palette = "Blues") +
-  guides(fill = guide_legend(title = NULL, reverse = T)) +
-  scale_y_percent_cz(expand = flush_axis) +
-  labs(title = "Obce podle míry poklesu příjmů")
-```
-
-```{r prijmy-typy, include=T}
-iscn_p_typ %>% 
-  filter(change_type == "rel") %>%
-  mutate(value_grp = cut_interval(value, length = .05)) %>% 
-  ggplot() +
-  geom_histogram(aes(value, y = stat(width * density)),
-                 fill = "darkblue") +
-  facet_wrap(~grp) +
-  theme_ptrr(multiplot = T, gridlines = "both") +
-  scale_y_percent_cz() +
-  scale_x_percent_cz() +
-  labs(title = "Rozdělení obcí podle poklesu příjmů",
-       subtitle = "Scénář: pokles RUD o 20 %")
+```{r real-prijmy-typy-ridge, include=T}
+plot_load("typ-ridge")
 ```
 
 
 #### Kraje
 
-```{r prijmy-kraje-data}
-iscn_p_kraj <- scen_diffs_abs(iscn, scto, rozp_p_celkem, kraj_short)
+```{r real-prijem-kraj-bar, include=T, fig.asp=.5}
+plot_load("kraj-bar")
 ```
 
-
-```{r r20-prijem-kraj-bar, include=T, fig.asp=.5}
-iscn_p_kraj %>% 
-  filter(change_type == "rel") %>%
-  group_by(grp) %>% 
-  summarise(value = mean(value)) %>% 
-  ggplot() +
-  geom_col(aes(-value, grp %>% fct_reorder(-value))) +
-  theme_ptrr(multiplot = F, gridlines = "x") +
-  # scale_y_percent_cz() +
-  scale_x_percent_cz(expand = flush_axis) +
-  labs(title = "Průměrný pokles obecních příjmů podle kraje",
-       subtitle = "Scénář: pokles RUD o 20 %")
+```{r real-prijem-kraje-hist, include=T}
+plot_load("kraj-hist")
 ```
 
-```{r r20-prijem-kraje-hist, include=T}
-iscn_p_kraj %>% 
-  filter(change_type == "rel",
-         grp != "Praha") %>%
-  mutate(value_grp = cut_interval(value, length = .05),
-         grp = fct_reorder(grp, value, "mean")) %>% 
-  ggplot() +
-  geom_histogram(aes(value, y = stat(width * density)),
-                 fill = "darkblue") +
-  facet_wrap(~grp) +
-  theme_ptrr(multiplot = T, gridlines = "both") +
-  scale_y_percent_cz() +
-  scale_x_percent_cz() +
-  labs(title = "Rozdělení obcí podle poklesu příjmů",
-       subtitle = "Podle krajů; scénář: pokles RUD o 20 %")
+```{r real-prijem-kraje-ridge, include=T}
+plot_load("kraj-ridge")
 ```
-
-
 
 #### Velikosti obcí
 
-```{r prijmy-vel-data}
+```{r real-prijmy-vel-data}
 iscn_p_vel <- scen_diffs_abs(iscn, scto, rozp_p_celkem, katobyv_nazev)
 ```
 
-```{r r20-prijem-vel-bar, include=T, fig.asp=.5}
-iscn_p_vel %>% 
-  filter(change_type == "rel") %>%
-  group_by(grp) %>% 
-  summarise(value = mean(value)) %>% 
-  ggplot() +
-  geom_col(aes(-value, grp)) +
-  theme_ptrr(multiplot = F, gridlines = "x") +
-  # scale_y_percent_cz() +
-  scale_x_percent_cz(expand = flush_axis) +
-  labs(title = "Průměrný pokles obecních příjmů podle počtu obyvatel",
-       subtitle = "Scénář: pokles RUD o 20 %")
+```{r real-prijem-vel-bar, include=T, fig.asp=.5}
+plot_load("vel-bar")
 ```
 
-```{r r20-prijem-vel-hist, include=T}
-iscn_p_vel %>% 
-  filter(change_type == "rel",
-         grp != "nad 1 000 000") %>%
-  mutate(value_grp = cut_interval(value, length = .05)) %>% 
-  ggplot() +
-  geom_histogram(aes(value, y = stat(width * density)),
-                 fill = "darkblue") +
-  facet_wrap(~grp) +
-  theme_ptrr(multiplot = T, gridlines = "both") +
-  scale_y_percent_cz() +
-  scale_x_percent_cz() +
-  labs(title = "Rozdělení obcí podle poklesu příjmů",
-       subtitle = "Scénář: pokles RUD o 20 %")
-
+```{r real-prijem-vel-hist, include=T}
+plot_load("vel-hist")
 ```
 
 #### Celkem
 
-```{r prijmy-celkem}
+
+### Bilance rozpočtů {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "bilance"
+```
+
+#### Typy obcí
+
+```{r real-bil-typ-bar, include=T, fig.asp=0.4}
+plot_load("typ-bar")
+```
+
+```{r real-bil-typ-hist, include=T}
+plot_load("typ-hist")
+```
+
+#### Kraje
+
+```{r real-bil-kraj-bar, include=T, fig.asp = .5}
+plot_load("kraj-bar")
+```
+
+```{r real-bil-kraj-hist, include=T}
+plot_load("kraj-hist")
+```
+
+#### Velikost obcí
+
+```{r real-bil-vel-bar, include=T, fig.asp=0.5}
+plot_load("vel-bar")
+```
+
+#### Celkem
+
+
+
+### Zadluženost a rozpočtová odpovědnost {.tabset .tabset-pills .tabset-fade}
+
+
+
+### Stav finančních rezerv {.tabset .tabset-pills .tabset-fade}
+
+
+## Pesimistický {.tabset}
+
+```{r pes-scen-subsets-pesimistic}
+scto <- c(sc_pes, sc_base) 
+rud_drop_perc <- "30 %"
+scen_stub <- "pes"
+```
+
+```{r pes-generate-charts-pessimistic, include=FALSE}
+rmarkdown::render("_scen_pt1.Rmd")
+```
+
+### Příjmy {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "prijmy"
+```
+
+#### Typy obcí
+
+```{r pes-prijem-typ-bar, include=T, fig.asp=.4}
+plot_load("typ-bar")
+```
+
+
+```{r pes-prijem-typ-fillbar, include=T, fig.asp=.4}
+plot_load("typ-fillbar")
+```
+
+```{r pes-prijmy-typy, include=T}
+plot_load("typ-hist")
+```
+
+
+```{r pes-prijmy-typy-ridge, include=T}
+plot_load("typ-ridge")
+```
+
+#### Kraje
+
+```{r pes-prijmy-kraje-data}
+iscn_p_kraj <- scen_diffs_abs(iscn, scto, rozp_p_celkem, kraj_short)
+```
+
+
+```{r pes-prijem-kraj-bar, include=T, fig.asp=.5}
+plot_load("kraj-bar")
+```
+
+```{r pes-prijem-kraje-hist, include=T}
+plot_load("kraj-hist")
+```
+
+
+```{r pes-prijem-kraje-ridge, include=T}
+plot_load("kraj-ridge")
+```
+
+#### Velikosti obcí
+
+```{r pes-prijmy-vel-data}
+iscn_p_vel <- scen_diffs_abs(iscn, scto, rozp_p_celkem, katobyv_nazev)
+```
+
+```{r pes-prijem-vel-bar, include=T, fig.asp=.5}
+plot_load("vel-bar")
+```
+
+```{r pes-prijem-vel-hist, include=T}
+plot_load("vel-hist")
+```
+
+#### Celkem
+
+```{r pes-prijmy-celkem}
 iscn %>% 
   filter(scenario %in% scto, per_yr == 2020) %>% 
   count(per_yr, scenario, wt = rozp_p_celkem, name = "outcome") %>%
@@ -315,7 +457,11 @@ iscn %>%
 
 ### Bilance rozpočtů {.tabset .tabset-pills .tabset-fade}
 
-```{r bilance-diff}
+```{r}
+outcome_stub <- "bilance"
+```
+
+```{r pes-bilance-diff}
 iscn_bil_diffs <- iscn %>% 
   filter(scenario %in% scto) %>% 
   left_join(iscn %>% 
@@ -327,149 +473,39 @@ iscn_bil_diffs <- iscn %>%
          bilance_diff = bilance_base,
          was_negative = bilance_rel_base < 0,
          is_negative = bilance_rel < 0,
-         newly_negative = !was_negative & is_negative)
+         newly_negative = !was_negative & is_negative) %>% 
+  filter(!(scenario %in% c("R", "R0")))
+
 ```
 
 #### Typy obcí
 
-```{r r20-bil-typ-bar, include=T, fig.asp=0.4}
-iscn_bil_diffs %>% 
-  ungroup() %>% 
-  mutate(grp = typobce) %>% 
-  count(grp, wt = sum(newly_negative)/n()) %>% 
-  mutate(var = "Obce, které spadnou do deficitu ve scénáři 2020") %>% 
-  bind_rows(iscn_bil_diffs %>% 
-              mutate(grp = typobce) %>% 
-              ungroup() %>% 
-              count(grp, wt = sum(was_negative)/n()) %>% 
-              mutate(var = "Obce, které měly deficit v roce 2019")) %>% 
-  ggplot(aes(n, grp %>% fct_reorder(n), fill = var %>% 
-               fct_rev())) +
-  geom_col() +
-  scale_x_percent_cz() +
-  scale_fill_manual(values = c("Obce, které měly deficit v roce 2019" = "grey", 
-                                "Obce, které spadnou do deficitu ve scénáři 2020" = "darkblue"), 
-                     name = NULL) +
-  guides(fill = guide_legend(reverse = T)) +
-  theme_ptrr("x", legend.position = "bottom") +
-  labs(title = "Podíl obcí, které se propadnou do deficitu",
-       subtitle = "Podle typu obce, scénář poklesu RUD o 20 %")
+```{r pes-bil-typ-bar, include=T, fig.asp=0.4}
+plot_load("typ-bar")
 ```
 
+```{r}
+```
 
-```{r r20-bil-typ-hist, include=T}
-iscn %>% 
-  filter(scenario %in% scto, per_yr == 2020) %>% 
-  filter(bilance_rel < 1) %>%
-  mutate(scenario = recode(scenario, 
-                           R0 = "2019", "R20-D0-mix" = "Scénář 2020")) %>% 
-  ggplot(aes(bilance_rel)) +
-  # geom_histogram(aes(fill = scenario, y = stat(width * density),
-  #                    alpha = scenario), colour = NA, position = "identity") +
-  geom_density(aes(fill = scenario, alpha = scenario), colour = NA) +
-  scale_fill_manual(values = c(`2019` = "grey", 
-                               `Scénář 2020` = "darkblue"), name = NULL) +
-  geom_vline(xintercept = 0) +
-  scale_alpha_manual(values = c(`2019` = 1, `Scénář 2020` = 0.6), name = NULL) +
-  facet_wrap(~typobce) +
-  scale_x_percent_cz() +
-  # scale_y_percent_cz() +
-  theme_ptrr(multiplot = T, gridlines = "both", legend.position = "bottom") +
-  labs(title = "Rozložení bilance obcí, 2019 a scénář 2020", 
-       subtitle = "Scénář 2020 = 20 % pokles RUD.\nObce s bilancí nad +100 % vynechány")
+```{r pes-bil-typ-hist, include=T}
+plot_load("typ-hist")
 ```
 
 #### Kraje
 
-
-```{r r20-bil-kraj-bar, include=T, fig.asp = .5}
-iscn_bil_diffs %>% 
-  ungroup() %>% 
-  mutate(grp = kraj_short) %>% 
-  count(grp, wt = sum(newly_negative)/n()) %>% 
-  mutate(var = "Obce, které se propadnou do deficitu ve scénáři 2020") %>% 
-  bind_rows(iscn_bil_diffs %>% 
-              mutate(grp = kraj_short) %>% 
-              ungroup() %>% 
-              count(grp, wt = sum(was_negative)/n()) %>% 
-              mutate(var = "Obce, které měly deficit v roce 2019")) %>% 
-  ggplot(aes(n, grp %>% fct_reorder(n),
-             fill = var %>% fct_rev())) +
-  geom_col() +
-  scale_x_percent_cz(expand = flush_axis) +
-  scale_fill_manual(values = c("Obce, které měly deficit v roce 2019" = "grey", 
-                                "Obce, které se propadnou do deficitu ve scénáři 2020" = "darkblue"), 
-                     name = NULL) +
-  guides(fill = guide_legend(reverse = T)) +
-  theme_ptrr("x") +
-  theme(legend.position = "bottom") +
-  labs(title = "Podíl obcí s deficitním rozpočtem, 2019 a scénář 2020",
-       subtitle = "Podle kraje, scénář poklesu RUD o 20 %")
+```{r pes-bil-kraj-bar, include=T, fig.asp = .5}
+plot_load("kraj-bar")
 ```
 
-```{r r20-bil-kraj-hist, include=T}
-iscn %>% 
-  filter(scenario %in% scto, per_yr == 2020) %>% 
-  filter(kraj_short != "Praha", bilance_rel < 1) %>% 
-  mutate(scenario = recode(scenario, R0 = "2019", 
-                           "R20-D0-mix" = "Scénář 2020")) %>% 
-  ggplot(aes(bilance_rel)) +
-  # geom_histogram(aes(fill = scenario, y = stat(width * density),
-  #                    alpha = scenario), colour = NA, position = "identity") +
-  geom_density(aes(fill = scenario, alpha = scenario), colour = NA) +
-  scale_fill_manual(values = c(`2019` = "grey", 
-                               `Scénář 2020` = "darkblue"), name = NULL) +
-  geom_vline(xintercept = 0) +
-  scale_alpha_manual(values = c(`2019` = 1, `Scénář 2020` = 0.6), name = NULL) +
-  facet_wrap(~kraj_short) +
-  scale_x_percent_cz() +
-  # scale_y_percent_cz() +
-  theme_ptrr(multiplot = T, gridlines = "both", legend.position = "bottom") +
-  labs(title = "Rozložení bilance obcí, 2019 a scénář 2020", 
-       subtitle = "Scénář 2020 = 20 % pokles RUD.\nObce s bilancí nad +100 % vynechány")
+```{r pes-bil-kraj-hist, include=T}
+plot_load("kraj-hist")
 ```
-
-
 
 #### Velikost obcí
 
-```{r r20-bil-vel-bar, include=T, fig.asp=0.5}
-iscn_bil_diffs %>% 
-  ungroup() %>% 
-  mutate(grp = katobyv_nazev) %>% 
-  count(grp, wt = sum(newly_negative)/n()) %>% 
-  mutate(var = "Obce, které se propadnou do deficitu ve scénáři 2020") %>% 
-  bind_rows(iscn_bil_diffs %>% 
-              mutate(grp = katobyv_nazev) %>% 
-              ungroup() %>% 
-              count(grp, wt = sum(was_negative)/n()) %>% 
-              mutate(var = "Obce, které měly deficit v roce 2019")) %>% 
-  ggplot(aes(n, grp, fill = var %>% fct_rev())) +
-  geom_col() +
-  scale_x_percent_cz(expand = flush_axis) +
-  scale_fill_manual(values = c("Obce, které měly deficit v roce 2019" = "grey", 
-                               "Obce, které se propadnou do deficitu ve scénáři 2020" = "darkblue"), 
-                     name = NULL) +
-  guides(fill = guide_legend(reverse = T)) +
-  theme_ptrr("x") +
-  theme(legend.position = "bottom") +
-  labs(title = "Podíl obcí s deficitním rozpočtem, 2019 a scénář 2020",
-       subtitle = "Podle počtu obyvatel, scénář poklesu RUD o 20 %")
+```{r pes-bil-vel-bar, include=T, fig.asp=0.5}
+plot_load("vel-bar")
 ```
 
 #### Celkem
 
-### Zadluženost a rozpočtová odpovědnost {.tabset .tabset-pills .tabset-fade}
-
-
-
-### Stav finančních rezerv {.tabset .tabset-pills .tabset-fade}
-
-
-## Optimistický
-
-## Pesimistický
-
-### OLD
-
-Pokud by příjmy z rozpočtového určení daní klesly v roce 2020 o 10 %, zvednul by se počet obcí s deficitním rozpočtem, a tedy s vyššími výdaji než příjmy o 9,6 p.b. oproti roku 2019, resp. by tento podíl narostl o třetinu (z 1697 obcí v roce 2019 na 2296 obcí v roce 2020). V případě poklesu o 20 % nebo 30 % by se počet těchto obcí zvýšil o 20 %, resp. 30 %. 
