@@ -183,7 +183,7 @@ indikatory %>%
   ungroup() %>%
   # count(scenario, per_yr, wt = (bilance < 0)/n()) %>%
   count(scenario, per_yr, wt = (bilance < 0 & abs(bilance) > kratkodoby_fin_majetek)/n()) %>%
-  spread(per_yr, n) %>% View()
+  spread(per_yr, n)
 
 indikatory %>%
   filter(per_yr %in% 2019:2022) %>%
