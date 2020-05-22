@@ -88,9 +88,13 @@ indik_scenarios <- indik_base %>%
          cash_drain_to_sum = if_else(per_yr > 2019 & bilance < 0,
                                      abs(bilance) * (1 - borrowing_ratio),
                                      0),
-         kratkodoby_fin_majetek = if_else(kratkodoby_fin_majetek - cumsum(cash_drain_to_sum) < 0,
+         cash_drain_cum = cumsum(cash_drain_to_sum),
+         kratkodoby_fin_majetek = if_else(kratkodoby_fin_majetek - cash_drain_cum < 0,
                                           0,
-                                          kratkodoby_fin_majetek - cumsum(cash_drain_to_sum)))
+                                          kratkodoby_fin_majetek - cash_drain_cum),
+         financing_shortfall = if_else(kratkodoby_fin_majetek < cash_drain_cum,
+                                       kratkodoby_fin_majetek - cash_drain_cum,
+                                       0))
 
 indik_for_calc <- bind_rows(indik_base %>%
                               mutate(scenario = "R",
