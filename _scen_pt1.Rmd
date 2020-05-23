@@ -54,7 +54,7 @@ iscn_p_typ %>%
   theme_ptrr(multiplot = F, gridlines = "x") +
   # scale_y_percent_cz() +
   scale_x_percent_cz(expand = flush_axis) +
-  labs(title = "Průměrný pokled obecních příjmů podle typu obce",
+  labs(title = "Průměrný pokles obecních příjmů podle typu obce",
        subtitle = str_glue("Scénář: pokles RUD o {rud_drop_perc}"))
 
 
