@@ -1,5 +1,5 @@
 ---
-title: "index"
+title: "Technická dokumentace"
 author: "Petr Bouchal"
 date: "4/8/2020"
 output: html_document
