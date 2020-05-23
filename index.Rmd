@@ -1,5 +1,5 @@
 ---
-title: "Shrnutí a rozcestník"
+title: "Rozpočty obcí a měst v krizi: stav a scénáře"
 output:
   html_document:
     toc: no
@@ -8,15 +8,72 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 source("shared.R")
+
+library(fontawesome)
 ```
 
 [Word dokument ke komentování](index.docx)
 
-#### Pracovní verze {.bs-callout .bs-callout-red} 
-
-###
-
+#### `r fa("exclamation-triangle", fill = "#d9534f")` Pracovní verze {.bs-callout .bs-callout-red} 
 
 
 Naposledy aktualizováno `r format(Sys.time(), "%d. %B %Y, %H:%M")`
 
+# {.tabset}
+
+## Co a proč
+
+#### Motivace
+
+Stávající situace přináší - ať už skrz opatření vlády nebo změnu chování obyvatel - výrazný pokles příjmů veřejných rozpočtů. To se týká i rozpočtů obcí a měst. Dosavadní veřejná a politická debata o nich se zpravidla omezuje na vyčíslení celkového úbytku daňových příjmů obcí, někdy ve srovnání s celkovými rezervami obcí. 
+
+Obce ale nejsou monolit a na různé skupiny obcí dopadne úbytek příjmů jinak. Všechny obce čelí stejnému propadu svých příjmů z rozpočtového určení daní, ale každá z nich je na něj různě dobře připravena.
+
+#### Stav a scénáře
+
+Proto využíváme dostupných detailních dat o hospodaření obcí a na jejich základě 
+
+- analyzujeme [stav před krizí](stav.html) v roce 2019
+- ukazujeme [pravděpodobné dopady krize](scenare.html) v roce 2020 na rozpočty obcí a měst.
+
+Zaměřujeme se na pokles příjmů z rozpočtového určení daní a ve třech různých scénářích ukazujeme, jak se promítne mj. do
+
+- deficitu rozpočtů
+- míry zadlužení
+- výše rezerv jednotlivých obcí
+
+Ukazujeme, jak se dopady krize liší mezi obcemi a jejich skupinami; například středně velká města měly již před krizí často deficitní rozpočty a malé rezervy.
+
+## Shrnutí poznatků
+
+#### `r fa("tools", fill = "#f0ad4e")` V přípravě {.bs-callout .bs-callout-orange} 
+
+<!-- #### Stav před krizí  -->
+
+<!-- -	Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo 58 % všech příjmů obcí a v součtu 209 miliard Kč.  -->
+<!-- -	Výdaje obcí se dělí na běžné (74 %, 268 miliard Kč) a kapitálové (26 %, 92 miliard Kč). -->
+<!-- -	Deficitní rozpočet mělo 27 % obcí (průměrný deficit u nich byl 16 %, deficit v součtu 11 mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek u nich 7 % a v součtu 28 mld. korun. -->
+<!-- -	Nenulový dluh mělo 42 % obcí (u nich dosahoval dluh v průměru 35 % příjmů) a v součtu tento dluh činil 64 miliard Kč.  -->
+<!-- -	Mediánová obec měla rezervy odpovídající 72 % svých ročních příjmů; v součtu tyto rezervy činí 208 miliard Kč (34 % těchto rezerv připadá na Prahu a dalších 12 % na krajská města). Obce zároveň měly 49 miliard krátkodobých závazků. -->
+<!-- -	Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazujeme v grafech. -->
+
+<!-- Shrnutí výsledků: Dopady krize (2020) -->
+
+<!-- -	Ukazujeme, že v případě stejných výdajů jako v roce 2019 a realistického scénáře poklesu příjmů obcí z RUD o 20 % by došlo k průměrnému poklesu celkových příjmů o * %, nárůstu deficitně hospodařících obcí o * %, dluh by narostl o * % bez čerpání rezerv a o * v případě, že by se nejdříve čerpaly rezervy, které by tak poklesly o * %. -->
+
+
+## Co kde hledat
+
+- v části [Stav před krizí (2020)](stav.html) popisujeme, jak 
+
+#
+
+----
+
+### Autoři
+
+Petr Bouchal (http://byrokrates.cz/) a Petr Janský (http://petrjansky.cz/) jsou autory „Rozpočty obcí a měst v krizi“. Výsledky jsou připraveny na základě datových souborů státní pokladny Ministerstva financí, které zpracoval Petr Bouchal.
+
+### Poděkování
+
+Autoři děkují Jakubovi Černému za pomoc s přípravou dat a průzkumem fungování příjmů obcí. Autoři děkují Jaromíru Baxovi a Danuši Nerudové za komentáře na dřívější verzi. Děkujeme Ministerstvu financí za poskytnutí dat (prostřednictvím https://monitor.statnipokladna.cz/).
