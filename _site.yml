@@ -1,7 +1,7 @@
 name: Rozpočty obcí a měst v krizi
 output_dir: docs
 include: []
-exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh"]
+exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh", "charts-storage"]
 navbar:
   title: "Rozpočty obcí a měst v krizi"
   left:
