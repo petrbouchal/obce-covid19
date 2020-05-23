@@ -1,5 +1,5 @@
 ---
-title: "Scénáře dopadu krize na finance obcí a měst"
+title: "Rozpočty obcí a měst: dopady krize (2020)"
 output:
   html_document:
     toc: no
