@@ -1,33 +1,37 @@
 ---
 title: "Poznámky a zdroje"
 output:
-  word_document: default
-  html_document: default
+  html_document:
+    toc: no
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, include = T)
+library(fontawesome)
 ```
 
 [Word dokument ke komentování](notes.docx)
 
+#### `r fa("tools", fill = "#f0ad4e")` V přípravě {.bs-callout .bs-callout-orange}
 
-Blah `r 3 * 4`
+## Metodologie
 
-```{r}
-3 * 4
-```
+#### `r fa("tools", fill = "#f0ad4e")` V přípravě {.bs-callout .bs-callout-orange}
 
-TO DO
+## Zdroje
 
-### Odkazy na (skryté) pracovní dokumenty {.bs-callout .bs-callout-grey}
+#### `r fa("tools", fill = "#f0ad4e")` V přípravě {.bs-callout .bs-callout-orange}
+
+##
+
+#### Odkazy na pracovní výstupy (neodkazované v menu ani jinde) {.bs-callout .bs-callout-grey}
 
 - [Náhledy scénářů](scenare-nahledy.html)
 - [Kontrola součtů pro náhodnou obec](nahodna-obec.html)
 - [Závislost obcí na RUD](podily-prijmy.html)
 - [Bilance rozpočtů obcí](prijmy-vydaje.html)
 
-### Dočasný sklad jinde neodkázaných zdrojů
+#### Dočasný sklad jinde neodkázaných zdrojů
 
 
 - https://www.mfcr.cz/cs/legislativa/legislativni-dokumenty/2019/vyhlaska-c-219-2019-sb-36077
