@@ -11,6 +11,6 @@ source("7a_calculate-tax-drop.R")
 source("8_calculate-indicators.R")
 source("9_calculate-scenarios.R")
 
-rmarkdown::render_site()
 source("build_word.R")
+rmarkdown::render_site()
 
