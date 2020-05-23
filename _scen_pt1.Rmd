@@ -110,7 +110,7 @@ grp_hist  <- function(data, reorder = FALSE, type = "histogram") {
   } else if (type == "ridge") {
       plt +    
       geom_density_ridges(aes(x = value, y = grp), alpha = .6,
-                   fill = "darkblue", colour = NA)
+                   fill = "darkblue", colour = "black")
   }
 }
 ```
