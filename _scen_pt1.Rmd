@@ -264,7 +264,7 @@ impact_bar <- function(data, grpvar) {
                 ungroup() %>% 
                 count(grp, wt = sum(was_negative)/n()) %>% 
                 mutate(var = "Obce, které měly deficit v roce 2019")) %>% 
-    ggplot(aes(n, grp %>% fct_reorder(n), fill = var %>% 
+    ggplot(aes(n, grp, fill = var %>% 
                  fct_rev())) +
     geom_col() +
     scale_x_percent_cz() +
