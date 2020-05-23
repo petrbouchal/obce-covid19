@@ -2,13 +2,6 @@
 output: html_document
 ---
 
-### Příjmy {.tabset .tabset-pills .tabset-fade}
-
-```{r}
-outcome_stub <- "prijmy"
-```
-
-#### Typy obcí
 
 ```{r diff-fun}
 scen_diffs_abs <- function(data, scens, var, grpvar) {
@@ -39,10 +32,22 @@ scen_diffs_abs <- function(data, scens, var, grpvar) {
                sep = "_")
   }
 }
-
-iscn_p_typ <- scen_diffs_abs(iscn, scto, rozp_p_celkem, typobce)
 ```
 
+
+
+
+### Příjmy {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "prijmy"
+```
+
+```{r diff-fun}
+iscn_p_typ <- scen_diffs_abs(iscn, scto, rozp_p_celkem, typobce_wrapped)
+```
+
+#### Typy obcí
 
 ```{r prijem-typ-bar, include=T, fig.asp=.4}
 iscn_p_typ %>% 
