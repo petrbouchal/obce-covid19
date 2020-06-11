@@ -247,7 +247,7 @@ iscn_bil_diffs <- iscn %>%
               rename(bilance_rel_base = bilance_rel,
                      bilance_base = bilance)) %>% 
   mutate(bilance_rel_diff = bilance_rel - bilance_rel_base,
-         bilance_diff = bilance_base,
+         bilance_diff = bilance - bilance_base,
          was_negative = bilance_rel_base < 0,
          is_negative = bilance_rel < 0,
          newly_negative = !was_negative & is_negative) %>% 
@@ -258,13 +258,13 @@ iscn_bil_diffs <- iscn %>%
 #### Typy obcí
 
 ```{r bil-bar-fn, include=T, fig.asp=0.4}
-impact_bar <- function(data, grpvar) {
+bil_impact_bar <- function(data, grpvar) {
   data %>% 
     ungroup() %>% 
     mutate(grp = {{grpvar}}) %>% 
     count(grp, wt = sum(newly_negative)/n()) %>% 
     mutate(var = "Obce, které spadnou do deficitu ve scénáři 2020") %>% 
-    bind_rows(iscn_bil_diffs %>% 
+    bind_rows(data %>% 
                 mutate(grp = {{grpvar}}) %>% 
                 ungroup() %>% 
                 count(grp, wt = sum(was_negative)/n()) %>% 
@@ -283,17 +283,13 @@ impact_bar <- function(data, grpvar) {
 
 
 ```{r bil-typ-bar, include=T, fig.asp=0.4}
-impact_bar(iscn_bil_diffs, typobce_wrapped) +
+bil_impact_bar(iscn_bil_diffs, typobce_wrapped) +
   labs(title = "Podíl obcí, které se propadnou do deficitu",
        subtitle = str_glue("Podle typu obce, scénář poklesu RUD o {rud_drop_perc}"))
 
 plot_save(last_plot(), "typ-bar")
 plot_load("typ-bar")
 ```
-
-```{r}
-```
-
 
 ```{r bilance-density-fn, include=T}
 shady_bil_density <- function(data, scens, facet_var) {
@@ -319,11 +315,11 @@ shady_bil_density <- function(data, scens, facet_var) {
 
 
 ```{r bil-typ-hist, include=T}
-shady_bil_density(iscn, scto, typobce_wrapped) +
+bth <- shady_bil_density(iscn, scto, typobce_wrapped) +
   labs(title = "Rozložení bilance obcí, 2019 a scénář 2020", 
        subtitle = str_glue("Scénář 2020 = {rud_drop_perc} pokles RUD.\nObce s bilancí nad +100 % vynechány"))
 
-plot_save(last_plot(), "typ-hist")
+plot_save(bth, "typ-hist")
 plot_load("typ-hist")
 ```
 
@@ -331,7 +327,7 @@ plot_load("typ-hist")
 
 
 ```{r bil-kraj-bar, include=T, fig.asp = .5}
-impact_bar(iscn_bil_diffs, kraj_short) +
+bil_impact_bar(iscn_bil_diffs, kraj_short) +
   labs(title = "Podíl obcí, které se propadnou do deficitu",
        subtitle = str_glue("Podle kraje, scénář poklesu RUD o {rud_drop_perc}"))
 
@@ -351,14 +347,18 @@ plot_load("kraj-hist")
 #### Velikost obcí
 
 ```{r bil-vel-bar, include=T, fig.asp=0.5}
-impact_bar(iscn_bil_diffs, katobyv_nazev) +
+bvb <- bil_impact_bar(iscn_bil_diffs, katobyv_nazev) +
   labs(title = "Podíl obcí, které se propadnou do deficitu",
        subtitle = str_glue("Podle velikosti obce, scénář poklesu RUD o {rud_drop_perc}"))
 
-plot_save(last_plot(), "vel-bar")
+plot_save(bvb, "vel-bar")
 plot_load("vel-bar")
 ```
 
 #### Celkem
+
+```{r}
+rm(outcome_stub)
+```
 
 

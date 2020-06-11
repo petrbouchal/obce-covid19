@@ -46,8 +46,14 @@ sc_real <- c("R20-D0-debt",
              "R20-D0-res",
              "R20-D0-mix")
 sc_real_mid <- "R20-D0-mix"
-sc_opt <- c("R10-D0-mix")
-sc_pes <- c("R30-D0-mix")
+sc_opt <- c("R10-D0-mix",
+            "R10-D0-res",
+            "R10-D0-mix")
+sc_opt_mid <- "R10-D0-mix"
+sc_pes <- c("R30-D0-mix",
+            "R30-D0-res",
+            "R30-D0-mix")
+sc_pes_mid <- "R30-D0-mix"
 
 sc_base <- c("R0", "R")
 
@@ -135,7 +141,9 @@ U těchto indikátorů nás zajímají
 ## Optimistický {.tabset}
 
 ```{r scen-subsets-optimistic}
-scto <- c(sc_opt, sc_base) 
+scto <- c(sc_opt_mid, sc_base) 
+scta <- c(sc_opt, sc_base) 
+
 rud_drop_perc <- "10 %"
 scen_stub <- "opt"
 ```
@@ -205,6 +213,7 @@ iscn %>%
   gather("scenario", "value", -per_yr, -R0)
 ```
 
+
 ### Bilance rozpočtů {.tabset .tabset-pills .tabset-fade}
 
 ```{r}
@@ -241,6 +250,80 @@ plot_load("vel-bar")
 
 
 
+
+### Stav finančních rezerv {.tabset .tabset-pills .tabset-fade}
+
+```{r generate-charts-optimistic-2, include=FALSE}
+rmarkdown::render("_scen_pt2.Rmd")
+```
+
+```{r}
+outcome_stub <- "rezervy"
+```
+
+#### Typ obce
+
+```{r opt-res-typ-bar-nula, include=T, fig.asp=.5}
+plot_load("typ-bar-nula")
+```
+
+```{r opt-res-typ-bar-bankrot, include=T, fig.asp=.5}
+plot_load("typ-bar-bankrot")
+```
+
+#### Kraje
+
+```{r opt-res-kraj-bar-nula, include=T, fig.asp=.5}
+plot_load("kraj-bar-nula")
+```
+
+```{r opt-res-kraj-bar-bankrot, include=T, fig.asp=.5}
+plot_load("kraj-bar-bankrot")
+```
+
+#### Velikost obcí
+
+```{r opt-res-vel-bar-nula, include=T, fig.asp=.5}
+plot_load("vel-bar-nula")
+```
+
+```{r opt-res-vel-bar-bankrot, include=T, fig.asp=.5}
+plot_load("vel-bar-bankrot")
+```
+
+#### Celkem
+
+
+
+
+### Zadluženost {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "dluh"
+```
+
+#### Typ obce
+
+```{r opt-dluh-typ-bar, include=T, fig.asp=.5}
+plot_load("typ-bar-breach")
+```
+
+#### Kraje
+
+```{r opt-dluh-kraj-bar, include=T, fig.asp=.5}
+plot_load("kraj-bar-breach")
+```
+
+#### Velikost obcí
+
+```{r opt-dluh-vel-bar, include=T, fig.asp=.5}
+plot_load("vel-bar-breach")
+```
+
+#### Celkem
+
+
+
 ## **Realistický** {.tabset}
 
 ```{r scen-subsets}
@@ -269,12 +352,12 @@ outcome_stub <- "prijmy"
 #### Typy obcí
 
 
-```{r prijem-typ-bar, include=T, fig.asp=.4}
+```{r real-prijem-typ-bar, include=T, fig.asp=.4}
 plot_load("typ-bar")
 ```
 
 
-```{r prijem-typ-fillbar, include=T, fig.asp=.4}
+```{r real-prijem-typ-fillbar, include=T, fig.asp=.4}
 plot_load("typ-fillbar")
 ```
 
@@ -355,17 +438,81 @@ plot_load("vel-bar")
 
 
 
-### Zadluženost a rozpočtová odpovědnost {.tabset .tabset-pills .tabset-fade}
-
-
-
 ### Stav finančních rezerv {.tabset .tabset-pills .tabset-fade}
 
+```{r generate-charts-realistic-2, include=FALSE}
+rmarkdown::render("_scen_pt2.Rmd")
+```
+
+```{r}
+outcome_stub <- "rezervy"
+```
+
+#### Typ obce
+
+```{r real-res-typ-bar-nula, include=T, fig.asp=.5}
+plot_load("typ-bar-nula")
+```
+
+```{r real-res-typ-bar-bankrot, include=T, fig.asp=.5}
+plot_load("typ-bar-bankrot")
+```
+
+#### Kraje
+
+```{r real-res-kraj-bar-nula, include=T, fig.asp=.5}
+plot_load("kraj-bar-nula")
+```
+
+```{r real-res-kraj-bar-bankrot, include=T, fig.asp=.5}
+plot_load("kraj-bar-bankrot")
+```
+
+#### Velikost obcí
+
+```{r real-res-vel-bar-nula, include=T, fig.asp=.5}
+plot_load("vel-bar-nula")
+```
+
+```{r real-res-vel-bar-bankrot, include=T, fig.asp=.5}
+plot_load("vel-bar-bankrot")
+```
+
+#### Celkem
+
+
+
+### Zadluženost {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "dluh"
+```
+
+#### Typ obce
+
+```{r real-dluh-typ-bar, include=T, fig.asp=.5}
+plot_load("typ-bar-breach")
+```
+
+#### Kraje
+
+```{r real-dluh-kraj-bar, include=T, fig.asp=.5}
+plot_load("kraj-bar-breach")
+```
+
+#### Velikost obcí
+
+```{r real-dluh-vel-bar, include=T, fig.asp=.5}
+plot_load("vel-bar-breach")
+```
+
+#### Celkem
 
 ## Pesimistický {.tabset}
 
 ```{r pes-scen-subsets-pesimistic}
-scto <- c(sc_pes, sc_base) 
+scta <- c(sc_pes, sc_base) 
+scto <- c(sc_pes_mid, sc_base) 
 rud_drop_perc <- "30 %"
 scen_stub <- "pes"
 ```
@@ -502,3 +649,72 @@ plot_load("vel-bar")
 
 #### Celkem
 
+### Stav finančních rezerv {.tabset .tabset-pills .tabset-fade}
+
+```{r generate-charts-pessimistic-2, include=FALSE}
+rmarkdown::render("_scen_pt2.Rmd")
+```
+
+```{r}
+outcome_stub <- "rezervy"
+```
+
+#### Typ obce
+
+```{r pes-res-typ-bar-nula, include=T, fig.asp=.5}
+plot_load("typ-bar-nula")
+```
+
+```{r pes-res-typ-bar-bankrot, include=T, fig.asp=.5}
+plot_load("typ-bar-bankrot")
+```
+
+#### Kraje
+
+```{r pes-res-kraj-bar-nula, include=T, fig.asp=.5}
+plot_load("kraj-bar-nula")
+```
+
+```{r pes-res-kraj-bar-bankrot, include=T, fig.asp=.5}
+plot_load("kraj-bar-bankrot")
+```
+
+#### Velikost obcí
+
+```{r pes-res-vel-bar-nula, include=T, fig.asp=.5}
+plot_load("vel-bar-nula")
+```
+
+```{r pes-res-vel-bar-bankrot, include=T, fig.asp=.5}
+plot_load("vel-bar-bankrot")
+```
+
+#### Celkem
+
+
+
+### Zadluženost {.tabset .tabset-pills .tabset-fade}
+
+```{r}
+outcome_stub <- "dluh"
+```
+
+#### Typ obce
+
+```{r pes-dluh-typ-bar, include=T, fig.asp=.5}
+plot_load("typ-bar-breach")
+```
+
+#### Kraje
+
+```{r pes-dluh-kraj-bar, include=T, fig.asp=.5}
+plot_load("kraj-bar-breach")
+```
+
+#### Velikost obcí
+
+```{r pes-dluh-vel-bar, include=T, fig.asp=.5}
+plot_load("vel-bar-breach")
+```
+
+#### Celkem
