@@ -144,7 +144,15 @@ indikatory <- indik_for_calc %>%
          scenario_name = fct_reorder(scenario_name, as.numeric(factor(scenario)))) %>%
   # reorder columns for better manual inspection
   select(per_yr, scenario, ico, orgs_ucjed_nazev, rozp_p_celkem, rozp_v_celkem,
-         bilance, saldo_cum, dluh, rozp_odp, everything())
+         bilance, saldo_cum, dluh, rozp_odp, everything()) %>%
+  mutate(typobce = as.factor(typobce) %>%
+           fct_relevel(c("Krajská města a Praha",
+                         "S rozšířenou působností",
+                         "S pověřeným obecním úřadem",
+                         "Běžná obec")),
+         kraj_short = fct_relabel(kraj,
+                                  ~str_remove(.x, "\\s?Kraj\\s?")) %>%
+           fct_recode(`Praha` = "Hlavní Město Praha"))
 
 indikatory %>%
   count(scenario, per_yr) %>%
