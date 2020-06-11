@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE,
 Sys.setlocale(locale = "cs_CZ.UTF-8")
 
 library(tidyverse)
+library(ptrr)
+library(ggridges)
 ```
 
 ```{r shared}
@@ -226,6 +228,77 @@ indik_2019 %>%
   coord_flip()
 ```
 
+```{r}
+indik_2019_res <- indik_2019 %>% 
+  mutate(rezerva_to_spend = kratkodoby_fin_majetek/rozp_v_celkem,
+         rezerva_to_zavazky = kratkodoby_fin_majetek/kratkodobe_zavazky)
+```
+
+```{r}
+indik_2019_res %>% 
+  count(typobce, wt = (rezerva_to_zavazky < 0)/n())
+```
+
+
+```{r}
+indik_2019_res %>% 
+  group_by(grp = typobce) %>% 
+  summarise(podil = mean(rezerva_to_zavazky < 1, na.rm = T), pocet = n()) %>%
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
+  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  geom_col() +
+  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  theme_ptrr("x") +
+  scale_x_percent_cz(expand = flush_axis)
+```
+
+```{r}
+indik_2019_res %>% 
+  group_by(grp = typobce) %>% 
+  summarise(podil = mean(rezerva_to_spend < .15, na.rm = T), pocet = n()) %>%
+  mutate(ci_hi = podil + 1.96 * sqrt(podil * (1-podil)/pocet),
+         ci_lo = pmax(0, podil - 1.96 * sqrt(podil * (1-podil)/pocet))) %>% 
+  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  geom_col() +
+  geom_linerange(aes(xmin = ci_lo, xmax = ci_hi),
+                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  theme_ptrr("x") +
+  scale_x_percent_cz(expand = flush_axis)
+```
+
+
+```{r}
+indik_2019_res %>% 
+  filter(rezerva_to_spend < 5) %>% 
+  filter(rezerva_to_zavazky < 50) %>% 
+  ggplot(aes(rezerva_to_spend, rezerva_to_zavazky)) +
+  geom_point(alpha = 0.1) +
+  facet_grid(~typobce)
+```
+
+
+```{r}
+indik_2019_res %>% 
+  filter(rezerva_to_zavazky < 5) %>%
+  ggplot(aes()) +
+  geom_density_ridges(aes(rezerva_to_spend, y = typobce), 
+                      fill = "darkblue", alpha = 1, colour = "white") +
+  geom_vline(xintercept = .15, colour = "red") +
+  theme_ptrr("x")
+```
+```{r}
+indik_2019_res %>% 
+  filter(rezerva_to_zavazky < 5) %>%
+  ggplot(aes()) +
+  # geom_density_ridges(aes(rezerva_to_zavazky, y = typobce)) +
+  geom_histogram(aes(rezerva_to_zavazky, y = stat(density * width))) +
+  facet_wrap(~typobce) +
+  geom_vline(xintercept = 1) +
+  scale_x_percent_cz(n.breaks = 6) +
+  scale_y_percent_cz() +
+  theme_ptrr("x")
+```
 
 
 ##
