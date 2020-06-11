@@ -62,10 +62,6 @@ Ukazujeme, jak se dopady krize liší mezi obcemi a jejich skupinami; napříkla
 <!-- -	Ukazujeme, že v případě stejných výdajů jako v roce 2019 a realistického scénáře poklesu příjmů obcí z RUD o 20 % by došlo k průměrnému poklesu celkových příjmů o * %, nárůstu deficitně hospodařících obcí o * %, dluh by narostl o * % bez čerpání rezerv a o * v případě, že by se nejdříve čerpaly rezervy, které by tak poklesly o * %. -->
 
 
-## Co kde hledat
-
-- v části [Stav před krizí (2020)](stav.html) popisujeme, jak 
-
 #
 
 ----
