@@ -37,7 +37,11 @@ orp <- CzechData::load_RUIAN_state("orp") %>% pull(spr_ob_kod)
 pou <- CzechData::load_RUIAN_state("pou") %>% pull(spr_ob_kod)
 krajska_mesta <- czso::czso_get_table(dataset_id = "130149") %>%
   filter(rok==2018) %>%
-  filter(is.na(pohlavi_kod), vuzemi_txt %in% c("Brno", "České Budějovice", "Hradec Králové", "Jihlava", "Karlovy Vary", "Liberec", "Olomouc", "Ostrava", "Pardubice", "Plzeň", "Praha",  "Ústí nad Labem",  "Zlín")) %>%
+  filter(is.na(pohlavi_kod),
+         vuzemi_txt %in% c("Brno", "České Budějovice", "Hradec Králové",
+                           "Jihlava", "Karlovy Vary", "Liberec", "Olomouc",
+                           "Ostrava", "Pardubice", "Plzeň", "Praha",
+                           "Ústí nad Labem",  "Zlín")) %>%
   mutate(vuzemi_kod = as.character(vuzemi_kod)) %>%
   pull(vuzemi_kod)
 
