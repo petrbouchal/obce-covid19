@@ -112,8 +112,10 @@ Realistický scénář v podobně snížení rozpočtového určení daní o 20 
 
 Také představujeme pesimistický scénář s poklesem o 30 % vzhledem k nejistotám spojeným s vývojem COVID-19 i ekonomiky. 
 
-Dále zjednodušeně předpokládáme, že výdaje a ostatní příjmy budou stejné jako v roce 2019.^[To je sice spíše nerealistický předpoklad, protože obce budou výdaje snižovat, ale reálně to zřejmě znamená nižší výdaje, než obce rozpočtovaly na rok 2020.
-Rozpočtové plány obcí na rok 2020 byly zveřejněny teprve velice nedávno, proto jako zástupné hodnoty pro baseline scénář využíváme právě skutečné výdaje z roku 2019. V další verzi výchozí scénář zpřesníme pomocí čerstvějších dat.]
+Dále zjednodušeně předpokládáme, že výdaje a ostatní příjmy budou stejné jako v roce 2019.
+
+(To je sice spíše nerealistický předpoklad, protože obce budou výdaje snižovat, ale reálně to zřejmě znamená nižší výdaje, než obce rozpočtovaly na rok 2020.
+Rozpočtové plány obcí na rok 2020 byly zveřejněny teprve velice nedávno, proto jako zástupné hodnoty pro baseline scénář využíváme právě skutečné výdaje z roku 2019. V další verzi výchozí scénář zpřesníme pomocí čerstvějších dat.)
 
 #### Rozhodování obcí ohledně dluhu a rezerv
 
