@@ -10,7 +10,29 @@ knitr::opts_chunk$set(echo = TRUE)
 source("shared.R")
 
 library(fontawesome)
+library(metathis)
 ```
+
+```{r meta-tags, include=FALSE}
+
+meta() %>%
+  meta_description(
+    "Rozpočty obcí a měst v krizi"
+  ) %>%
+  meta_name("github-repo" = "petrbouchal/obce-covid19") %>%
+  meta_viewport() %>%
+  meta_social(
+    title = "Rozpočty obcí a měst v krizi",
+    url = "https://obce-covid19.netlify.app/",
+    image = "https://obce-covid19.netlify.app/metaimage.png",
+    image_alt = "Náhled grafu změny bilance obcí následkem krize",
+    og_type = "website",
+    og_author = c("Petr Bouchal"),
+    twitter_card_type = "summary_large_image",
+    twitter_creator = "@petrbouchal"
+  )
+```
+
 
 [Word dokument ke komentování](index.docx)
 
