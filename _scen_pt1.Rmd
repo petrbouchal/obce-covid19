@@ -317,7 +317,8 @@ shady_bil_density <- function(data, scens, facet_var) {
 ```{r bil-typ-hist, include=T}
 bth <- shady_bil_density(iscn, scto, typobce_wrapped) +
   labs(title = "Rozložení bilance obcí, 2019 a scénář 2020", 
-       subtitle = str_glue("Scénář 2020 = {rud_drop_perc} pokles RUD.\nObce s bilancí nad +100 % vynechány"))
+       subtitle = str_glue("Scénář 2020 = {rud_drop_perc} pokles RUD."),
+       caption = "Obce s bilancí nad +100 % vynechány")
 
 plot_save(bth, "typ-hist")
 plot_load("typ-hist")
@@ -338,7 +339,8 @@ plot_load("kraj-bar")
 ```{r bil-kraj-hist, include=T}
 shady_bil_density(iscn, scto, kraj_short) +
   labs(title = "Rozložení bilance obcí, 2019 a scénář 2020", 
-       subtitle = str_glue("Scénář 2020 = {rud_drop_perc} pokles RUD.\nObce s bilancí nad +100 % vynechány"))
+       subtitle = str_glue("Scénář 2020 = {rud_drop_perc} pokles RUD."),
+       caption = "Obce s bilancí nad +100 % vynechány")
 
 plot_save(last_plot(), "kraj-hist")
 plot_load("kraj-hist")
