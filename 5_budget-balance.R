@@ -2,7 +2,7 @@ library(tidyverse)
 library(statnipokladna)
 
 source("shared.R")
-budget <- read_rds("data-processed/budgets_druhove_annual.rds")
+budget <- read_parquet("data-processed/budgets_druhove_annual.parquet")
 
 obce_endyear_polozka_cons <- budget %>%
   ungroup() %>%
@@ -25,4 +25,4 @@ obce_bilance <- obce_endyear_polozka_cons %>%
          bilance_rel = bilance/Příjmy,
          katobyv_nazev = fct_reorder(katobyv_nazev, as.numeric(katobyv_id)))
 
-write_rds(obce_bilance, "data-processed/budgets_bilance.rds")
+write_parquet(obce_bilance, "data-processed/budgets_bilance.parquet")

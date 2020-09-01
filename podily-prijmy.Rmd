@@ -13,8 +13,8 @@ library(ptrr)
 ```
 
 ```{r data}
-# budget <- read_rds("data-processed/budgets_druhove_annual.rds")
-budget <- read_rds("data-input/budgets_income_bare.rds")
+# budget <- read_parquet("data-processed/budgets_druhove_annual.parquet")
+budget <- read_parquet("data-input/budgets_income_bare.parquet")
 ```
 
 ```{r metadata}

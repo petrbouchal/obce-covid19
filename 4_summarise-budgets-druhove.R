@@ -1,8 +1,8 @@
 library(tidyverse)
 library(statnipokladna)
 
-bb <- read_rds("data-input/budgets_all_bare.rds")
-polozka <- read_rds("data-processed/polozka.rds")
+bb <- read_parquet("data-input/budgets_all_bare.parquet")
+polozka <- read_parquet("data-processed/polozka.parquet")
 
 druhove_annual <- bb %>%
   filter(per_m == "12") %>%
@@ -11,15 +11,15 @@ druhove_annual <- bb %>%
 
 nrow(druhove_annual)
 
-write_rds(druhove_annual,
-          "data-processed/budgets_druhove_annual.rds", compress = "gz")
-write_rds(druhove_annual %>%
+write_parquet(druhove_annual,
+          "data-processed/budgets_druhove_annual.parquet")
+write_parquet(druhove_annual %>%
             filter(vtab == "000100"),
-          "data-processed/budgets_druhove_prijmy_annual.rds",
+          "data-processed/budgets_druhove_prijmy_annual.parquet",
           compress = "gz")
-write_rds(druhove_annual %>%
+write_parquet(druhove_annual %>%
             filter(vtab == "000200"),
-          "data-processed/budgets_druhove_vydaje_annual.rds",
+          "data-processed/budgets_druhove_vydaje_annual.parquet",
           compress = "gz")
 rm("druhove_annual")
 
@@ -28,20 +28,20 @@ druhove <- bb %>%
   summarise_at(vars(starts_with("budget_")), sum, na.rm = T)
 
 nrow(druhove)
-write_rds(druhove, "data-processed/budgets_druhove.rds", compress = "gz")
-write_rds(druhove %>%
+write_parquet(druhove, "data-processed/budgets_druhove.parquet")
+write_parquet(druhove %>%
             filter(vtab == "000100"),
-          "data-processed/budgets_druhove_prijmy.rds",
+          "data-processed/budgets_druhove_prijmy.parquet",
           compress = "gz")
-write_rds(druhove %>%
+write_parquet(druhove %>%
             filter(vtab == "000200"),
-          "data-processed/budgets_druhove_vydaje.rds",
+          "data-processed/budgets_druhove_vydaje.parquet",
           compress = "gz")
 
 
 # Capital x current spend -------------------------------------------------
 
-b_v <- read_rds("data-processed/budgets_druhove_vydaje_annual.rds")
+b_v <- read_parquet("data-processed/budgets_druhove_vydaje_annual.parquet")
 
 table(b_v$ico %in% ico_obce)
 
@@ -89,5 +89,5 @@ nrow(spend_trida %>% filter(is.na(rozp_v_kap)))
 nrow(spend_trida %>% filter(is.na(rozp_v_kap_share)))
 nrow(spend_trida %>% filter(is.na(rozp_v_bezne)))
 
-write_rds(spend_trida, "data-processed/budgets_capital.rds")
+write_parquet(spend_trida, "data-processed/budgets_capital.parquet")
 

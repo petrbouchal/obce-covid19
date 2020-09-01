@@ -5,10 +5,10 @@ source("shared.R")
 
 # Load data ---------------------------------------------------------------
 
-rozvaha <- read_rds("data-processed/rozvaha.rds") %>%
+rozvaha <- read_parquet("data-processed/rozvaha.parquet") %>%
   ungroup() %>%
   mutate(per_yr = as.numeric(per_yr))
-rozp <- read_rds("data-processed/budget_for_scenarios.rds") %>%
+rozp <- read_parquet("data-processed/budget_for_scenarios.parquet") %>%
   ungroup() %>%
   mutate(per_yr = as.numeric(per_yr))
 
@@ -53,4 +53,4 @@ indik_base <- rozp %>%
   left_join(dluh) %>%
   ungroup()
 
-write_rds(indik_base, "data-processed/indikatory.rds")
+write_parquet(indik_base, "data-processed/indikatory.parquet")

@@ -3,7 +3,7 @@ library(statnipokladna)
 
 source("shared.R")
 
-orgs <- read_rds("data-processed/orgs_selected.rds")
+orgs <- read_parquet("data-processed/orgs_selected.parquet")
 
 rzv <- sp_get_table("balance-sheet", 2019) %>%
   bind_rows(sp_get_table("balance-sheet-2", 2019))

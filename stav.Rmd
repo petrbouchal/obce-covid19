@@ -22,7 +22,7 @@ source("shared.R")
 
 
 ```{r load-data}
-indikatory <- read_rds("data-processed/scenare_vysledky.rds")
+indikatory <- read_parquet("data-processed/scenare_vysledky.parquet")
 indik_2019 <- indikatory %>% 
   filter(per_yr == 2019)
 ```

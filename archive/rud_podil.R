@@ -1,9 +1,9 @@
 library(tidyverse)
 library(statnipokladna)
 
-budgets <- read_rds("data-input/budgets_all_bare.rds")
-polozka <- read_rds("data-processed/polozka.rds")
-orgs <- read_rds("data-input/orgs.rds") %>%
+budgets <- read_parquet("data-input/budgets_all_bare.parquet")
+polozka <- read_parquet("data-processed/polozka.parquet")
+orgs <- read_parquet("data-input/orgs.parquet") %>%
   select(ico, start_date, end_date, ucjed_nazev, obec, nuts_id, katobyv_id,
          pocob, kod_pou, kod_rp, zuj, typorg_id, kraj, druhuj_id, druhuj_nazev)
 katobyv <- sp_get_codelist("katobyv")

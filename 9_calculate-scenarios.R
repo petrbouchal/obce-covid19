@@ -5,7 +5,7 @@ library(dplyr)
 library(forcats)
 library(stringr)
 
-indik_base <- read_rds("data-processed/indikatory.rds")
+indik_base <- read_parquet("data-processed/indikatory.parquet")
 
 # Set scenarios -----------------------------------------------------------
 
@@ -53,8 +53,8 @@ scenarios_by_year <- crossing(per_yr = scenario_years, scenarios) %>%
 # podíl cizích zdrojů: pokud se zvyšuje i dluh, zvyušují se i cizí zdroje
 
 
-write_rds(scenarios, "data-processed/scenarios.rds")
-write_rds(scenarios_by_year, "data-processed/scenarios_by_year.rds")
+write_parquet(scenarios, "data-processed/scenarios.parquet")
+write_parquet(scenarios_by_year, "data-processed/scenarios_by_year.parquet")
 
 # Project -----------------------------------------------------------------
 
@@ -164,7 +164,7 @@ indikatory %>%
 
 names(indikatory)
 
-write_rds(indikatory, "data-processed/scenare_vysledky.rds")
+write_parquet(indikatory, "data-processed/scenare_vysledky.parquet")
 
 # Check -------------------------------------------------------------------
 

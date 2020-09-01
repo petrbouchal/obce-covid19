@@ -4,14 +4,14 @@ library(statnipokladna)
 source("shared.R")
 
 # this file created in 5_budget-balance.R
-spending <- read_rds("data-processed/budgets_bilance.rds") %>%
+spending <- read_parquet("data-processed/budgets_bilance.parquet") %>%
   select(rozp_v_celkem = Výdaje, ico, per_yr)
 
-spending_capital <- read_rds("data-processed/budgets_capital.rds")
+spending_capital <- read_parquet("data-processed/budgets_capital.parquet")
 
 spending %>% count(per_yr)
 
-income00 <- read_rds("data-processed/budgets_druhove_prijmy_annual.rds")
+income00 <- read_parquet("data-processed/budgets_druhove_prijmy_annual.parquet")
 
 # income00 %>% group_by(per_yr) %>% n_distinct(ico)
 
@@ -57,4 +57,4 @@ rozp <- income %>%
 
 rozp %>% ungroup() %>% count(per_yr)
 
-write_rds(rozp, "data-processed/budget_for_scenarios.rds")
+write_parquet(rozp, "data-processed/budget_for_scenarios.parquet")

@@ -1,5 +1,6 @@
 library(statnipokladna)
 library(readr)
+library(arrow)
 
 
 # kody polozek prijmu z dani rozdelovanych pres RUD
@@ -19,13 +20,13 @@ rozvaha_keep <- c("AKTIVA","A.","A.I.","A.II.","A.III.","A.IV.","B.",
 # org metadata
 
 ico_obce <- read_rds("data-processed/ico_obce.rds")
-orgs <- read_rds("data-processed/orgs_selected_obce.rds")
+orgs <- read_parquet("data-processed/orgs_selected_obce.parquet")
 katobyv <- sp_get_codelist("katobyv", dest_dir = "data-input")
 nuts <- sp_get_codelist("nuts", dest_dir = "data-input")
-obce_typy <- read_rds("data-processed/obce_typy.rds")
+obce_typy <- read_parquet("data-processed/obce_typy.parquet")
 
 # budgeting codelist
-polozka <- read_rds("data-processed/polozka.rds")
+polozka <- read_parquet("data-processed/polozka.parquet")
 
 add_obce_meta <- function(data) {
   data$period_vykaz <- lubridate::make_date(data$per_yr, "12", "31")

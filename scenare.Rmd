@@ -36,9 +36,9 @@ ggplot2::update_geom_defaults(geom = "line",
 
 
 ```{r data-load}
-indikatory <- read_rds("data-processed/scenare_vysledky.rds")
-scenarios <- read_rds("data-processed/scenarios.rds")
-scenarios_by_year <- read_rds("data-processed/scenarios_by_year.rds")
+indikatory <- read_parquet("data-processed/scenare_vysledky.parquet")
+scenarios <- read_parquet("data-processed/scenarios.parquet")
+scenarios_by_year <- read_parquet("data-processed/scenarios_by_year.parquet")
 ```
 
 ```{r scens}

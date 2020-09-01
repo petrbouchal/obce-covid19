@@ -4,9 +4,9 @@ library(statnipokladna)
 source("shared.R")
 options(scipen = 100)
 
-prijmy <- read_rds("data-processed/budgets_druhove_prijmy_annual.rds") %>%
+prijmy <- read_parquet("data-processed/budgets_druhove_prijmy_annual.parquet") %>%
   filter(per_yr == "2019")
-prijmy_indikatory <- read_rds("data-processed/budget_for_scenarios.rds") %>%
+prijmy_indikatory <- read_parquet("data-processed/budget_for_scenarios.parquet") %>%
   filter(per_yr == 2019)
 
 prijmy_indikatory %>%

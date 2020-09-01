@@ -43,4 +43,4 @@ propady %>%
   select(sektor, drop_pct, hdp_drop) %>%
   spread(sektor, drop_pct)
 
-write_rds(propady, "data-input/gdp-to-tax.rds")
+write_parquet(propady, "data-input/gdp-to-tax.parquet")

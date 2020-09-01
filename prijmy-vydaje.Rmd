@@ -14,7 +14,7 @@ library(ptrr)
 
 ```{r data}
 # created in 5_budget-balance.R
-obce_bilance <- read_rds("data-processed/budgets_bilance.rds")
+obce_bilance <- read_parquet("data-processed/budgets_bilance.parquet")
 ```
 
 ```{r metadata}
@@ -45,6 +45,6 @@ obce_bilance %>%
 ```
 
 ```{r}
-write_rds(obce_bilance, "data-processed/budgets_bilance.rds")
+write_parquet(obce_bilance, "data-processed/budgets_bilance.parquet")
 ```
 

@@ -38,5 +38,5 @@ rozvaha_processed <- bind_rows(rozvaha_1_processed, rozvaha_2_processed) %>%
 rozvaha_processed_unfiltered <- bind_rows(rozvaha_1_processed, rozvaha_2_processed) %>%
   sp_add_codelist("katobyv")
 
-write_rds(rozvaha_processed, "data-processed/rozvaha_filtered.rds", compress = "gz")
-write_rds(rozvaha_processed_unfiltered, "data-processed/rozvaha.rds", compress = "gz")
+write_parquet(rozvaha_processed, "data-processed/rozvaha_filtered.parquet")
+write_parquet(rozvaha_processed_unfiltered, "data-processed/rozvaha.parquet")
