@@ -105,4 +105,12 @@ Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalšíc
 
 Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné.
 
+# Metodologie
+
+blah blah
+
+[@bouchal2020]
+
+[@rcoreteam2020]
+
 # Bibliografie
