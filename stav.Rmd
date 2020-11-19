@@ -108,7 +108,7 @@ Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalšíc
 Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné.
 
 ```{r top-cash}
-indik_2019 %>% 
+indik_slctyr %>% 
   mutate(var_perc = kratkodoby_fin_majetek/sum(kratkodoby_fin_majetek, na.rm = T)) %>%
   mutate(pocob = as.numeric(pocob), rnk = rank(desc(pocob))) %>% 
   ungroup() %>% 
@@ -119,7 +119,7 @@ indik_2019 %>%
 
 
 ```{r, fig.height=2}
-indik_2019 %>% 
+indik_slctyr %>% 
   group_by(grp = typobce) %>% 
   summarise(var = sum(kratkodoby_fin_majetek, na.rm = T)) %>% 
   ungroup() %>% 
@@ -130,19 +130,19 @@ indik_2019 %>%
 ```
 
 ```{r}
-indik_2019_res <- indik_2019 %>% 
+indik_slctyr_res <- indik_slctyr %>% 
   mutate(rezerva_to_spend = kratkodoby_fin_majetek/rozp_v_celkem,
          rezerva_to_zavazky = kratkodoby_fin_majetek/kratkodobe_zavazky)
 ```
 
 ```{r}
-indik_2019_res %>% 
+indik_slctyr_res %>% 
   count(typobce, wt = (rezerva_to_zavazky < 1)/n())
 ```
 
 
 ```{r}
-indik_2019_res %>% 
+indik_slctyr_res %>% 
   group_by(grp = typobce) %>% 
   summarise(podil = mean(rezerva_to_zavazky < 1, na.rm = T), pocet = n()) %>%
   mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
@@ -155,7 +155,7 @@ indik_2019_res %>%
 ```
 
 ```{r}
-indik_2019_res %>% 
+indik_slctyr_res %>% 
   group_by(grp = typobce) %>% 
   summarise(podil = mean(rezerva_to_spend < .15, na.rm = T), pocet = n()) %>%
   mutate(ci_hi = podil + 1.96 * sqrt(podil * (1-podil)/pocet),
@@ -170,7 +170,7 @@ indik_2019_res %>%
 
 
 ```{r}
-indik_2019_res %>% 
+indik_slctyr_res %>% 
   filter(rezerva_to_spend < 5) %>% 
   filter(rezerva_to_zavazky < 50) %>% 
   ggplot(aes(rezerva_to_spend, rezerva_to_zavazky)) +
@@ -180,7 +180,7 @@ indik_2019_res %>%
 
 
 ```{r}
-indik_2019_res %>% 
+indik_slctyr_res %>% 
   filter(rezerva_to_zavazky < 5) %>%
   ggplot(aes()) +
   geom_density_ridges(aes(rezerva_to_spend, y = typobce), 
@@ -188,8 +188,9 @@ indik_2019_res %>%
   geom_vline(xintercept = .15, colour = "red") +
   theme_ptrr("x")
 ```
+
 ```{r}
-indik_2019_res %>% 
+indik_slctyr_res %>% 
   filter(rezerva_to_zavazky < 5) %>%
   ggplot(aes()) +
   # geom_density_ridges(aes(rezerva_to_zavazky, y = typobce)) +
