@@ -74,3 +74,32 @@ dluh_pos_mean <- indik_2019 %>%
 dluh_pos_mean_last4 <- indik_2019 %>%
   filter(dluh > 0) %>%
   summarise(n = mean(rozp_odp, na.rm = T)) %>% pull()
+
+rez <- sum(indik_2019$kratkodoby_fin_majetek/1e9, na.rm = T)
+
+rez_to_spend_mean <- indik_2019 %>%
+  mutate(share = kratkodoby_fin_majetek/rozp_p_celkem) %>%
+  summarise(m = mean(share, na.rm = T)) %>% pull()
+
+rez_to_spend_median <- indik_2019 %>%
+  mutate(share = kratkodoby_fin_majetek/rozp_p_celkem) %>%
+  summarise(m = median(share, na.rm = T)) %>% pull()
+
+rez_10pc_spend <- indik_2019 %>%
+  count(wt = (kratkodoby_fin_majetek > rozp_v_celkem * 0.1)/n()) %>% pull()
+
+rez_2xkap <- indik_2019 %>%
+  count(wt = (kratkodoby_fin_majetek > rozp_v_kap * 2)/n()) %>% pull()
+
+rez_pha <- indik_2019 %>%
+  filter(ico == "00064581") %>% pull(kratkodoby_fin_majetek) %>% {./1e9}
+
+rez_krajska <- indik_2019 %>%
+  filter(ico != "00064581" & typobce == "Krajská města a Praha") %>%
+  count(wt = kratkodoby_fin_majetek/1e9) %>%
+  pull()
+
+rez_pha_share <- rez_pha/rez
+rez_krajska_share <- rez_krajska/rez
+
+kzav <- sum(indik_2019$kratkodobe_zavazky/1e9, na.rm = T)

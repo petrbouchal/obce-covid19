@@ -4,6 +4,8 @@ output:
   html_document:
     toc: no
 always_allow_html: true
+params:
+  rok: 2019
 ---
 
 ```{r setup, include=FALSE}
@@ -35,6 +37,9 @@ meta() %>%
   ) %>% 
   include_meta() 
 ```
+
+```{r}
+source("cisla_report_stav.R")
 ```
 
 
