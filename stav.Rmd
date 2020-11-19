@@ -3,6 +3,7 @@ title: "Stav obecních financí v roce 2019"
 output: html_document
 params:
   rok: 2019
+  scen: "real"
 ---
 
 ```{r setup, include=FALSE}

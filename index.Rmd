@@ -6,6 +6,7 @@ output:
 always_allow_html: true
 params:
   rok: 2019
+  scen: "real"
 ---
 
 ```{r setup, include=FALSE}
@@ -94,7 +95,7 @@ Ukazujeme, jak se dopady krize liší mezi obcemi a jejich skupinami; napříkla
 - dopad se liší napříč velikostními a typovými skupinami obcí. Už jen dopad na celkové příjmy se liší podle typu obce. (Různé obce závisí na daňových příjmech do různé míry.)
 
 ```{r, include=TRUE, fig.asp=0.4}
-scen_stub <- "real"
+scen_stub <- params$scen
 outcome_stub <- "prijmy"
 plot_load("typ-bar")
 ```
