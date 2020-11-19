@@ -14,3 +14,4 @@ source("9_calculate-scenarios.R")
 source("build_word.R")
 rmarkdown::render_site()
 
+rmarkdown::render("studie-idea.Rmd", output_format = rmarkdown::word_document())

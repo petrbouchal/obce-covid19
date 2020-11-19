@@ -1,0 +1,18 @@
+---
+title: "Studie IDEA"
+subtitle: "Podtitul"
+author: "Petr Bouchal a Petr Janský"
+date: "listopad 2020"
+output: word_document
+params:
+  rok: 2018
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r load-numbers}
+source("cisla_report_stav.R")
+```
+
