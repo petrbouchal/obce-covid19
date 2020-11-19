@@ -1,6 +1,7 @@
 library(statnipokladna)
 library(readr)
 library(arrow)
+library(dplyr)
 
 
 # kody polozek prijmu z dani rozdelovanych pres RUD
@@ -21,8 +22,9 @@ rozvaha_keep <- c("AKTIVA","A.","A.I.","A.II.","A.III.","A.IV.","B.",
 
 ico_obce <- read_rds("data-processed/ico_obce.rds")
 orgs <- read_parquet("data-processed/orgs_selected_obce.parquet")
-katobyv <- sp_get_codelist("katobyv", dest_dir = "data-input")
-nuts <- sp_get_codelist("nuts", dest_dir = "data-input")
+katobyv <- sp_get_codelist("katobyv", dest_dir = "data-input/sp/") %>%
+  rename(katobyv_nazev = nazev)
+nuts <- sp_get_codelist("nuts", dest_dir = "data-input/sp/")
 obce_typy <- read_parquet("data-processed/obce_typy.parquet")
 
 # budgeting codelist
