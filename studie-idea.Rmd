@@ -26,3 +26,77 @@ source("shared.R")
 source("cisla_report_stav.R")
 ```
 
+## Příjmy a výdaje
+
+### Příjmy
+
+Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
+
+#### Rozpočtové určení daní (RUD) {.bs-callout .bs-callout-blue}
+
+Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týká se daně z příjmu fyzických i právnických osob a DPH. Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní.
+
+### Výdaje
+
+Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_total)` všech výdajů; v součtu šlo o `r nm(spend - kap)` miliard Kč. Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
+
+
+```{r}
+indik_slctyr %>% 
+  count(typobce, wt = (bilance < 0)/n())
+```
+
+```{r}
+indik_slctyr %>% 
+  count(katobyv_nazev, wt = (bilance < 0)/n())
+```
+
+```{r}
+indik_slctyr %>% 
+  count(kraj, wt = (bilance < 0)/n())
+```
+
+## Bilance rozpočtů
+
+
+Deficitní rozpočet mělo `r bil_neg_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(1 - bil_pos_share)`) obcí. Průměrný deficit u těchto obcí byl `r pc(bil_neg_avg)`, mediánový pak `r pc(bil_neg_median)`.
+
+Celkový deficit obcí s deficitním financováním byl `r nm(bil_neg_sum)` mld. korun.
+
+Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance_sum)` mld. korun. 
+
+## Dluh
+
+Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(dluh_pos_share)`) obcí a v součtu tento dluh činil `r nm(dluh)` miliard Kč. Mezi obcemi s nenulovým dluhem dosahoval dluh v průměru `r pc(dluh_pos_mean)` příjmů (a `r pc(dluh_pos_mean_last4)` průměru příjmů za poslední čtyři roky, tj. 2016-2019).
+
+### Rozpočtová odpovědnost
+
+Ministerstvo financí pro monitorování finančního zdraví obcí používá mimo jiné i indikátor rozpočtové odpovědnosti, vypočtený jako podíl dluhu obce k průměrným příjmům obce za poslední 4 roky. Finance obce jsou považovány za problematické, pokud tento poměr přesáhne 60 %.
+
+V roce 2019 tento práh přesáhlo `r dluh_breach_count` (`r pc(dluh_breach_share)`) obcí.
+
+```{r}
+ggplot(indik_slctyr) +
+  geom_histogram(aes(rozp_odp, y = stat(width * density)), binwidth = .05) +
+  geom_vline(xintercept = .6) +
+  facet_wrap(~typobce)
+```
+
+```{r}
+indik_slctyr %>% 
+  count(typobce, wt = (rozp_odp > .6)/n())
+
+```
+
+```{r}
+indik_slctyr %>% 
+  count(kraj, wt = (rozp_odp > .6)/n())
+```
+
+## Rezervy
+
+Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech.
+
+Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalších `r pc(rez_krajska_share)` připadá na krajská města.
+
+Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné.
