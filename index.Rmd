@@ -90,7 +90,7 @@ Ukazujeme, jak se dopady krize liší mezi obcemi a jejich skupinami; napříkla
 
 ### Autoři
 
-Petr Bouchal (http://byrokrates.cz/) a Petr Janský (http://petrjansky.cz/) jsou autory „Rozpočty obcí a měst v krizi“. Výsledky jsou připraveny na základě datových souborů státní pokladny Ministerstva financí, které zpracoval Petr Bouchal.
+Petr Bouchal (http://petrbouchal.xyz/) a Petr Janský (http://petrjansky.cz/) jsou autory „Rozpočty obcí a měst v krizi“. Výsledky jsou připraveny na základě datových souborů státní pokladny Ministerstva financí, které zpracoval Petr Bouchal.
 
 ### Poděkování
 
