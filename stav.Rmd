@@ -192,7 +192,7 @@ rez_pha <- indik_2019 %>%
   filter(ico == "00064581") %>% pull(kratkodoby_fin_majetek) %>% {./1e9}
 
 rez_krajska <- indik_2019 %>% 
-  filter(ico != "00064581" & typobce == "Krajské město/Praha") %>%
+  filter(ico != "00064581" & typobce == "Krajská města a Praha") %>%
   count(wt = kratkodoby_fin_majetek/1e9) %>% 
   pull()
 
@@ -238,7 +238,7 @@ indik_2019_res <- indik_2019 %>%
 
 ```{r}
 indik_2019_res %>% 
-  count(typobce, wt = (rezerva_to_zavazky < 0)/n())
+  count(typobce, wt = (rezerva_to_zavazky < 1)/n())
 ```
 
 
