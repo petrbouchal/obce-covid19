@@ -1,7 +1,6 @@
 ---
 title: "Stav obecních financí v roce 2019"
-output:
-  html_document: default
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -14,6 +13,7 @@ Sys.setlocale(locale = "cs_CZ.UTF-8")
 library(tidyverse)
 library(ptrr)
 library(ggridges)
+library(fontawesome)
 ```
 
 ```{r shared}
@@ -28,6 +28,8 @@ indik_2019 <- indikatory %>%
 ```
 
 [Word dokument ke komentování](stav.docx)
+
+#### `r fa("exclamation-triangle", fill = "#d9534f")` Pracovní verze {.bs-callout .bs-callout-red} 
 
 ## Příjmy a výdaje
 

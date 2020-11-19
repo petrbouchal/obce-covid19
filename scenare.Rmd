@@ -10,6 +10,7 @@ library(tidyverse)
 library(ptrr)
 library(Hmisc)
 library(ggridges)
+library(fontawesome)
 
 knitr::opts_chunk$set(echo = FALSE, 
                       warning = FALSE,
@@ -87,6 +88,8 @@ plot_load <- function(id) {
 
 
 [Word dokument ke komentování](scenare.docx)
+
+#### `r fa("exclamation-triangle", fill = "#d9534f")` Pracovní verze {.bs-callout .bs-callout-red} 
 
 # {.tabset .tabset-pills}
 
