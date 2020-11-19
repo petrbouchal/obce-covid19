@@ -1,11 +1,24 @@
+
+# This code generates data and one-number objects needed in index.Rmd, stav.Rmd and studie-idea.Rmd
+# Normally it is run from within those docs when they are knitted and will therefore use the `rok` parameter set in the header of those documents
+
 source("shared.R")
 library(tidyverse)
 
+
+# set param if not run from within a parameterised Rmd --------------------
+
 if(is.null(params$rok)) yr_slct <- 2019 else yr_slct <- params$rok
+
+
+# Load data ---------------------------------------------------------------
 
 indikatory <- read_parquet("data-processed/scenare_vysledky.parquet")
 indik_slctyr <- indikatory %>%
   filter(per_yr == yr_slct)
+
+
+# Spending ----------------------------------------------------------------
 
 spend <- sum(indik_slctyr$rozp_p_celkem/1e9)
 rud <- sum(indik_slctyr$rozp_p_rud/1e9)
@@ -22,6 +35,7 @@ kap_share_mean <- mean(indik_slctyr$rozp_v_kap_share, na.rm = T)
 kap_share_total <- kap/spend
 
 
+# Bilance -----------------------------------------------------------------
 
 bilance_sum <- sum(indik_slctyr$bilance/1e9, na.rm = T)
 bilance_avg <- mean(indik_slctyr$bilance_rel, na.rm = T)
@@ -49,6 +63,7 @@ bil_neg_count <- indik_slctyr %>%
   count(wt = bilance < 0) %>% pull()
 
 
+# Dluh --------------------------------------------------------------------
 
 dluh <- sum(indik_slctyr$dluh/1e9, na.rm = T)
 
@@ -74,6 +89,8 @@ dluh_pos_mean <- indik_slctyr %>%
 dluh_pos_mean_last4 <- indik_slctyr %>%
   filter(dluh > 0) %>%
   summarise(n = mean(rozp_odp, na.rm = T)) %>% pull()
+
+# Rezervy -----------------------------------------------------------------
 
 rez <- sum(indik_slctyr$kratkodoby_fin_majetek/1e9, na.rm = T)
 
