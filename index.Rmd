@@ -79,18 +79,45 @@ Ukazujeme, jak se dopady krize liší mezi obcemi a jejich skupinami; napříkla
 
 #### `r fa("tools", fill = "#f0ad4e")` V přípravě {.bs-callout .bs-callout-orange} 
 
-<!-- #### Stav před krizí  -->
+### Stav před krizí
 
-<!-- -	Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo 58 % všech příjmů obcí a v součtu 209 miliard Kč.  -->
-<!-- -	Výdaje obcí se dělí na běžné (74 %, 268 miliard Kč) a kapitálové (26 %, 92 miliard Kč). -->
-<!-- -	Deficitní rozpočet mělo 27 % obcí (průměrný deficit u nich byl 16 %, deficit v součtu 11 mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek u nich 7 % a v součtu 28 mld. korun. -->
-<!-- -	Nenulový dluh mělo 42 % obcí (u nich dosahoval dluh v průměru 35 % příjmů) a v součtu tento dluh činil 64 miliard Kč.  -->
-<!-- -	Mediánová obec měla rezervy odpovídající 72 % svých ročních příjmů; v součtu tyto rezervy činí 208 miliard Kč (34 % těchto rezerv připadá na Prahu a dalších 12 % na krajská města). Obce zároveň měly 49 miliard krátkodobých závazků. -->
-<!-- -	Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazujeme v grafech. -->
+-	Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo 58 % všech příjmů obcí a v součtu 209 miliard Kč.
+-	Výdaje obcí se dělí na běžné (74 %, 268 miliard Kč) a kapitálové (26 %, 92 miliard Kč).
+-	Deficitní rozpočet mělo 27 % obcí (průměrný deficit u nich byl 16 %, deficit v součtu 11 mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek u nich 7 % a v součtu 28 mld. korun.
+-	Nenulový dluh mělo 42 % obcí (u nich dosahoval dluh v průměru 35 % příjmů) a v součtu tento dluh činil 64 miliard Kč.
+-	Mediánová obec měla rezervy odpovídající 72 % svých ročních příjmů; v součtu tyto rezervy činí 208 miliard Kč (34 % těchto rezerv připadá na Prahu a dalších 12 % na krajská města). Obce zároveň měly 49 miliard krátkodobých závazků.
+-	Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazujeme v grafech.
 
-<!-- Shrnutí výsledků: Dopady krize (2020) -->
+### Dopady krize (2020)
 
 <!-- -	Ukazujeme, že v případě stejných výdajů jako v roce 2019 a realistického scénáře poklesu příjmů obcí z RUD o 20 % by došlo k průměrnému poklesu celkových příjmů o * %, nárůstu deficitně hospodařících obcí o * %, dluh by narostl o * % bez čerpání rezerv a o * v případě, že by se nejdříve čerpaly rezervy, které by tak poklesly o * %. -->
+- dopad se liší napříč velikostními a typovými skupinami obcí. Už jen dopad na celkové příjmy se liší podle typu obce. (Různé obce závisí na daňových příjmech do různé míry.)
+
+```{r, include=TRUE, fig.asp=0.4}
+scen_stub <- "real"
+outcome_stub <- "prijmy"
+plot_load("typ-bar")
+```
+- nejvíce ohrožené z hlediska zachování služeb a investic budou obce, které kvůli výpadku příjmů spadnou do deficitu. Často jde o obce, jejichž aktivita je podstatná pro své širší zázemí - centra aglomerací, regionů a mikroregionů.
+
+```{r, include=TRUE, fig.asp=0.4}
+outcome_stub <- "bilance"
+plot_load("typ-bar")
+```
+- některé obce - zvláště malá města - nemají dostatek rezerv, aby udržely plánované výdaje bez zadlužování
+
+```{r, include=TRUE, fig.asp=0.5}
+outcome_stub = "rezervy"
+plot_load("vel-bar-nula")
+```
+
+- při dluhovém financování deficitu by výrazně přibylo obcí překračujících míru zadlužení, za kterou by jim hrozily sankce. I zde jsou nejvíc ohrožena regionální centra.
+
+```{r, include=TRUE, fig.asp=0.5}
+outcome_stub = "dluh"
+plot_load("typ-bar-breach")
+```
+
 
 
 #
