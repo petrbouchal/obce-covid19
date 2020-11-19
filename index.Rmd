@@ -3,14 +3,16 @@ title: "Rozpočty obcí a měst v krizi: stav a scénáře"
 output:
   html_document:
     toc: no
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 source("shared.R")
 
 library(fontawesome)
 library(metathis)
+library(forcats)
 ```
 
 ```{r meta-tags, include=FALSE}
@@ -30,7 +32,9 @@ meta() %>%
     og_author = c("Petr Bouchal"),
     twitter_card_type = "summary_large_image",
     twitter_creator = "@petrbouchal"
-  )
+  ) %>% 
+  include_meta() 
+```
 ```
 
 
