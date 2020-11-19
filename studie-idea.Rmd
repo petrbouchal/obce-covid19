@@ -6,10 +6,20 @@ date: "listopad 2020"
 output: word_document
 params:
   rok: 2018
+  scen: "real"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+
+Sys.setlocale(locale = "cs_CZ.UTF-8")
+
+library(tidyverse)
+library(ptrr)
+```
+
+```{r shared code}
+source("shared.R")
 ```
 
 ```{r load-numbers}
