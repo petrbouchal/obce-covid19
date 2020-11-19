@@ -70,23 +70,6 @@ iscn <- indikatory %>%
   filter(per_yr %in% 2019:2020)
 ```
 
-```{r plot-transfer-fns}
-plot_save <- function(plot, id) {
-  pth <- file.path("charts-storage", 
-                   paste0(scen_stub, "_", outcome_stub, "_", id, ".rds"))
-  message(paste("Saving", pth))
-  write_rds(plot, pth)
-}
-
-plot_load <- function(id) {
-  pth <- file.path("charts-storage", 
-                   paste0(scen_stub, "_", outcome_stub, "_", id, ".rds"))
-  message(paste("Loading", pth))
-  read_rds(pth)
-}
-```
-
-
 [Word dokument ke komentování](scenare.docx)
 
 #### `r fa("exclamation-triangle", fill = "#d9534f")` Pracovní verze {.bs-callout .bs-callout-red} 

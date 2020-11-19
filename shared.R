@@ -58,3 +58,19 @@ pc <- function(x, accuracy = 1) {
 nm <- function(x, accuracy = 1) {
   ptrr::label_number_cz(accuracy = accuracy)(x)
 }
+
+# Plot transfer functions
+
+plot_save <- function(plot, id) {
+  pth <- file.path("charts-storage",
+                   paste0(scen_stub, "_", outcome_stub, "_", id, ".rds"))
+  message(paste("Saving", pth))
+  write_rds(plot, pth)
+}
+
+plot_load <- function(id) {
+  pth <- file.path("charts-storage",
+                   paste0(scen_stub, "_", outcome_stub, "_", id, ".rds"))
+  message(paste("Loading", pth))
+  read_rds(pth)
+}
