@@ -26,4 +26,5 @@ output:
     mathjax: null
     df_print: paged
     includes:
-      in_header: gaheader.html
+      in_header: matomo.html
+always_allow_html: true
