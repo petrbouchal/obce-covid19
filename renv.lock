@@ -304,10 +304,10 @@
     },
     "czso": {
       "Package": "czso",
-      "Version": "0.2.3.9000",
+      "Version": "0.3.2",
       "Source": "Repository",
-      "Repository": null,
-      "Hash": "68b28cfd170e7b639e69831a7e2cc0c2"
+      "Repository": "CRAN",
+      "Hash": "7ffa48a87d813dc81f0f2567128a956b"
     },
     "data.table": {
       "Package": "data.table",
@@ -578,10 +578,10 @@
     },
     "htmltools": {
       "Package": "htmltools",
-      "Version": "0.4.0",
+      "Version": "0.5.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "2d7691222f82f41e93f6d30f169bd5e1"
+      "Hash": "7d651b7131794fe007b1ad6f21aaa401"
     },
     "htmlwidgets": {
       "Package": "htmlwidgets",

@@ -3,7 +3,7 @@ title: "Studie IDEA"
 subtitle: "Podtitul"
 author: "Petr Bouchal a Petr Janský"
 date: "listopad 2020"
-output: word_document
+output: bookdown::word_document2
 bibliography: [bibliography.bib, packages.bib]
 csl: chicago-author-date.csl
 params:
@@ -106,7 +106,9 @@ Finance obce jsou považovány za problematické, pokud tento poměr přesáhne 
 
 V roce 2019 tento práh přesáhlo `r dluh_breach_count` (`r pc(dluh_breach_share)`) obcí.
 
-```{r}
+Jak ukazujeme v \@ref(fig:plt1), je to celý blbost
+
+```{r plt1, fig.cap="blah"}
 ggplot(indik_slctyr) +
   geom_histogram(aes(rozp_odp, y = stat(width * density)), binwidth = .05) +
   geom_vline(xintercept = .6) +
@@ -136,3 +138,9 @@ Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalšíc
 Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. 
 
 Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné.
+
+# Test citací
+
+@bouchal2020 je balík v R
+
+# Bibliografie
