@@ -8,15 +8,22 @@ library(tidyverse)
 
 # set param if not run from within a parameterised Rmd --------------------
 
-if(is.null(params$rok)) yr_slct <- 2019 else yr_slct <- params$rok
+if(!exists("params")) yr_slct <- 2019 else yr_slct <- params$rok
 
 
 # Load data ---------------------------------------------------------------
 
-indikatory <- read_parquet("data-processed/scenare_vysledky.parquet")
-indik_slctyr <- indikatory %>%
-  filter(per_yr == yr_slct)
+indik_file <- here::here("data-processed", "scenare_vysledky.parquet")
 
+if(file.exists(indik_file)) {
+  indikatory <- read_parquet(indik_file)
+  indik_slctyr <- indikatory %>%
+    filter(per_yr == yr_slct)
+  # write_parquet(indik_slctyr, here::here("data-transfer", "indik_slctyr.parquet"))
+} else {
+  indik_slctyr <- read_parquet(here::here("data-transfer", "indik_slctyr.parquet"))
+  if(unique(indik_slctyr$per_yr != yr_slct)) stop("Roky nesedí.")
+}
 
 # Spending ----------------------------------------------------------------
 
