@@ -60,17 +60,17 @@ Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týk
 
 Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_total)` všech výdajů; v součtu šlo o `r nm(spend - kap)` miliard Kč. Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
 
-```{r}
+```{r, eval = F}
 indik_slctyr %>% 
   count(typobce, wt = (bilance < 0)/n())
 ```
 
-```{r}
+```{r, eval = F}
 indik_slctyr %>% 
   count(katobyv_nazev, wt = (bilance < 0)/n())
 ```
 
-```{r}
+```{r, eval = F}
 indik_slctyr %>% 
   count(kraj, wt = (bilance < 0)/n())
 ```
@@ -96,13 +96,13 @@ ggplot(indik_slctyr) +
   facet_wrap(~typobce)
 ```
 
-```{r}
+```{r, eval = F}
 indik_slctyr %>% 
   count(typobce, wt = (rozp_odp > .6)/n())
 
 ```
 
-```{r}
+```{r, eval = F}
 indik_slctyr %>% 
   count(kraj, wt = (rozp_odp > .6)/n())
 ```
