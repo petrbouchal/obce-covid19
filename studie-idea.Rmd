@@ -30,7 +30,7 @@ source("shared.R")
 source("cisla_report_stav.R")
 ```
 
-## Shrnutí výsledků: Stav před krizí (2019)
+# Shrnutí výsledků: Stav před krizí (2019)
 
 
 Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo 58 % všech příjmů obcí a v součtu 209 miliard Kč. 
@@ -51,9 +51,9 @@ Mediánová obec měla rezervy odpovídající 72 % svých ročních příjmů; 
 Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazujeme v grafech.
 
 
-## Příjmy a výdaje
+# Příjmy a výdaje
 
-### Příjmy
+## Příjmy
 
 Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
 
@@ -61,7 +61,7 @@ Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD
 
 Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týká se daně z příjmu fyzických i právnických osob a DPH. Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní.
 
-### Výdaje
+## Výdaje
 
 Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_total)` všech výdajů; v součtu šlo o `r nm(spend - kap)` miliard Kč. Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
 
@@ -81,7 +81,7 @@ indik_slctyr %>%
   count(kraj, wt = (bilance < 0)/n())
 ```
 
-## Bilance rozpočtů
+# Bilance rozpočtů
 
 
 Deficitní rozpočet mělo `r bil_neg_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(1 - bil_pos_share)`) obcí. 
@@ -98,7 +98,7 @@ Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_slctyr$ico)` (`r p
 
 Mezi obcemi s nenulovým dluhem dosahoval dluh v průměru `r pc(dluh_pos_mean)` příjmů (a `r pc(dluh_pos_mean_last4)` průměru příjmů za poslední čtyři roky, tj. 2016-2019).
 
-### Rozpočtová odpovědnost
+## Rozpočtová odpovědnost
 
 Ministerstvo financí pro monitorování finančního zdraví obcí používá mimo jiné i indikátor rozpočtové odpovědnosti, vypočtený jako podíl dluhu obce k průměrným příjmům obce za poslední 4 roky. 
 
@@ -126,7 +126,7 @@ indik_slctyr %>%
   count(kraj, wt = (rozp_odp > .6)/n())
 ```
 
-## Rezervy
+# Rezervy
 
 Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. 
 
