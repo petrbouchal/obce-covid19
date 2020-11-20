@@ -11,8 +11,6 @@ params:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE)
-source("shared.R")
-
 library(fontawesome)
 library(metathis)
 library(forcats)
