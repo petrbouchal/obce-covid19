@@ -20,8 +20,8 @@ rozvaha_keep <- c("AKTIVA","A.","A.I.","A.II.","A.III.","A.IV.","B.",
 
 # org metadata
 
-ico_obce <- read_rds("data-processed/ico_obce.rds")
-orgs <- read_parquet("data-processed/orgs_selected_obce.parquet")
+ico_obce <- read_rds("data-transfer/ico_obce.rds")
+orgs <- read_parquet("data-transfer/orgs_selected_obce.parquet")
 katobyv <- sp_get_codelist("katobyv", dest_dir = "data-input/sp/") %>%
   rename(katobyv_nazev = nazev)
 nuts <- sp_get_codelist("nuts", dest_dir = "data-input/sp/")
