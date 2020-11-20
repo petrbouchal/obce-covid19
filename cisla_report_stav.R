@@ -14,14 +14,15 @@ if(!exists("params")) yr_slct <- 2019 else yr_slct <- params$rok
 # Load data ---------------------------------------------------------------
 
 indik_file <- here::here("data-processed", "scenare_vysledky.parquet")
+indik_subset_file <- here::here("data-transfer", "indik_slctyr.parquet")
 
 if(file.exists(indik_file)) {
   indikatory <- read_parquet(indik_file)
   indik_slctyr <- indikatory %>%
     filter(per_yr == yr_slct)
-  # write_parquet(indik_slctyr, here::here("data-transfer", "indik_slctyr.parquet"))
+  if(!file.exists(indik_subset_file)) write_parquet(indik_slctyr, indik_subset_file)
 } else {
-  indik_slctyr <- read_parquet(here::here("data-transfer", "indik_slctyr.parquet"))
+  indik_slctyr <- read_parquet(indik_subset_file)
   if(unique(indik_slctyr$per_yr != yr_slct)) stop("Roky nesedí.")
 }
 
