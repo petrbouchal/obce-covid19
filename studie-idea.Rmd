@@ -3,7 +3,10 @@ title: "Studie IDEA"
 subtitle: "Podtitul"
 author: "Petr Bouchal a Petr Janský"
 date: "listopad 2020"
-output: bookdown::word_document2
+output: 
+  bookdown::word_document2:
+    reference_docx: idea-template.docx
+    number_sections: no
 bibliography: [bibliography.bib, packages.bib]
 csl: chicago-author-date.csl
 params:
@@ -26,7 +29,7 @@ library(ptrr)
 source("cisla_report_stav.R")
 ```
 
-# Shrnutí výsledků: Stav před krizí (2019)
+# Shrnutí
 
 Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo 58 % všech příjmů obcí a v součtu 209 miliard Kč.
 
@@ -48,7 +51,7 @@ Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazuje
 
 Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
 
-#### Rozpočtové určení daní (RUD) {.bs-callout .bs-callout-blue}
+#### Rozpočtové určení daní (RUD) {-}
 
 Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týká se daně z příjmu fyzických i právnických osob a DPH. Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní.
 
