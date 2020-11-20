@@ -7,14 +7,14 @@ output: bookdown::word_document2
 bibliography: [bibliography.bib, packages.bib]
 csl: chicago-author-date.csl
 params:
-  rok: 2018
+  rok: 2019
   scen: "real"
 nocite: |
   @monitor
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F)
 
 Sys.setlocale(locale = "cs_CZ.UTF-8")
 
