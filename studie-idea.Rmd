@@ -22,10 +22,6 @@ library(tidyverse)
 library(ptrr)
 ```
 
-```{r shared code}
-source("shared.R")
-```
-
 ```{r load-numbers}
 source("cisla_report_stav.R")
 ```
