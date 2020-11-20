@@ -31,19 +31,15 @@ source("cisla_report_stav.R")
 
 # Shrnutí
 
-Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo 58 % všech příjmů obcí a v součtu 209 miliard Kč.
+- Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo 58 % všech příjmů obcí a v součtu 209 miliard Kč.
+- Výdaje obcí se dělí na běžné (74 %, 268 miliard Kč) a kapitálové (26 %, 92 miliard Kč).
+- Deficitní rozpočet mělo 27 % obcí (průměrný deficit u nich byl 16 %, deficit v součtu 11 mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek unich 7 % a v součtu 28 mld. korun.
+- Nenulový dluh mělo 42 % obcí (u nich dosahoval dluh v průměru 35 % příjmů) a v součtu tento dluh činil 64 miliard Kč.
+- Mediánová obec měla rezervy odpovídající 72 % svých ročních příjmů; v součtu tyto rezervy činí 208 miliard Kč (34 % těchto rezerv připadá na Prahu a dalších 12 % na krajská města).
+- Obce zároveň měly 49 miliard krátkodobých závazků.
+- Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazujeme v grafech.
 
-Výdaje obcí se dělí na běžné (74 %, 268 miliard Kč) a kapitálové (26 %, 92 miliard Kč).
-
-Deficitní rozpočet mělo 27 % obcí (průměrný deficit u nich byl 16 %, deficit v součtu 11 mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek u nich 7 % a v součtu 28 mld. korun.
-
-Nenulový dluh mělo 42 % obcí (u nich dosahoval dluh v průměru 35 % příjmů) a v součtu tento dluh činil 64 miliard Kč.
-
-Mediánová obec měla rezervy odpovídající 72 % svých ročních příjmů; v součtu tyto rezervy činí 208 miliard Kč (34 % těchto rezerv připadá na Prahu a dalších 12 % na krajská města).
-
-Obce zároveň měly 49 miliard krátkodobých závazků.
-
-Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazujeme v grafech.
+\newpage
 
 # Příjmy a výdaje
 
