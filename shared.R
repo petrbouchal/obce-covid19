@@ -25,10 +25,10 @@ orgs <- read_parquet("data-transfer/orgs_selected_obce.parquet")
 katobyv <- sp_get_codelist("katobyv", dest_dir = "data-input/sp/") %>%
   rename(katobyv_nazev = nazev)
 nuts <- sp_get_codelist("nuts", dest_dir = "data-input/sp/")
-obce_typy <- read_parquet("data-processed/obce_typy.parquet")
+obce_typy <- read_parquet("data-transfer/obce_typy.parquet")
 
 # budgeting codelist
-polozka <- read_parquet("data-processed/polozka.parquet")
+polozka <- read_parquet("data-transfer/polozka.parquet")
 
 add_obce_meta <- function(data) {
   data$period_vykaz <- lubridate::make_date(data$per_yr, "12", "31")
