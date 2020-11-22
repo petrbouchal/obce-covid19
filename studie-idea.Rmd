@@ -9,6 +9,7 @@ output:
     number_sections: no
 bibliography: [bibliography.bib, packages.bib]
 csl: chicago-author-date.csl
+zotero: [peta-peta]
 params:
   rok: 2019
   scen: "real"
