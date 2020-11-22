@@ -23,6 +23,8 @@ Sys.setlocale(locale = "cs_CZ.UTF-8")
 
 library(tidyverse)
 library(ptrr)
+
+knitr::write_bib(file = 'packages.bib')
 ```
 
 ```{r load-numbers}
