@@ -111,6 +111,8 @@ Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svýc
 
 # Test citací
 
-@bouchal2020 je balík v R
+Použili jsme balík na data [@bouchal2020].
+
+Jak říká @sedmihradská-nitschová2004, rozpočty jsou těžký. Někdy dokonce nejtěžší [@sedmihradská2010].
 
 # Bibliografie
