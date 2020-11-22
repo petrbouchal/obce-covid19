@@ -1,8 +1,8 @@
 ---
-title: "Studie IDEA"
-subtitle: "Podtitul"
+title: "Rozpočty obcí a měst v krizi"
+subtitle: "Covid-19, hospodářská krize a pokles daňových příjmů"
 author: "Petr Bouchal a Petr Janský"
-date: "listopad 2020"
+date: "Listopad 2020"
 output: 
   bookdown::word_document2:
     reference_docx: idea-template.docx
@@ -34,6 +34,7 @@ source("cisla_report_stav.R")
 
 # Shrnutí
 
+-   V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovali různé obce a města do roku 2020, který pro ně připravil COVID-19, hospodářskou krizi a pokles daňových příjmů.
 -   Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo 58 % všech příjmů obcí a v součtu 209 miliard Kč.
 -   Výdaje obcí se dělí na běžné (74 %, 268 miliard Kč) a kapitálové (26 %, 92 miliard Kč).
 -   Deficitní rozpočet mělo 27 % obcí (průměrný deficit u nich byl 16 %, deficit v součtu 11 mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek unich 7 % a v součtu 28 mld. korun.
@@ -43,6 +44,16 @@ source("cisla_report_stav.R")
 -   Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazujeme v grafech.
 
 \newpage
+
+# Úvod
+
+V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovali různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. Konkrétně v této studii upozorňujeme na následující tři fenomény.
+
+**Různorodost obcí.** V mezinárodním srovnání je českých obcí velký počet vůči velikosti země a tyto obce se z rozpočtového hlediska mezi sebou velmi liší: v tom jak zadlužené jsou, jakou mají bilanci příjmů a výdajů a i toho, jak moc velké mají rezervy.
+
+**Závislost na daňových příjmech.** Zásadním příjmem obcí jako celku je tzv. rozpočtové určení daní (RUD), ale to jak velký podíl má RUD na celkových příjmech konkrétní obce záleží na jejích ostatních příjmech, jako je například daň z nemovitostí.
+
+**Daňové příjmy v krizi.** Daňové příjmy obcí klesají a budou klesat z alespoň tří důvodů. Zaprvé, v návaznosti na epidemii covid-19 a související vládní opatření došlo k hospodářské krizi, která s sebou přináší pokles daňových příjmů. Zadruhé, některá vládní protikrizová opatření přímo snížila některé daňové příjmy. Zatřetí, vláda se v listopadu 2020 rozhodla výrazně snížit daň z příjmů fyzických osob.
 
 # Příjmy a výdaje
 
