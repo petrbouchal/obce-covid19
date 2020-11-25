@@ -28,11 +28,15 @@ Sys.setlocale(locale = "cs_CZ.UTF-8")
 library(tidyverse)
 library(ptrr)
 
-knitr::write_bib(file = 'packages.bib')
+library(statnipokladna)
 ```
 
 ```{r load-numbers}
 source("cisla_report_stav.R")
+```
+
+```{r package-bib, include=FALSE}
+knitr::write_bib(file = 'packages.bib')
 ```
 
 # Shrnutí
