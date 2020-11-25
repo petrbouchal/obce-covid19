@@ -655,10 +655,10 @@
     },
     "knitr": {
       "Package": "knitr",
-      "Version": "1.28",
+      "Version": "1.30",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "915a6f0134cdbdf016d7778bc80b2eda"
+      "Hash": "eed7ee0d02eee88d53881cdc92457c62"
     },
     "labeling": {
       "Package": "labeling",
@@ -886,15 +886,15 @@
     },
     "ptrr": {
       "Package": "ptrr",
-      "Version": "0.1.0.9000",
+      "Version": "0.2.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "petrbouchal",
       "RemoteRepo": "ptrr",
       "RemoteRef": "master",
-      "RemoteSha": "4d13b33d7abf8bd0ebe435f266d169340bcbef39",
-      "Hash": "dc6f30d153ffc3956b01792f3995fd47"
+      "RemoteSha": "e2cd67a6183a5c64381bb0bb429f6b965024975a",
+      "Hash": "6c1a35daaabca45a17c1ea5990095412"
     },
     "purrr": {
       "Package": "purrr",
@@ -1029,15 +1029,10 @@
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.4.6",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "rmarkdown",
-      "RemoteUsername": "rstudio",
-      "RemoteRef": "master",
-      "RemoteSha": "26fe392ee7d416a365d627c62827d04a6e5d4d0b",
-      "Hash": "870db08b3f414f32dd4144b5ba4f17e8"
+      "Version": "2.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "20a0a94af9e8f7040510447763aab3e9"
     },
     "roxygen2": {
       "Package": "roxygen2",

@@ -15,10 +15,13 @@ params:
   scen: "real"
 nocite: |
   @monitor
+lang: cs
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = F, message = F)
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F,
+                      dev = "ragg_png", dpi = 300, fig.asp = .6,
+                      fig.width = (21-2*2.205)/2.54)
 
 Sys.setlocale(locale = "cs_CZ.UTF-8")
 
