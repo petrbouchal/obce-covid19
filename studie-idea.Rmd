@@ -144,8 +144,8 @@ Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako pros
 
 # Test citací
 
-Použili jsme balík na data [@bouchal2020].
+Použili jsme balík na data [@R-statnipokladna].
 
-Jak říká @sedmihradská-nitschová2004, rozpočty jsou těžký. Někdy dokonce nejtěžší [@sedmihradská2010].
+Jak říká @sedmihradska2016, rozpočty jsou těžký. Někdy dokonce nejtěžší [@sedmihradská-nitschová2004].
 
 # Bibliografie
