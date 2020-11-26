@@ -104,13 +104,39 @@ Průměrný deficit u těchto obcí byl `r pc(bil_neg_avg)`, mediánový pak `r 
 Celkový deficit obcí s deficitním financováním byl `r nm(bil_neg_sum)` mld. korun. 
 Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance_sum)` mld. korun.
 
+```{r deficit-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.4}
+indik_slctyr %>% 
+  group_by(grp = typobce) %>% 
+  summarise(podil = mean(bilance < 0), .groups = "drop",
+            pocet = n()) %>% 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
+  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  geom_col() +
+  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  scale_x_percent_cz(expand = flush_axis) +
+  theme_studie(margin_side = 0) +
+  labs(title = "Podíl obcí s deficitním rozpočtem")
+```
+
 ## Dluh
 
 Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(dluh_pos_share)`) obcí a v součtu tento dluh činil `r nm(dluh)` miliard Kč. Mezi obcemi s nenulovým dluhem dosahoval dluh v průměru `r pc(dluh_pos_mean)` příjmů (a `r pc(dluh_pos_mean_last4)` průměru příjmů za poslední čtyři roky, tj. 2016-2019).
 
-## Rozpočtová odpovědnost
-
-Ministerstvo financí pro monitorování finančního zdraví obcí používá mimo jiné i indikátor rozpočtové odpovědnosti, vypočtený jako podíl dluhu obce k průměrným příjmům obce za poslední 4 roky. Finance obce jsou považovány za problematické, pokud tento poměr přesáhne 60 %. V roce 2019 tento práh přesáhlo `r dluh_breach_count` (`r pc(dluh_breach_share)`) obcí.
+```{r deficit-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.4}
+indik_slctyr %>% 
+  group_by(grp = typobce) %>% 
+  summarise(podil = mean(dluh > 0, na.rm = T), .groups = "drop",
+            pocet = n()) %>% 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
+  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  geom_col() +
+  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  scale_x_percent_cz(expand = flush_axis) +
+  theme_studie(margin_side = 0) +
+  labs(title = "Podíl obcí s nenulovým dluhem")
+```
 
 Jak ukazujeme v \@ref(fig:plt1), nedává to příliš dobrý smysl.
 
@@ -141,6 +167,27 @@ Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prost
 Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalších `r pc(rez_krajska_share)` připadá na krajská města. 
 Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. 
 Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné. Viz obrázek \@ref(fig:rezervy).
+
+```{r}
+indik_slctyr_res <- indik_slctyr %>% 
+  mutate(rezerva_to_spend = kratkodoby_fin_majetek/rozp_v_celkem,
+         rezerva_to_zavazky = kratkodoby_fin_majetek/kratkodobe_zavazky)
+```
+
+```{r rezervy, fig.cap="Rezervy obcí podle typu", fig.asp=.4}
+indik_slctyr_res %>% 
+  group_by(grp = typobce) %>% 
+  summarise(podil = mean(rezerva_to_zavazky < 1, na.rm = T), pocet = n()) %>%
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
+  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  geom_col() +
+  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  theme_studie() +
+  scale_x_percent_cz(expand = flush_axis) +
+  labs(title = "Rezervy obcí podle typu",
+       subtitle = "Jako % ročních příjmů, rok 2019")
+```
 
 # Test citací
 
