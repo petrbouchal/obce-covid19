@@ -1,0 +1,155 @@
+---
+title: "Explorace dat z 2019 pro studii"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setlocale(locale = "cs_CZ.UTF-8")
+```
+
+```{r load-numbers}
+source("cisla_report_stav.R")
+```
+
+```{r}
+indik_slctyr %>% 
+  mutate(rezerva_volna = kratkodoby_fin_majetek - kratkodobe_zavazky,
+         rezerva_volna_to_spend = rezerva_volna/rozp_v_celkem) %>% 
+  ggplot(aes(bilance/rozp_v_celkem, rezerva_volna_to_spend)) +
+  geom_point(alpha = .2) +
+  facet_wrap(~typobce) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0)
+```
+
+## Závislost na RUD
+
+```{r}
+indik_slctyr %>% 
+  group_by(typobce) %>% 
+  summarise(vazeny = sum(rozp_p_rud)/sum(rozp_p_celkem),
+            nevazeny = mean(rozp_p_rud/rozp_p_celkem),
+            median = median(rozp_p_rud/rozp_p_celkem)) # nevazeny prumer
+```
+
+## Podíl kapitálu na výdajích
+
+```{r}
+indik_slctyr %>% 
+  group_by(typobce) %>%
+  summarise(nevazeny = mean(rozp_v_kap_share),
+            vazeny = sum(rozp_v_kap)/sum(rozp_v_celkem),
+            median = median(rozp_v_kap_share))
+
+```
+
+Hypotéza: velká města utratí spoustu peněz za veřejnou dopravu a zdravotnictví (plus to zkresluje Praha se svými výdaji na vzdělání coby kraj - ale tím pádem by měla mít i vyšší investice než krajská města, protože silnice) vs. regionální centra. která utratí víc za...investice do silnic/dopravní obslužnosti obecně? Běžné obce pak typicky neposkytují sociální služby atd.
+
+## Kapitálové výdaje per capita
+
+```{r}
+indik_slctyr %>% 
+  group_by(typobce) %>% 
+  mutate(kap_per_kap = rozp_v_kap/as.integer(pocob)) %>% 
+  summarise(nevazeny = mean(rozp_v_kap/as.integer(pocob)),
+            vazeny = sum(rozp_v_kap)/sum(as.integer(pocob)),
+            median = median(kap_per_kap)) %>% 
+  mutate_if(is.numeric, round)
+```
+
+Tady už to dává větší smysl
+
+## Podíl skupin obcí na celkových obecních investicích
+
+```{r}
+indik_slctyr %>% 
+  add_tally(wt = rozp_v_kap, name = "kapital_total") %>% 
+  group_by(typobce) %>% 
+  summarise(sum(rozp_v_kap)/unique(kapital_total))
+```
+## Bilance
+
+```{r}
+indik_slctyr %>% 
+  ggplot(aes(x = bilance/rozp_v_celkem, y = typobce)) +
+  geom_violin() +
+  facet_wrap(. ~ typobce)
+```
+
+```{r}
+ggplot(indik_slctyr) +
+  geom_point(aes(kratkodoby_fin_majetek/rozp_v_celkem, bilance/rozp_v_celkem), alpha = .3) +
+  facet_wrap(. ~ typobce, scales = "free")
+```
+
+```{r deficit-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.5}
+indik_slctyr %>% 
+  group_by(grp = typobce) %>% 
+  summarise(podil = mean(bilance < 0), .groups = "drop",
+            pocet = n()) %>% 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
+  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  geom_col() +
+  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  scale_x_percent_cz(expand = flush_axis) +
+  theme_studie() +
+  labs(title = "Podíl obcí s deficitním rozpočtem")
+```
+
+```{r}
+indik_slctyr %>% 
+  ggplot(aes(x = as.integer(pocob), y = rozp_p_rud/rozp_p_celkem)) +
+  geom_point() +
+  xlim(0, 2e4) +
+  facet_wrap(. ~ kraj, scales = "free")
+```
+
+```{r}
+indik_slctyr %>% 
+  mutate(volna_rezerva_to_spend = (kratk))
+```
+
+```{r}
+indik_slctyr %>% 
+  group_by(grp = typobce) %>% 
+  summarise(podil = mean((kratkodoby_fin_majetek - kratkodobe_zavazky) < 0, na.rm = T), 
+            .groups = "drop",
+            pocet = n()) %>% 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
+  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  geom_col() +
+  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  theme_ptrr("x") +
+  scale_x_percent_cz(expand = flush_axis) +
+  theme_studie()
+```
+
+```{r}
+indik_slctyr %>% 
+  group_by(grp = typobce) %>% 
+  mutate(netres_rel = (kratkodoby_fin_majetek - kratkodobe_zavazky)/rozp_v_celkem) %>% 
+  # summarise(netres_rel = median(netres_rel, na.rm = T), .groups = "drop",
+  #           pocet = n()) %>% 
+  ggplot(aes(x = netres_rel)) + 
+  # geom_col() +
+  geom_histogram() +
+  facet_wrap(~ typobce) +
+  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+  #                colour = "darkgrey", linetype = "dotted", size = .8) +
+  theme_ptrr("x") +
+  scale_x_percent_cz(expand = flush_axis) +
+  theme_studie()
+```
+
+
+```{r}
+ggplot(indik_slctyr) +
+  geom_point(aes(x = bilance/rozp_p_celkem, 
+                 y = dluh/rozp_p_celkem), alpha = .1) + 
+  facet_wrap(~ typobce) +
+  xlim(-1, 1)
+
+```

@@ -76,3 +76,31 @@ plot_load <- function(id) {
   message(paste("Loading", pth))
   read_rds(pth)
 }
+
+theme_studie <- function(gridlines = "x",
+                         base_size = 12,
+                         family = "Helvetica",
+                         title_family = "Georgia",
+                         multiplot = FALSE,
+                         tonecol = 'lightgrey',
+                         margin_side = 6,
+                         margin_bottom = 6,
+                         plot.title.position = "plot",
+                         axis_titles = FALSE,
+                         richtext = FALSE,
+                         plot.title = element_text(colour = "#2526A9"),
+                         ...) {
+  ptrr::theme_ptrr(gridlines = gridlines,
+                   base_size = base_size,
+                   family = family,
+                   title_family = title_family,
+                   multiplot = multiplot,
+                   tonecol = tonecol,
+                   margin_side = margin_side,
+                   margin_bottom = margin_bottom,
+                   plot.title.position = plot.title.position,
+                   axis_titles = axis_titles,
+                   richtext = richtext,
+                   plot.title = element_text(colour = "#2526A9", size = 14),
+                   ...)
+}
