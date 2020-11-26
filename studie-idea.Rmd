@@ -54,13 +54,17 @@ knitr::write_bib(file = 'packages.bib')
 
 # Úvod
 
-V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovali různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. Konkrétně v této studii upozorňujeme na následující tři fenomény.
+V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. 
+Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovali různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. 
+Konkrétně v této studii upozorňujeme na následující tři fenomény.
 
-**Různorodost obcí.** V mezinárodním srovnání je českých obcí velký počet vůči velikosti země a tyto obce se z rozpočtového hlediska mezi sebou velmi liší: v tom jak zadlužené jsou, jakou mají bilanci příjmů a výdajů a i toho, jak moc velké mají rezervy.
+**Různorodost obcí.** V mezinárodním srovnání je českých obcí velký počet vůči velikosti země a tyto obce se z rozpočtového hlediska mezi sebou velmi liší: v tom jak zadlužené jsou, jakou mají bilanci příjmů a výdajů a i toho, jak velké mají rezervy.
 
 **Závislost na daňových příjmech.** Zásadním příjmem obcí jako celku je tzv. rozpočtové určení daní (RUD), ale to jak velký podíl má RUD na celkových příjmech konkrétní obce záleží na jejích ostatních příjmech, jako je například daň z nemovitostí.
 
-**Daňové příjmy v krizi.** Daňové příjmy obcí klesají a budou klesat z alespoň tří důvodů. Zaprvé, v návaznosti na epidemii covid-19 a související vládní opatření došlo k hospodářské krizi, která s sebou přináší pokles daňových příjmů. Zadruhé, některá vládní protikrizová opatření přímo snížila některé daňové příjmy. Zatřetí, vláda se v listopadu 2020 rozhodla výrazně snížit daň z příjmů fyzických osob.
+**Daňové příjmy v krizi.** Daňové příjmy obcí klesají a budou klesat z alespoň tří důvodů. 
+Zaprvé, v návaznosti na epidemii covid-19 a související vládní opatření došlo k hospodářské krizi, která s sebou přináší pokles daňových příjmů. 
+Zadruhé, některá vládní protikrizová opatření přímo snížila některé daňové příjmy. Zatřetí, vláda se v listopadu 2020 rozhodla výrazně snížit daň z příjmů fyzických osob.
 
 # Příjmy a výdaje
 
@@ -68,13 +72,15 @@ V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 20
 
 Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
 
-#### Rozpočtové určení daní (RUD) {.unnumbered}
+#### Box: Rozpočtové určení daní (RUD) {.unnumbered}
 
-Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týká se daně z příjmu fyzických i právnických osob a DPH. Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní.
+Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týká se daně z příjmu fyzických i právnických osob a DPH. 
+Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní.
 
 ## Výdaje
 
-Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_total)` všech výdajů; v součtu šlo o `r nm(spend - kap)` miliard Kč. Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
+Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_total)` všech výdajů; v součtu šlo o `r nm(spend - kap)` miliard Kč. 
+Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
 
 ```{r, eval = F}
 indik_slctyr %>% 
@@ -93,7 +99,10 @@ indik_slctyr %>%
 
 # Bilance rozpočtů
 
-Deficitní rozpočet mělo `r bil_neg_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(1 - bil_pos_share)`) obcí. Průměrný deficit u těchto obcí byl `r pc(bil_neg_avg)`, mediánový pak `r pc(bil_neg_median)`. Celkový deficit obcí s deficitním financováním byl `r nm(bil_neg_sum)` mld. korun. Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance_sum)` mld. korun.
+Deficitní rozpočet mělo `r bil_neg_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(1 - bil_pos_share)`) obcí. 
+Průměrný deficit u těchto obcí byl `r pc(bil_neg_avg)`, mediánový pak `r pc(bil_neg_median)`. 
+Celkový deficit obcí s deficitním financováním byl `r nm(bil_neg_sum)` mld. korun. 
+Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance_sum)` mld. korun.
 
 ## Dluh
 
@@ -125,7 +134,13 @@ indik_slctyr %>%
 
 # Rezervy
 
-Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech. Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech. Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalších `r pc(rez_krajska_share)` připadá na krajská města. Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné.
+Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. 
+Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech.
+Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. 
+Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech.
+Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalších `r pc(rez_krajska_share)` připadá na krajská města. 
+Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. 
+Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné. Viz obrázek \@ref(fig:rezervy).
 
 # Test citací
 
