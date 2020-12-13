@@ -489,15 +489,15 @@
     },
     "ggtext": {
       "Package": "ggtext",
-      "Version": "0.1.0",
+      "Version": "0.1.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "clauswilke",
       "RemoteRepo": "ggtext",
       "RemoteRef": "master",
-      "RemoteSha": "e97803485c5785551578373886223e048ba542ee",
-      "Hash": "11084044bfe2db865c7b45738c7f8a29"
+      "RemoteSha": "dfb02af7ca53d8de696dfcc33a4d5f1a28abe986",
+      "Hash": "63a560d132884c5fe84e450603d1d41f"
     },
     "gh": {
       "Package": "gh",
@@ -893,8 +893,8 @@
       "RemoteUsername": "petrbouchal",
       "RemoteRepo": "ptrr",
       "RemoteRef": "master",
-      "RemoteSha": "e2cd67a6183a5c64381bb0bb429f6b965024975a",
-      "Hash": "6c1a35daaabca45a17c1ea5990095412"
+      "RemoteSha": "81231a41f3628e082e62c015c5fbce9a7c7c1b1e",
+      "Hash": "4cf048fd1e85e901337b9026a5da04c7"
     },
     "purrr": {
       "Package": "purrr",
@@ -905,10 +905,10 @@
     },
     "ragg": {
       "Package": "ragg",
-      "Version": "0.1.5",
+      "Version": "0.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "55ecadf0808546b2d1e8a06b1658a787"
+      "Hash": "34630c700bb331339a80ddc9c6821e25"
     },
     "rappdirs": {
       "Package": "rappdirs",
@@ -1195,10 +1195,10 @@
     },
     "systemfonts": {
       "Package": "systemfonts",
-      "Version": "0.2.1",
+      "Version": "0.3.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "b9cbe1031f93e8d06e36a330705c654f"
+      "Hash": "046e821d454edb3722192f588f4d7884"
     },
     "testthat": {
       "Package": "testthat",
@@ -1206,6 +1206,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "0829b987b8961fb07f3b1b64a2fbc495"
+    },
+    "textshaping": {
+      "Package": "textshaping",
+      "Version": "0.2.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a34d4aa94ca91a52710b1c0c36bcded6"
     },
     "tibble": {
       "Package": "tibble",

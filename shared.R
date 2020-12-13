@@ -2,6 +2,7 @@ library(statnipokladna)
 library(readr)
 library(arrow)
 library(dplyr)
+library(ragg)
 
 
 # kody polozek prijmu z dani rozdelovanych pres RUD
