@@ -133,7 +133,7 @@ indik_slctyr %>%
 
 Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(dluh_pos_share)`) obcí a v součtu tento dluh činil `r nm(dluh)` miliard Kč. Mezi obcemi s nenulovým dluhem dosahoval dluh v průměru `r pc(dluh_pos_mean)` příjmů (a `r pc(dluh_pos_mean_last4)` průměru příjmů za poslední čtyři roky, tj. 2016-2019).
 
-```{r dluh-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.4}
+```{r dluh-podil, fig.cap="Podíl obcí s nenulovým dluhem", fig.asp=.4}
 indik_slctyr %>% 
   group_by(grp = typobce_wrapped) %>% 
   summarise(podil = mean(dluh > 0, na.rm = T), .groups = "drop",
