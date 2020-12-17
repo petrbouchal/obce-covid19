@@ -262,6 +262,6 @@ share_typ <- indik_slctyr %>%
            fct_rev()) %>% 
   group_by(variable) %>% 
   mutate(share = value/sum(value))
-```s
+```
 
 # Bibliografie
