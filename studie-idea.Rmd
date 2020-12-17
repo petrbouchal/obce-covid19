@@ -116,14 +116,14 @@ Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance
 
 ```{r deficit-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.4}
 indik_slctyr %>% 
-  group_by(grp = typobce) %>% 
+  group_by(grp = typobce_wrapped) %>% 
   summarise(podil = mean(bilance < 0), .groups = "drop",
             pocet = n()) %>% 
   mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
-  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  ggplot(aes(podil, grp)) + 
   geom_col() +
-  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
-                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+  #                colour = "darkgrey", linetype = "dotted", size = .8) +
   scale_x_percent_cz(expand = flush_axis) +
   theme_studie(margin_side = 0) +
   labs(title = "Podíl obcí s deficitním rozpočtem")
@@ -135,14 +135,14 @@ Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_slctyr$ico)` (`r p
 
 ```{r dluh-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.4}
 indik_slctyr %>% 
-  group_by(grp = typobce) %>% 
+  group_by(grp = typobce_wrapped) %>% 
   summarise(podil = mean(dluh > 0, na.rm = T), .groups = "drop",
             pocet = n()) %>% 
   mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
-  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  ggplot(aes(podil, grp)) + 
   geom_col() +
-  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
-                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+  #                colour = "darkgrey", linetype = "dotted", size = .8) +
   scale_x_percent_cz(expand = flush_axis) +
   theme_studie(margin_side = 0) +
   labs(title = "Podíl obcí s nenulovým dluhem")
