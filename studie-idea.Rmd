@@ -148,19 +148,9 @@ indik_slctyr %>%
   labs(title = "Podíl obcí s nenulovým dluhem")
 ```
 
-Jak ukazujeme v \@ref(fig:plt1), nedává to příliš dobrý smysl.
-
-```{r plt1, fig.cap="blah"}
-ggplot(indik_slctyr) +
-  geom_histogram(aes(rozp_odp, y = stat(width * density)), binwidth = .05) +
-  geom_vline(xintercept = .6) +
-  facet_wrap(~typobce)
-```
-
 ```{r, eval = F}
 indik_slctyr %>% 
   count(typobce, wt = (rozp_odp > .6)/n())
-
 ```
 
 ```{r, eval = F}
