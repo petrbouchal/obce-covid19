@@ -205,4 +205,38 @@ Použili jsme balík na data [@R-statnipokladna].
 
 Jak říká @sedmihradska2016, rozpočty jsou těžký. Někdy dokonce nejtěžší [@sedmihradská-nitschová2004].
 
+# Apendix
+
+## Podíl skupin obcí na celkových obecních investicích
+
+```{r}
+share_typ <- indik_slctyr %>% 
+  add_tally(wt = rozp_v_kap, name = "kapital_total") %>% 
+  group_by(typobce_wrapped) %>% 
+  summarise(pocet = n(),
+            kap = sum(rozp_v_kap),
+            pop = sum(as.numeric(pocob)), 
+            rud = sum(rozp_p_rud),
+            vydaje = sum(rozp_v_celkem),
+            dluh = sum(dluh, na.rm = T),
+            rezervy = sum(kratkodoby_fin_majetek, na.rm = T), .groups = "keep") %>% 
+  pivot_longer(cols = c(pocet, kap, pop, rud, vydaje, rezervy, dluh), 
+               names_to = "variable", values_to = "value") %>% 
+  mutate(variable = fct_relevel(variable, 
+                                "pocet",
+                                "pop", "vydaje", "rud", "kap", "rezervy", "dluh") %>%
+           fct_recode(
+             `Počet obcí` = "pocet",
+             `Počet obyvatel` = "pop",
+             `Výdaje` = "vydaje",
+             `RUD` = "rud",
+             `Kapitálové výdaje` = "kap",
+             `Rezervy` = "rezervy",
+             `Dluh` = "dluh"
+             ) %>% 
+           fct_rev()) %>% 
+  group_by(variable) %>% 
+  mutate(share = value/sum(value))
+```s
+
 # Bibliografie
