@@ -186,18 +186,52 @@ indik_slctyr_res <- indik_slctyr %>%
 
 ```{r rezervy, fig.cap="Rezervy obcí podle typu", fig.asp=.4}
 indik_slctyr_res %>% 
-  group_by(grp = typobce) %>% 
-  summarise(podil = mean(rezerva_to_zavazky < 1, na.rm = T), pocet = n()) %>%
-  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
-  ggplot(aes(podil, grp %>% str_wrap(15))) + 
-  geom_col() +
-  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
-                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  group_by(grp = typobce_wrapped) %>% 
+  summarise(median = median(rezerva_to_spend, na.rm = T), pocet = n(),
+            prumer = mean(rezerva_to_spend, na.rm = T)) %>%
+  ggplot(aes(y = grp)) + 
+  geom_col(aes(x = median)) +
+  geom_point(aes(x = prumer), pch = "|", size = 10) +
+  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+  #                colour = "darkgrey", linetype = "dotted", size = .8) +
   theme_studie() +
   scale_x_percent_cz(expand = flush_axis) +
+  annotate("text", x = .8, y = "Běžná obec", label = "Medián",
+           colour = "white") +
+  annotate("text", x = 1.25, y = "Běžná obec", 
+           label = "Průměr", colour = "black", hjust = 1) +
   labs(title = "Rezervy obcí podle typu",
        subtitle = "Jako % ročních příjmů, rok 2019")
 ```
+```{r}
+ggplot(indik_slctyr_res, aes(x = rezerva_to_spend)) +
+  geom_density() +
+  facet_wrap(~typobce_wrapped) +
+  scale_x_continuous(limits = c(0, 5)) +
+  theme_studie()
+```
+
+
+Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. 
+
+```{r, fig.cap="Čisté rezervy obcí", fig.asp=.4}
+indik_slctyr %>% 
+  group_by(grp = typobce_wrapped) %>% 
+  summarise(podil = mean((kratkodoby_fin_majetek - kratkodobe_zavazky) < 0, na.rm = T), 
+            .groups = "drop",
+            pocet = n()) %>% 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
+  ggplot(aes(podil, grp)) + 
+  geom_col() +
+  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+  #                colour = "darkgrey", linetype = "dotted", size = .8) +
+  theme_ptrr("x") +
+  scale_x_percent_cz(expand = flush_axis) +
+  theme_studie() +
+  labs(title = "Podíl obcí, jejichž krátkodobé závazky překračují rezervy")
+```
+
+Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné. Viz obrázek \@ref(fig:rezervy).
 
 # Test citací
 
