@@ -3,6 +3,7 @@ library(readr)
 library(arrow)
 library(dplyr)
 library(ragg)
+library(ptrr)
 
 
 # kody polozek prijmu z dani rozdelovanych pres RUD
