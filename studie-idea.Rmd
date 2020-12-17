@@ -55,7 +55,7 @@ knitr::write_bib(file = 'packages.bib')
 # Úvod
 
 V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. 
-Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovali různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. 
+Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. 
 Konkrétně v této studii upozorňujeme na následující tři fenomény.
 
 **Různorodost obcí.** V mezinárodním srovnání je českých obcí velký počet vůči velikosti země a tyto obce se z rozpočtového hlediska mezi sebou velmi liší: v tom jak zadlužené jsou, jakou mají bilanci příjmů a výdajů a i toho, jak velké mají rezervy.
