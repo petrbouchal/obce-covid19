@@ -193,7 +193,8 @@ indik_slctyr_res %>%
   labs(title = "Rezervy obcí podle typu",
        subtitle = "Jako % ročních příjmů, rok 2019")
 ```
-```{r}
+
+```{r rezervy-hist}
 ggplot(indik_slctyr_res, aes(x = rezerva_to_spend)) +
   geom_density() +
   facet_wrap(~typobce_wrapped) +
@@ -202,9 +203,9 @@ ggplot(indik_slctyr_res, aes(x = rezerva_to_spend)) +
 ```
 
 
-Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. 
+Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží (viz \@ref(fig:rezervy-net)). 
 
-```{r, fig.cap="Čisté rezervy obcí", fig.asp=.4}
+```{r rezervy-net, fig.cap="Čisté rezervy obcí", fig.asp=.4}
 indik_slctyr %>% 
   group_by(grp = typobce_wrapped) %>% 
   summarise(podil = mean((kratkodoby_fin_majetek - kratkodobe_zavazky) < 0, na.rm = T), 
