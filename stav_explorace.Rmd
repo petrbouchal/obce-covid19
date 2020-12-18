@@ -1,6 +1,8 @@
 ---
 title: "Explorace dat z 2019 pro studii"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -26,31 +28,53 @@ indik_slctyr %>%
 ## Závislost na RUD
 
 ```{r}
-indik_slctyr %>% 
+zav_rud_typ <- indik_slctyr %>% 
   group_by(typobce) %>% 
   summarise(vazeny = sum(rozp_p_rud)/sum(rozp_p_celkem),
             nevazeny = mean(rozp_p_rud/rozp_p_celkem),
             median = median(rozp_p_rud/rozp_p_celkem)) # nevazeny prumer
 ```
 
+```{r}
+levels(zav_rud_typ$typobce)
+```
+
+
+```{r}
+ggplot(zav_rud_typ, aes(x = vazeny, y = typobce)) +
+  geom_col() +
+  theme_studie("x") +
+  scale_x_percent_cz()
+```
+
+
 ## Podíl kapitálu na výdajích
 
 ```{r}
-indik_slctyr %>% 
-  group_by(typobce) %>%
+kap_ratio_typ <- indik_slctyr %>% 
+  group_by(typobce_wrapped) %>%
   summarise(nevazeny = mean(rozp_v_kap_share),
             vazeny = sum(rozp_v_kap)/sum(rozp_v_celkem),
             median = median(rozp_v_kap_share))
 
 ```
 
+```{r}
+ggplot(kap_ratio_typ, aes(x = vazeny, y = typobce_wrapped)) +
+  geom_col() +
+  theme_studie("x") +
+  scale_x_percent_cz() +
+  labs(title = "Podíl kapitálových výdajů na výdajích obcí")
+```
+
+
 Hypotéza: velká města utratí spoustu peněz za veřejnou dopravu a zdravotnictví (plus to zkresluje Praha se svými výdaji na vzdělání coby kraj - ale tím pádem by měla mít i vyšší investice než krajská města, protože silnice) vs. regionální centra. která utratí víc za...investice do silnic/dopravní obslužnosti obecně? Běžné obce pak typicky neposkytují sociální služby atd.
 
 ## Kapitálové výdaje per capita
 
 ```{r}
-indik_slctyr %>% 
-  group_by(typobce) %>% 
+kap_percap_typ <- indik_slctyr %>% 
+  group_by(typobce_wrapped) %>% 
   mutate(kap_per_kap = rozp_v_kap/as.integer(pocob)) %>% 
   summarise(nevazeny = mean(rozp_v_kap/as.integer(pocob)),
             vazeny = sum(rozp_v_kap)/sum(as.integer(pocob)),
@@ -58,16 +82,70 @@ indik_slctyr %>%
   mutate_if(is.numeric, round)
 ```
 
+
+```{r}
+ggplot(kap_percap_typ, aes(x = median, y = typobce_wrapped)) +
+  geom_col() +
+  geom_point(aes(x = vazeny), pch = "|", size = 10) +
+  theme_studie("x") +
+  scale_x_number_cz() +
+  annotate("text", x = 9000, y = "Běžná obec", label = "Průměr") +
+  annotate("text", x = 4300, y = "Běžná obec", 
+           label = "Medián", colour = "white", hjust = 1) +
+  labs(title = "Kapitálové výdaje na obyvatele (Kč)")
+```
+
 Tady už to dává větší smysl
 
 ## Podíl skupin obcí na celkových obecních investicích
 
 ```{r}
-indik_slctyr %>% 
+share_typ <- indik_slctyr %>% 
   add_tally(wt = rozp_v_kap, name = "kapital_total") %>% 
-  group_by(typobce) %>% 
-  summarise(sum(rozp_v_kap)/unique(kapital_total))
+  group_by(typobce_wrapped) %>% 
+  summarise(pocet = n(),
+            kap = sum(rozp_v_kap),
+            pop = sum(as.numeric(pocob)), 
+            rud = sum(rozp_p_rud),
+            vydaje = sum(rozp_v_celkem),
+            dluh = sum(dluh, na.rm = T),
+            rezervy = sum(kratkodoby_fin_majetek, na.rm = T), .groups = "keep") %>% 
+  pivot_longer(cols = c(pocet, kap, pop, rud, vydaje, rezervy, dluh), 
+               names_to = "variable", values_to = "value") %>% 
+  mutate(variable = fct_relevel(variable, 
+                                "pocet",
+                                "pop", "vydaje", "rud", "kap", "rezervy", "dluh") %>%
+           fct_recode(
+             `Počet obcí` = "pocet",
+             `Počet obyvatel` = "pop",
+             `Výdaje` = "vydaje",
+             `RUD` = "rud",
+             `Kapitálové výdaje` = "kap",
+             `Rezervy` = "rezervy",
+             `Dluh` = "dluh"
+             ) %>% 
+           fct_rev()) %>% 
+  group_by(variable) %>% 
+  mutate(share = value/sum(value))
 ```
+
+```{r}
+ggplot(share_typ, aes(x = value, fill = typobce_wrapped, y = variable)) +
+  geom_col(position = "fill") +
+  theme_studie("x", legend.position = "top") +
+  guides(fill = guide_legend(reverse = T)) +
+  scale_fill_ordinal(end = .6, name = "Typ obce") +
+  scale_x_percent_cz() +
+  labs(title = "Podíl různých typů obcí na objemech klíčových proměnných")
+```
+```{r}
+ggplot(share_typ, aes(y = share, colour = typobce_wrapped, 
+                      group = typobce_wrapped,
+                      x = variable)) +
+  geom_line()
+```
+
+
 ## Bilance
 
 ```{r}
@@ -85,14 +163,14 @@ ggplot(indik_slctyr) +
 
 ```{r deficit-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.5}
 indik_slctyr %>% 
-  group_by(grp = typobce) %>% 
+  group_by(grp = typobce_wrapped) %>% 
   summarise(podil = mean(bilance < 0), .groups = "drop",
             pocet = n()) %>% 
   mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
-  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  ggplot(aes(podil, grp)) + 
   geom_col() +
-  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
-                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+  #                colour = "darkgrey", linetype = "dotted", size = .8) +
   scale_x_percent_cz(expand = flush_axis) +
   theme_studie() +
   labs(title = "Podíl obcí s deficitním rozpočtem")
@@ -111,25 +189,28 @@ indik_slctyr %>%
   mutate(volna_rezerva_to_spend = (kratk))
 ```
 
+## Čisté rezervy
+
 ```{r}
 indik_slctyr %>% 
-  group_by(grp = typobce) %>% 
+  group_by(grp = typobce_wrapped) %>% 
   summarise(podil = mean((kratkodoby_fin_majetek - kratkodobe_zavazky) < 0, na.rm = T), 
             .groups = "drop",
             pocet = n()) %>% 
   mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
-  ggplot(aes(podil, grp %>% str_wrap(15))) + 
+  ggplot(aes(podil, grp)) + 
   geom_col() +
-  geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
-                 colour = "darkgrey", linetype = "dotted", size = .8) +
+  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
+  #                colour = "darkgrey", linetype = "dotted", size = .8) +
   theme_ptrr("x") +
   scale_x_percent_cz(expand = flush_axis) +
-  theme_studie()
+  theme_studie() +
+  labs(title = "Podíl obcí, jejichž krátkodobé závazky překračují rezervy")
 ```
 
 ```{r}
 indik_slctyr %>% 
-  group_by(grp = typobce) %>% 
+  group_by(grp = typobce_wrapped) %>% 
   mutate(netres_rel = (kratkodoby_fin_majetek - kratkodobe_zavazky)/rozp_v_celkem) %>% 
   # summarise(netres_rel = median(netres_rel, na.rm = T), .groups = "drop",
   #           pocet = n()) %>% 
