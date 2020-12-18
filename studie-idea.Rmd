@@ -208,7 +208,7 @@ ggplot(indik_slctyr_res, aes(x = rezerva_to_spend)) +
   geom_density() +
   facet_wrap(~typobce_wrapped) +
   scale_x_continuous(limits = c(0, 5)) +
-  theme_studie()
+  theme_studie("both", multiplot = T)
 ```
 
 
