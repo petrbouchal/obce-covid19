@@ -95,6 +95,31 @@ Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_
 Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
 
 ```{r}
+kap_ratio_typ <- indik_slctyr %>% 
+  group_by(typobce_wrapped) %>%
+  summarise(nevazeny = mean(rozp_v_kap_share),
+            vazeny = sum(rozp_v_kap)/sum(rozp_v_celkem),
+            median = median(rozp_v_kap_share))
+
+```
+
+Největší podíl investic na výdajích vykazují běžné obce, jak ukazuje \@ref(fig:kap-ratio); tento podíl klesá s rostoucí administrativní rolí obce, především kvůli odlišným povinnostem různých typů obcí; např. obce s rozšířenou působností poskytují některé sociální služby a další funkce pro širší okolí. Kategorie s nejnižším podílem investic na výdajích pak zahrnuje i Prahu, která plní i funkce kraje, což s sebou nese vyšší běžné výdaje (např. střední školství a částečně zdravotnictví.)
+
+```{r kap-ratio, fig.asp = 0.4}
+ggplot(kap_ratio_typ, aes(x = median, y = typobce_wrapped)) +
+  geom_col() +
+  geom_point(aes(x = nevazeny), pch = "|", size = 10) +
+  theme_studie("x") +
+  annotate("text", x = .225, y = "Běžná obec", label = "Průměr") +
+  annotate("text", x = .195, y = "Běžná obec", 
+           label = "Medián", colour = "white", hjust = 1) +
+  scale_x_percent_cz() +
+  labs(title = "Podíl kapitálových výdajů na výdajích obcí")
+```
+
+Při zohlednění počtu obyvatel se ukazuje, že nejvyšší výdaje na obyvatele mají běžné obce (průměr v \@ref(fig:kap-percap)); při pohledu na mediánovou obec v každé kategorii ale více než běžné obce investují obce v ostatních kategoriích (sloupce "medián" tamtéž). To naznačuje, že mezi běžnými obcemi existuje malé množství obcí s extrémně vysokými investicemi na obyvatele.
+
+```{r}
 kap_percap_typ <- indik_slctyr %>% 
   group_by(typobce_wrapped) %>% 
   mutate(kap_per_kap = rozp_v_kap/as.integer(pocob)) %>% 
