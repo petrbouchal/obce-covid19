@@ -232,7 +232,7 @@ Jak říká @sedmihradska2016, rozpočty jsou těžký. Někdy dokonce nejtěž�
 
 # Apendix
 
-## Podíl skupin obcí na celkových obecních investicích
+## Podíl skupin obcí na objemech veřejných peněz
 
 ```{r}
 share_typ <- indik_slctyr %>% 
@@ -262,6 +262,18 @@ share_typ <- indik_slctyr %>%
            fct_rev()) %>% 
   group_by(variable) %>% 
   mutate(share = value/sum(value))
+```
+
+```{r multishare, fig.asp=.4}
+ggplot(share_typ, aes(x = value, fill = typobce_wrapped, y = variable,
+                      alpha = !variable %in% c("Počet obcí", "Počet obyvatel"))) +
+  geom_col(position = "fill") +
+  scale_alpha_manual(values = c(`TRUE` = 1, `FALSE` = 0.6), guide = "none") +
+  theme_studie("x", legend.position = "top") +
+  guides(fill = guide_legend(reverse = T)) +
+  scale_fill_ordinal(end = .6, name = "Typ obce") +
+  scale_x_percent_cz() +
+  labs(title = "Podíl různých typů obcí na objemech klíčových proměnných")
 ```
 
 # Bibliografie
