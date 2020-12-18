@@ -170,13 +170,12 @@ indik_slctyr %>%
 
 # Rezervy
 
-Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. 
 Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech.
-Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč. 
-Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech.
+
+Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů (viz graf \@ref(fig:rezervy)); v součtu tyto rezervy činí `r nm(rez)` miliard Kč.
+
 Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalších `r pc(rez_krajska_share)` připadá na krajská města. 
-Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží. 
-Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné. Viz obrázek \@ref(fig:rezervy).
+
 
 ```{r}
 indik_slctyr_res <- indik_slctyr %>% 
