@@ -71,12 +71,22 @@ Zatřetí, vláda se v listopadu 2020 rozhodla výrazně snížit daň z příjm
 
 ## Příjmy
 
-Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
+Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč. 
+Obrázek \@ref(fig:rud-podil) ukazuje rozdělení závislosti příjmů na RUD u různých typů obcí.
 
 #### Box: Rozpočtové určení daní (RUD) {.unnumbered}
 
 Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týká se daně z příjmu fyzických i právnických osob a DPH. 
 Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní.
+
+```{r rud-podil, fig.asp = .5}
+ggplot(indik_slctyr) +
+  geom_boxplot(aes(x = typobce_wrapped, y = rozp_p_rud/rozp_p_celkem), width = .3) +
+  theme_studie("y") +
+  scale_y_percent_cz() +
+  labs(title = "Podíl RUD na rozpočtových příjmech obcí")
+```
+
 
 ## Výdaje
 
