@@ -1,8 +1,8 @@
 ---
-title: "Rozpočty obcí a měst v krizi"
-subtitle: "Covid-19, hospodářská krize a pokles daňových příjmů"
+title: "Rozpočty obcí a měst v předvečer krize"
+subtitle: "Covid-19, hospodářský útlum a pokles daňových příjmů"
 author: "Petr Bouchal a Petr Janský"
-date: "Listopad 2020"
+date: "Leden 2021"
 output: 
   bookdown::word_document2:
     reference_docx: idea-template.docx
@@ -42,8 +42,10 @@ knitr::write_bib(file = 'packages.bib')
 # Shrnutí
 
 -   V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. Ukazujeme, v jak dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil COVID-19, hospodářskou krizi a pokles daňových příjmů.
+-   V roce 2019 celkové příjmy obcí dosáhly `r nm(rozp_p_celkem)` miliard Kč a celkové výdaje `r nm(spend)` miliard Kč, což velikostně odpovídá téměř čtvrtině státního rozpočtu (výdaje 1552 miliard Kč v roce 2019).
 -   Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
 -   Výdaje obcí se dělí na běžné (`r pc(1 - kap_share_total)`, `r nm(spend - kap)` miliard Kč) a kapitálové (`r pc(kap_share_total)`, `r nm(kap)` miliard Kč).
+-   Kapitálové výdaje měly v průměru nejvyšší běžné obce: jak relativně vůči běžným výdajům, tak v Kč na obyvatele měly investice vyšší než obce s pověřeným obecním úřadem, obce s rozšířenou působností nebo krajská města včetně Prahy (v průměru, ačkoliv ne podle mediánu, což ukazuje na vysoké investice menšího počtu běžných obcí a obecněji na různorodost obcí).
 -   Deficitní rozpočet mělo `r pc(1 - bil_pos_share)` obcí (průměrný deficit u nich byl `r pc(bil_neg_avg)`, deficit v součtu `r nm(bil_neg_sum)` mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek unich 7 % a v součtu 28 mld. korun.
 -   Nenulový dluh mělo `r pc(dluh_pos_share)` % obcí (u nich dosahoval dluh v průměru `r pc(dluh_pos_mean)` % příjmů) a v součtu tento dluh činil `r nm(dluh)` miliard Kč.
 -   Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních výdajů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč (`r pc(rez_pha_share)` těchto rezerv připadá na Prahu a dalších `r pc(rez_krajska_share)` na krajská města).
@@ -54,30 +56,23 @@ knitr::write_bib(file = 'packages.bib')
 
 # Úvod
 
-V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. 
-Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. 
-Konkrétně v této studii upozorňujeme na následující tři fenomény.
+V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. Konkrétně v této studii upozorňujeme na následující tři fenomény.
 
 **Různorodost obcí.** V mezinárodním srovnání je českých obcí velký počet vůči velikosti země a tyto obce se z rozpočtového hlediska mezi sebou velmi liší: v tom jak zadlužené jsou, jakou mají bilanci příjmů a výdajů a i toho, jak velké mají rezervy.
 
-**Závislost na daňových příjmech.** Zásadním příjmem obcí jako celku je tzv. rozpočtové určení daní (RUD), ale to jak velký podíl má RUD na celkových příjmech konkrétní obce záleží na jejích ostatních příjmech, jako je například daň z nemovitostí.
+**Závislost na daňových příjmech.** Zásadním příjmem obcí jako celku je tzv. rozpočtové určení daní (RUD), ale to jak velký podíl má RUD na celkových příjmech konkrétní obce záleží především na jejích ostatních příjmech, jako je například daň z nemovitostí.
 
-**Daňové příjmy v krizi.** Daňové příjmy obcí klesají a budou klesat z alespoň tří důvodů. 
-Zaprvé, v návaznosti na epidemii covid-19 a související vládní opatření došlo k hospodářské krizi, která s sebou přináší pokles daňových příjmů. 
-Zadruhé, některá vládní protikrizová opatření přímo snížila některé daňové příjmy. 
-Zatřetí, vláda se v listopadu 2020 rozhodla výrazně snížit daň z příjmů fyzických osob.
+**Daňové příjmy v krizi.** Daňové příjmy obcí klesají a budou klesat z alespoň tří důvodů. Zaprvé, v návaznosti na epidemii covid-19 a související vládní opatření došlo k hospodářské krizi, která s sebou přináší pokles daňových příjmů. Zadruhé, některá vládní protikrizová opatření přímo snížila některé daňové příjmy. Zatřetí, parlament nejspíše od roku 2021 výrazně sníží daň z příjmů fyzických osob.
 
 # Příjmy a výdaje
 
 ## Příjmy
 
-Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč. 
-Obrázek \@ref(fig:rud-podil) ukazuje rozdělení závislosti příjmů na RUD u různých typů obcí.
+Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč. Obrázek \@ref(fig:rud-podil) ukazuje rozdělení závislosti příjmů na RUD u různých typů obcí.
 
 #### Box: Rozpočtové určení daní (RUD) {.unnumbered}
 
-Rozpočtové určení daní redistribuuje vybrané daně mezi obce a kraje. Týká se daně z příjmu fyzických i právnických osob a DPH. 
-Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní.
+Rozpočtové určení daní redistribuuje vybrané daně mezi obce, kraje a státní rozpočet. Týká se daně z příjmu fyzických i právnických osob a DPH (i daně z nemovitých věcí, jejíž celé příjmy jdou obcím). Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní. Zbývající a zároveň největší díl příjmů připadá státnímu rozpočtu.
 
 ```{r rud-podil, fig.asp = .5}
 ggplot(indik_slctyr) +
@@ -87,10 +82,9 @@ ggplot(indik_slctyr) +
   labs(title = "Podíl RUD na rozpočtových příjmech obcí")
 ```
 
-
 ## Výdaje
 
-Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_total)` všech výdajů; v součtu šlo o `r nm(spend - kap)` miliard Kč. 
+Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_total)` všech výdajů; v součtu šlo o `r nm(spend - kap)` miliard Kč.
 
 Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
 
@@ -117,7 +111,7 @@ ggplot(kap_ratio_typ, aes(x = median, y = typobce_wrapped)) +
   labs(title = "Podíl kapitálových výdajů na výdajích obcí")
 ```
 
-Při zohlednění počtu obyvatel se ukazuje, že nejvyšší výdaje na obyvatele mají běžné obce (průměr v \@ref(fig:kap-percap)); při pohledu na mediánovou obec v každé kategorii ale více než běžné obce investují obce v ostatních kategoriích (sloupce "medián" tamtéž). To naznačuje, že mezi běžnými obcemi existuje malé množství obcí s extrémně vysokými investicemi na obyvatele.
+Při zohlednění počtu obyvatel se ukazuje, že nejvyšší kapitálové výdaje na obyvatele mají běžné obce (průměr v \@ref(fig:kap-percap)); při pohledu na mediánovou obec v každé kategorii ale více než běžné obce investují obce v ostatních kategoriích (sloupce "medián" tamtéž). To naznačuje, že mezi běžnými obcemi existuje relativně malé množství obcí s extrémně vysokými investicemi na obyvatele.
 
 ```{r}
 kap_percap_typ <- indik_slctyr %>% 
@@ -128,7 +122,6 @@ kap_percap_typ <- indik_slctyr %>%
             median = median(kap_per_kap)) %>% 
   mutate_if(is.numeric, round)
 ```
-
 
 ```{r kap-percap, fig.asp=.4}
 ggplot(kap_percap_typ, aes(x = median, y = typobce_wrapped)) +
@@ -144,10 +137,7 @@ ggplot(kap_percap_typ, aes(x = median, y = typobce_wrapped)) +
 
 # Bilance rozpočtů
 
-Deficitní rozpočet mělo `r bil_neg_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(1 - bil_pos_share)`) obcí. 
-Průměrný deficit u těchto obcí byl `r pc(bil_neg_avg)`, mediánový pak `r pc(bil_neg_median)`. 
-Celkový deficit obcí s deficitním financováním byl `r nm(bil_neg_sum)` mld. korun. 
-Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance_sum)` mld. korun.
+Deficitní rozpočet mělo za rok 2019 `r bil_neg_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(1 - bil_pos_share)`) obcí. Průměrný deficit u těchto obcí byl `r pc(bil_neg_avg)`, mediánový pak `r pc(bil_neg_median)`. Celkový deficit obcí s deficitním financováním byl `r nm(bil_neg_sum)` mld. korun. Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance_sum)` mld. korun.
 
 ```{r deficit-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.4}
 indik_slctyr %>% 
@@ -166,7 +156,7 @@ indik_slctyr %>%
 
 ## Dluh
 
-Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(dluh_pos_share)`) obcí a v součtu tento dluh činil `r nm(dluh)` miliard Kč. Mezi obcemi s nenulovým dluhem dosahoval dluh v průměru `r pc(dluh_pos_mean)` příjmů (a `r pc(dluh_pos_mean_last4)` průměru příjmů za poslední čtyři roky, tj. 2016-2019).
+Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(dluh_pos_share)`) obcí a v součtu tento dluh činil `r nm(dluh)` miliard Kč. Mezi obcemi s nenulovým dluhem dosahoval dluh v průměru `r pc(dluh_pos_mean)` příjmů.
 
 ```{r dluh-podil, fig.cap="Podíl obcí s nenulovým dluhem", fig.asp=.4}
 indik_slctyr %>% 
@@ -199,8 +189,7 @@ Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prost
 
 Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů (viz graf \@ref(fig:rezervy)); v součtu tyto rezervy činí `r nm(rez)` miliard Kč.
 
-Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalších `r pc(rez_krajska_share)` připadá na krajská města. 
-
+Zhruba `r pc(rez_pha_share)` těchto rezerv ovšem připadá na Prahu a dalších `r pc(rez_krajska_share)` připadá na krajská města.
 
 ```{r}
 indik_slctyr_res <- indik_slctyr %>% 
@@ -236,8 +225,7 @@ ggplot(indik_slctyr_res, aes(x = rezerva_to_spend)) +
   theme_studie("both", multiplot = T)
 ```
 
-
-Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží (viz graf \@ref(fig:rezervy-net)). 
+Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží (viz graf \@ref(fig:rezervy-net)).
 
 ```{r rezervy-net, fig.cap="Čisté rezervy obcí", fig.asp=.4}
 indik_slctyr %>% 
@@ -258,15 +246,9 @@ indik_slctyr %>%
 
 Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako prostředky pro předfinancování nebo spolufinancování investičních akcí, které mají být hrazeny z dotací, jejichž časování je často špatně předvídatelné. Viz obrázek \@ref(fig:rezervy).
 
-# Test citací
-
-Použili jsme balík na data [@R-statnipokladna].
-
-Jak říká @sedmihradska2016, rozpočty jsou těžký. Někdy dokonce nejtěžší [@sedmihradská-nitschová2004].
-
-# Apendix
-
 ## Podíl skupin obcí na objemech veřejných peněz
+
+Shrnující graf níže ukazuje jaký je podíl čtyř skupin obcí na celkovém počtu obcí, počtu obyvatel a výše diskutovaných rozpočtových ukazatelích. Samozřejmě, těch nejmenších, běžných obcí je výrazná většina, ačkoliv v nich žije méně než polovina všech obyvatel. Co je překvapivější, tyto běžné obce mají menší podíl než by odpovídal jejich podílu obyvatel úplně všeho - výdajů, příjmů z rozpočtového určení daní, rezerv, dluhu - kromě kapitálových výdajů a tedy investic.
 
 ```{r}
 share_typ <- indik_slctyr %>% 
@@ -309,5 +291,21 @@ ggplot(share_typ, aes(x = value, fill = typobce_wrapped, y = variable,
   scale_x_percent_cz() +
   labs(title = "Podíl různých typů obcí na objemech klíčových proměnných")
 ```
+
+# Závěr
+
+Máme více než 6000 obcí, za každou z nich je zodpovědné jiné zastupitelstvo a každá z nich vstupovala do krizového roku 2020 v jiné rozpočtové kondici. Některé z obcí již v rozpočtových problémech byly v roce 2019, jiným obcím by stačily menší negativní šok, než krizový rok 2020, aby se do nich dostaly. Přílišné zadlužení a zadlužování trápilo již v roce 2019 řadu obcí a jejich počet během roku 2020 jistě nepoklesl. Mnohé obce hospodařily již v roce 2019 s deficitním rozpočtem a ty i jiné pro udržení rovnováhy mezi výdaji a příjmy v roce 2020 nejspíše musely omezovat jimi poskytované veřejné služby, což bezprostředně ovlivnilo kvalitu života obyvatel. V důsledku probíhající krize většina obcí nejspíše snižuje své kapitálové výdaje a tyto nižší investice ovlivní negativně nejen konkrétní obyvatele těchto obcí, ale i celkový hospodářský vývoj.
+
+V této studii jsme ukázali, že obce se v roce 2019 lišily v závislosti příjmů na rozpočtovém určení daní, ve velikosti investic, ve velikosti deficitního nebo přebytkového hospodaření, stejně tak jako v tom jak moc byly zadlužené nebo měly rezervy. V této studii poukazujeme na rozdíly mezi obcemi podle administrativní role obce a dělíme je tak na běžné obce, obce s pověřeným obecním úřadem, obce s rozšířenou působností a krajská města včetně speciálního případu Prahy. Ačkoliv některé rozdíly jsou patrné i mezi těmito čtyřmi skupinami, průměry za skupiny zakrývají velké rozdíly mezi jednotlivými obcemi na které upozorňujeme v grafech.
+
+Naši deskriptivní analýzu roku 2019 motivujeme různorodostí obcí a jejich rozdílnou připraveností na nadcházející krizi, včetně poklesu příjmů obcí v důsledku hospodářského útlumu, protikrizových daňových opatření i v budoucnu pravděpodobně schváleného snížení daní od roku 2021. Zároveň ale samotnou probíhající krizi a její dopady na příjmy nebo investice obcí v této studii neanalyzujeme, což by ale mělo být předmětem dalšího zkoumání především s tím, jak budou dostupná nová rozpočtová data za rok 2020. Stejně tak v této studii neprognózujeme budoucí vývoj a nerozšiřujeme existující simulace vývoje daňových příjmů obcí (viz kalkulačky Svazu měst a obcí České republiky a Sdružení místních samospráv).
+
+# Test citací
+
+Použili jsme balík na data [@R-statnipokladna].
+
+Jak říká @sedmihradska2016, rozpočty jsou těžký. Někdy dokonce nejtěžší [@sedmihradská-nitschová2004].
+
+# Apendix
 
 # Bibliografie
