@@ -42,7 +42,7 @@ knitr::write_bib(file = 'packages.bib')
 # Shrnutí
 
 -   V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. Ukazujeme, v jak dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil COVID-19, hospodářskou krizi a pokles daňových příjmů.
--   V roce 2019 celkové příjmy obcí dosáhly `r nm(rozp_p_celkem)` miliard Kč a celkové výdaje `r nm(spend)` miliard Kč, což velikostně odpovídá téměř čtvrtině státního rozpočtu (výdaje 1552 miliard Kč v roce 2019).
+-   V roce 2019 celkové příjmy obcí dosáhly `r nm(income)` miliard Kč a celkové výdaje `r nm(spend)` miliard Kč, což velikostně odpovídá téměř čtvrtině státního rozpočtu (výdaje 1552 miliard Kč v roce 2019).
 -   Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
 -   Výdaje obcí se dělí na běžné (`r pc(1 - kap_share_total)`, `r nm(spend - kap)` miliard Kč) a kapitálové (`r pc(kap_share_total)`, `r nm(kap)` miliard Kč).
 -   Kapitálové výdaje měly v průměru nejvyšší běžné obce: jak relativně vůči běžným výdajům, tak v Kč na obyvatele měly investice vyšší než obce s pověřeným obecním úřadem, obce s rozšířenou působností nebo krajská města včetně Prahy (v průměru, ačkoliv ne podle mediánu, což ukazuje na vysoké investice menšího počtu běžných obcí a obecněji na různorodost obcí).
