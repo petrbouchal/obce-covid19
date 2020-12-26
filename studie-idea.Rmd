@@ -74,7 +74,7 @@ Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD
 
 Rozpočtové určení daní redistribuuje vybrané daně mezi obce, kraje a státní rozpočet. Týká se daně z příjmu fyzických i právnických osob a DPH (i daně z nemovitých věcí, jejíž celé příjmy jdou obcím). Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní. Zbývající a zároveň největší díl příjmů připadá státnímu rozpočtu.
 
-```{r rud-podil, fig.asp = .5}
+```{r rud-podil, fig.asp = .5, fig.cap="RUD a příjmy"}
 ggplot(indik_slctyr) +
   geom_boxplot(aes(x = typobce_wrapped, y = rozp_p_rud/rozp_p_celkem), width = .3) +
   theme_studie("y") +
@@ -99,7 +99,7 @@ kap_ratio_typ <- indik_slctyr %>%
 
 Největší podíl investic na výdajích vykazují běžné obce, jak ukazuje \@ref(fig:kap-ratio); tento podíl klesá s rostoucí administrativní rolí obce, především kvůli odlišným povinnostem různých typů obcí; např. obce s rozšířenou působností poskytují některé sociální služby a další funkce pro širší okolí. Kategorie s nejnižším podílem investic na výdajích pak zahrnuje i Prahu, která plní i funkce kraje, což s sebou nese vyšší běžné výdaje (např. střední školství a částečně zdravotnictví.)
 
-```{r kap-ratio, fig.asp = 0.4}
+```{r kap-ratio, fig.asp = 0.4, fig.cap="Kapitálové výdaje"}
 ggplot(kap_ratio_typ, aes(x = median, y = typobce_wrapped)) +
   geom_col() +
   geom_point(aes(x = nevazeny), pch = "|", size = 10) +
@@ -123,7 +123,7 @@ kap_percap_typ <- indik_slctyr %>%
   mutate_if(is.numeric, round)
 ```
 
-```{r kap-percap, fig.asp=.4}
+```{r kap-percap, fig.asp=.4, fig.cap="Kapitálové výdaje na obyvatele"}
 ggplot(kap_percap_typ, aes(x = median, y = typobce_wrapped)) +
   geom_col() +
   geom_point(aes(x = vazeny), pch = "|", size = 10) +
