@@ -26,24 +26,26 @@ if(file.exists(indik_file)) {
   if(unique(indik_slctyr$per_yr != yr_slct)) stop("Roky nesedí.")
 }
 
-# Spending ----------------------------------------------------------------
 
-spend <- sum(indik_slctyr$rozp_p_celkem/1e9)
+
+# Income ------------------------------------------------------------------
+
+spend <- sum(indik_slctyr$rozp_v_celkem/1e9)
 rud <- sum(indik_slctyr$rozp_p_rud/1e9)
 
-income <- sum(indik_slctyr$rozp_v_celkem/1e9)
+income <- sum(indik_slctyr$rozp_p_celkem/1e9)
 
 rud_share <- (sum(indik_slctyr$rozp_p_rud/1e9)/sum(indik_slctyr$rozp_p_celkem/1e9))
 
-rezervy <- sum(indik_slctyr$kratkodoby_fin_majetek/1e9, na.rm = T)
-bilance <- sum(indik_slctyr$bilance/1e9)
+# Spending ----------------------------------------------------------------
 
 kap <- sum(indik_slctyr$rozp_v_kap/1e9, na.rm = T)
 kap_share_mean <- mean(indik_slctyr$rozp_v_kap_share, na.rm = T)
 kap_share_total <- kap/spend
 
-
 # Bilance -----------------------------------------------------------------
+
+bilance <- sum(indik_slctyr$bilance/1e9)
 
 bilance_sum <- sum(indik_slctyr$bilance/1e9, na.rm = T)
 bilance_avg <- mean(indik_slctyr$bilance_rel, na.rm = T)
@@ -99,6 +101,8 @@ dluh_pos_mean_last4 <- indik_slctyr %>%
   summarise(n = mean(rozp_odp, na.rm = T)) %>% pull()
 
 # Rezervy -----------------------------------------------------------------
+
+rezervy <- sum(indik_slctyr$kratkodoby_fin_majetek/1e9, na.rm = T)
 
 rez <- sum(indik_slctyr$kratkodoby_fin_majetek/1e9, na.rm = T)
 
