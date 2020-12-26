@@ -7,6 +7,7 @@ output:
   bookdown::word_document2:
     reference_docx: idea-template.docx
     number_sections: no
+    pandoc_args: !expr rmarkdown::pandoc_lua_filter_args(rmarkdown::pkg_file_lua('pandoc-quotes.lua', 'ptrr'))
 bibliography: [bibliography.bib, packages.bib]
 csl: chicago-author-date.csl
 zotero: [peta-peta]
