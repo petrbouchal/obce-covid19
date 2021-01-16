@@ -18,10 +18,10 @@ orgs <- orgs %>%
 b_old <- read_parquet("data-input/budgets_old.parquet")
 b_old_coded <- b_old %>%
   select(-kraj) %>%
-  sp_add_codelist("polozka", dest_dir = "data-input") %>%
+  sp_add_codelist("polozka") %>%
   sp_add_codelist(orgs) %>%
   select(-kraj) %>%
-  sp_add_codelist("nuts", dest_dir = "data-input")
+  sp_add_codelist("nuts")
 
 rm("b_old")
 write_parquet(b_old_coded, "data-processed/budgets_old_coded.parquet")
@@ -33,10 +33,10 @@ rm("b_old_coded")
 b_new <- read_parquet("data-input/budgets.parquet")
 b_new_coded <- b_new %>%
   select(-kraj) %>%
-  sp_add_codelist("polozka", dest_dir = "data-input") %>%
+  sp_add_codelist("polozka") %>%
   sp_add_codelist(orgs) %>%
   select(-kraj) %>%
-  sp_add_codelist("nuts", dest_dir = "data-input")
+  sp_add_codelist("nuts")
 
 rm("b_new")
 write_parquet(b_new_coded, "data-processed/budgets_new_coded.parquet")
@@ -48,10 +48,10 @@ rm("b_new_coded")
 b_17 <- read_parquet("data-input/budgets_2017.parquet")
 b_17_coded <- b_17 %>%
   select(-kraj) %>%
-  sp_add_codelist("polozka", dest_dir = "data-input") %>%
+  sp_add_codelist("polozka") %>%
   sp_add_codelist(orgs) %>%
   select(-kraj) %>%
-  sp_add_codelist("nuts", dest_dir = "data-input")
+  sp_add_codelist("nuts")
 
 rm("b_17")
 write_parquet(b_17_coded, "data-processed/budgets_17_coded.parquet")
@@ -62,7 +62,7 @@ rm("b_17_coded")
 # 2018 --------------------------------------------------------------------
 
 b_18 <- read_parquet("data-input/budgets_2018.parquet")
-polozka_raw <- sp_get_codelist("polozka", dest_dir = "data-input")
+polozka_raw <- sp_get_codelist("polozka")
 
 # polozka_duplicates <- polozka_raw %>%
 #   group_by(polozka) %>%
@@ -87,7 +87,7 @@ b_18_coded <- b_18 %>%
   select(-kraj) %>%
   sp_add_codelist(orgs) %>%
   select(-kraj) %>%
-  sp_add_codelist("nuts", dest_dir = "data-input")
+  sp_add_codelist("nuts")
 
 # check that all polozky have a match
 

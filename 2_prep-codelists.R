@@ -1,4 +1,4 @@
-polozka_raw <- sp_get_codelist("polozka", dest_dir = "data-input/")
+polozka_raw <- sp_get_codelist("polozka")
 polozka <- polozka_raw %>%
   # fix codes where end date is before start date
   mutate(end_date = if_else(polozka %in% c("1381", "2326") & end_date == "2018-09-30",

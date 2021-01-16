@@ -37,7 +37,7 @@ bb2 <- obce_income_endyear_polozka_cons %>%
   filter(rud) %>%
   sp_add_codelist(orgs) %>%
   select(-kraj) %>%
-  sp_add_codelist("nuts", dest_dir = "data-input") %>%
+  sp_add_codelist("nuts") %>%
   left_join(katobyv) %>%
   mutate(katobyv_nazev = as.factor(katobyv_nazev) %>%
            fct_reorder(as.integer(katobyv_id)),

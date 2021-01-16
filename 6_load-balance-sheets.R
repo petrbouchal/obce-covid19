@@ -5,8 +5,7 @@ source("shared.R")
 
 rozvaha_1 <- statnipokladna::sp_get_table("balance-sheet",
                                               year = 2010:2019,
-                                              ico = ico_obce,
-                                              dest_dir = "data-input")
+                                              ico = ico_obce)
 
 rozvaha_1_processed <- rozvaha_1 %>%
   sp_add_codelist("polvyk") %>%
@@ -15,7 +14,7 @@ rozvaha_1_processed <- rozvaha_1 %>%
 
 rozvaha_2 <- statnipokladna::sp_get_table("balance-sheet-2",
                                             year = 2013:2019,
-                                            ico = ico_obce, dest_dir = "data-input")
+                                            ico = ico_obce)
 
 rozvaha_2 %>%
   group_by(per_yr) %>%

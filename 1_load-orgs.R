@@ -4,8 +4,8 @@ library(CzechData)
 library(arrow)
 
 if(!file.exists("data-input/orgs.parquet")) {
-  orgs_raw <- sp_get_codelist("ucjed", dest_dir = "data-input")
-  druhuj <- sp_get_codelist("druhuj", dest_dir = "data-input")
+  orgs_raw <- sp_get_codelist("ucjed")
+  druhuj <- sp_get_codelist("druhuj")
 
   orgs <- orgs_raw %>%
     left_join(druhuj)
@@ -66,7 +66,7 @@ levels(obce_typy$typobce_wrapped)
 obce_typy %>% distinct() %>% count(typobce)
 write_parquet(obce_typy, "data-transfer/obce_typy.parquet")
 
-katobyv <- sp_get_codelist("katobyv", dest_dir = "data-input/sp/") %>%
+katobyv <- sp_get_codelist("katobyv") %>%
   rename(katobyv_nazev = nazev)
 write_parquet(okresy, "data-transfer/katobyv_codelist.parquet")
 

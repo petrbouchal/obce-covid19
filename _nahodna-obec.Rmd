@@ -17,14 +17,14 @@ orgs <- read_parquet("data-transfer/orgs_selected.parquet")
 
 
 ```{r}
-b19_all <- sp_get_table("budget-local", 2019, 12, dest_dir = "data-input")
+b19_all <- sp_get_table("budget-local", 2019, 12)
 
 b19_all_coded <- b19_all %>%
   select(-kraj) %>% 
   sp_add_codelist(orgs) %>% 
-  sp_add_codelist("polozka", dest_dir = "data-input") %>% 
+  sp_add_codelist("polozka") %>% 
   select(-kraj) %>% 
-  sp_add_codelist("nuts", dest_dir = "data-input")
+  sp_add_codelist("nuts")
 ```
 
 
