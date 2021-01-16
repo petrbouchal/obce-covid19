@@ -13,15 +13,15 @@ druhove_annual <- bb %>%
 nrow(druhove_annual)
 
 write_parquet(druhove_annual,
-          "data-processed/budgets_druhove_annual.parquet")
+              "data-processed/budgets_druhove_annual.parquet")
 write_parquet(druhove_annual %>%
-            filter(vtab == "000100"),
-          "data-processed/budgets_druhove_prijmy_annual.parquet",
-          compress = "gz")
+                filter(vtab == "000100"),
+              "data-processed/budgets_druhove_prijmy_annual.parquet",
+              compress = "gz")
 write_parquet(druhove_annual %>%
-            filter(vtab == "000200"),
-          "data-processed/budgets_druhove_vydaje_annual.parquet",
-          compress = "gz")
+                filter(vtab == "000200"),
+              "data-processed/budgets_druhove_vydaje_annual.parquet",
+              compress = "gz")
 rm("druhove_annual")
 
 druhove <- bb %>%
