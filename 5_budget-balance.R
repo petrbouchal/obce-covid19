@@ -9,20 +9,22 @@ obce_endyear_polozka_cons <- budget %>%
   filter(ico %in% ico_obce) %>%
   sp_add_codelist(polozka) %>%
   sp_add_codelist(orgs) %>%
-  select(-kraj) %>%
+  # select(-kraj) %>%
   sp_add_codelist(nuts, by = "nuts_id") %>%
   sp_add_codelist("katobyv", dest_dir = "data-input") %>%
+  rename(katobyv_nazev = nazev) %>%
   # konsolidovat na urovni ucetni jednotky
   filter(!kon_pol)
 
 obce_bilance <- obce_endyear_polozka_cons %>%
   group_by(per_yr, ico, druh, katobyv_nazev, katobyv_id, nuts_id, orgs_ucjed_nazev,
-           obec, pocob, zuj, kod_pou, kod_rp, kraj, okres) %>%
+           obec, pocob, kraj, zuj, kod_pou, kod_rp) %>%
   summarise(rslt = sum(budget_spending, na.rm = T)) %>%
   pivot_wider(names_from = druh, values_from = rslt) %>%
   ungroup() %>%
   mutate(bilance = Příjmy - Výdaje,
          bilance_rel = bilance/Příjmy,
-         katobyv_nazev = fct_reorder(katobyv_nazev, as.numeric(katobyv_id)))
+         katobyv_nazev = fct_reorder(katobyv_nazev, as.numeric(katobyv_id))) %>%
+  ungroup()
 
 write_parquet(obce_bilance, "data-processed/budgets_bilance.parquet")

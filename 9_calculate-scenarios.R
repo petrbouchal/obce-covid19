@@ -150,7 +150,7 @@ indikatory <- indik_for_calc %>%
                          "S rozšířenou působností",
                          "S pověřeným obecním úřadem",
                          "Běžná obec")),
-         kraj_short = fct_relabel(kraj,
+         kraj_short = fct_relabel(kraj_nazev,
                                   ~str_remove(.x, "\\s?Kraj\\s?")) %>%
            fct_recode(`Praha` = "Hlavní Město Praha"))
 
