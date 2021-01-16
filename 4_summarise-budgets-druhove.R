@@ -1,4 +1,5 @@
 library(tidyverse)
+library(arrow)
 library(statnipokladna)
 
 bb <- read_parquet("data-input/budgets_all_bare.parquet")
