@@ -4,6 +4,7 @@
 
 source("shared.R")
 library(tidyverse)
+library(arrow)
 
 
 # set param if not run from within a parameterised Rmd --------------------
