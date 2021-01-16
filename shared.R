@@ -26,9 +26,8 @@ ico_obce <- read_rds("data-transfer/ico_obce.rds")
 orgs <- read_parquet("data-transfer/orgs_selected_obce.parquet")
 kraje <- read_parquet("data-transfer/kraj_codelist.parquet")
 okresy <- read_parquet("data-transfer/okres_codelist.parquet")
-katobyv <- sp_get_codelist("katobyv", dest_dir = "data-input/sp/") %>%
-  rename(katobyv_nazev = nazev)
-nuts <- sp_get_codelist("nuts", dest_dir = "data-input/sp/")
+nuts <- read_parquet("data-transfer/nuts_codelist.parquet")
+katobyv <- read_parquet("data-transfer/katobyv_codelist.parquet")
 obce_typy <- read_parquet("data-transfer/obce_typy.parquet")
 
 # budgeting codelist
