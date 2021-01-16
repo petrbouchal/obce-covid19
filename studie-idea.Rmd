@@ -69,11 +69,11 @@ V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 20
 
 ## Příjmy
 
-Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč. Obrázek \@ref(fig:rud-podil) ukazuje rozdělení závislosti příjmů na RUD u různých typů obcí.
+Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč. Obrázek \@ref(fig:rud-podil) ukazuje rozdělení závislosti příjmů na RUD u různých typů obcí. (Příjmy Prahy zahrnují i tzv. krajskou část rozpočtového určení daní, viz níže.)
 
 #### Box: Rozpočtové určení daní (RUD) {.unnumbered}
 
-Rozpočtové určení daní redistribuuje vybrané daně mezi obce, kraje a státní rozpočet. Týká se daně z příjmu fyzických i právnických osob a DPH (i daně z nemovitých věcí, jejíž celé příjmy jdou obcím). Obce obdrží cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní. Zbývající a zároveň největší díl příjmů připadá státnímu rozpočtu.
+Rozpočtové určení daní redistribuuje vybrané daně mezi obce, kraje a státní rozpočet. Týká se daně z příjmu fyzických i právnických osob a DPH (i daně z nemovitých věcí, jejíž celé příjmy jdou obcím). Podle pravidel platných do roku 2020 obdržely obce cca 24 % celkových výnosů těchto daní; na podíl jednotlivých obcí má zásadní vliv počet obyvatel. Kraje pak obdrží celkem cca 9 % výnosu těchto daní. (Rozpočet hlavního města Prahy zahrnuje oba tyto příjmy.) Zbývající a zároveň největší díl příjmů připadá státnímu rozpočtu.
 
 ```{r rud-podil, fig.asp = .5, fig.cap="RUD a příjmy"}
 ggplot(indik_slctyr) +
