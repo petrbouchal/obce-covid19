@@ -16,20 +16,25 @@ if(!file.exists("data-input/orgs.parquet")) {
   orgs <- read_parquet("data-input/orgs.parquet")
 }
 
-orgs_selected <- read_parquet("data-input/orgs.parquet") %>%
-  select(ico, start_date, end_date, ucjed_nazev, obec, nuts_id, katobyv_id,
-         pocob, kod_pou, kod_rp, zuj, typorg_id, kraj, druhuj_id, druhuj_nazev)
+orgs_selected <- read_parquet("data-input/orgs.parquet",
+                              col_select = c("ico", "start_date", "end_date",
+                                             "ucjed_nazev", "obec", "nuts_id",
+                                             "katobyv_id", "pocob", "kod_pou",
+                                             "kod_rp", "zuj", "typorg_id",
+                                             "kraj", "druhuj_id", "druhuj_nazev"))
 write_parquet(orgs_selected, "data-transfer/orgs_selected.parquet")
 
-orgs_selected_obce <- read_parquet("data-input/orgs.parquet") %>%
-  select(ico, start_date, end_date, ucjed_nazev, obec, nuts_id, katobyv_id,
-         pocob, kod_pou, kod_rp, zuj, typorg_id, kraj, druhuj_id, druhuj_nazev,
-         zrizovatel_ico) %>%
+orgs_selected_obce <- read_parquet("data-input/orgs.parquet",
+                                   col_select = c("ico", "start_date", "end_date",
+                                                  "ucjed_nazev", "obec", "nuts_id",
+                                                  "katobyv_id", "pocob", "kod_pou",
+                                                  "kod_rp", "zuj", "typorg_id",
+                                                  "kraj", "druhuj_id", "druhuj_nazev")) %>%
   filter(druhuj_id == "4")
 write_parquet(orgs_selected_obce, "data-transfer/orgs_selected_obce.parquet")
 
-ico_obce <- orgs %>%
-  filter(druhuj_id == "4" & ico != "00241687") %>%
+ico_obce <- orgs_selected_obce %>%
+  filter(ico != "00241687") %>%
   distinct(ico) %>%
   pull(ico)
 write_rds(ico_obce, "data-transfer/ico_obce.rds")
