@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(statnipokladna)
-orgs <- read_parquet("data-processed/orgs_selected.parquet")
+orgs <- read_parquet("data-transfer/orgs_selected.parquet")
 ```
 
 

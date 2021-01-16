@@ -14,12 +14,6 @@ source("9_calculate-scenarios.R")
 source("build_word.R")
 rmarkdown::render_site()
 
-files_for_ideareport <- c("polozka.parquet",
-                          "obce_typy.parquet",
-                          "ico_obce.rds",
-                          "orgs_selected_obce.parquet")
-paths_for_ideareport <- file.path("data-processed", files_for_ideareport)
-file.copy(paths_for_ideareport, "data-transfer", overwrite = T)
 source("cisla_report_stav.R")
 
 rmarkdown::render("studie-idea.Rmd", output_format = rmarkdown::word_document())

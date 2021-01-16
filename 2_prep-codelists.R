@@ -19,4 +19,4 @@ polozka <- polozka_raw %>%
                            as.Date("9999-12-31"), end_date)) %>%
   select(-for2018, -duplicate, -latest, -n)
 
-write_parquet(polozka, "data-processed/polozka.parquet")
+write_parquet(polozka, "data-shared/polozka.parquet")

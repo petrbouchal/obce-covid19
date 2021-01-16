@@ -3,7 +3,7 @@ library(arrow)
 library(statnipokladna)
 
 bb <- read_parquet("data-input/budgets_all_bare.parquet")
-polozka <- read_parquet("data-processed/polozka.parquet")
+polozka <- read_parquet("data-transfer/polozka.parquet")
 
 druhove_annual <- bb %>%
   filter(per_m == "12") %>%

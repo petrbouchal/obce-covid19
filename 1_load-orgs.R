@@ -19,20 +19,20 @@ if(!file.exists("data-input/orgs.parquet")) {
 orgs_selected <- read_parquet("data-input/orgs.parquet") %>%
   select(ico, start_date, end_date, ucjed_nazev, obec, nuts_id, katobyv_id,
          pocob, kod_pou, kod_rp, zuj, typorg_id, kraj, druhuj_id, druhuj_nazev)
-write_parquet(orgs_selected, "data-processed/orgs_selected.parquet")
+write_parquet(orgs_selected, "data-transfer/orgs_selected.parquet")
 
 orgs_selected_obce <- read_parquet("data-input/orgs.parquet") %>%
   select(ico, start_date, end_date, ucjed_nazev, obec, nuts_id, katobyv_id,
          pocob, kod_pou, kod_rp, zuj, typorg_id, kraj, druhuj_id, druhuj_nazev,
          zrizovatel_ico) %>%
   filter(druhuj_id == "4")
-write_parquet(orgs_selected_obce, "data-processed/orgs_selected_obce.parquet")
+write_parquet(orgs_selected_obce, "data-transfer/orgs_selected_obce.parquet")
 
 ico_obce <- orgs %>%
   filter(druhuj_id == "4" & ico != "00241687") %>%
   distinct(ico) %>%
   pull(ico)
-write_rds(ico_obce, "data-processed/ico_obce.rds")
+write_rds(ico_obce, "data-transfer/ico_obce.rds")
 
 orp <- CzechData::load_RUIAN_state("orp") %>% pull(spr_ob_kod)
 pou <- CzechData::load_RUIAN_state("pou") %>% pull(spr_ob_kod)
@@ -64,7 +64,7 @@ levels(obce_typy$typobce)
 levels(obce_typy$typobce_wrapped)
 
 obce_typy %>% distinct() %>% count(typobce)
-write_parquet(obce_typy, "data-processed/obce_typy.parquet")
+write_parquet(obce_typy, "data-transfer/obce_typy.parquet")
 
 nuts_codelist <- sp_get_codelist("nuts")
 

@@ -2,7 +2,7 @@ library(tidyverse)
 library(statnipokladna)
 
 budgets <- read_parquet("data-input/budgets_all_bare.parquet")
-polozka <- read_parquet("data-processed/polozka.parquet")
+polozka <- read_parquet("data-transfer/polozka.parquet")
 orgs <- read_parquet("data-input/orgs.parquet") %>%
   select(ico, start_date, end_date, ucjed_nazev, obec, nuts_id, katobyv_id,
          pocob, kod_pou, kod_rp, zuj, typorg_id, kraj, druhuj_id, druhuj_nazev)
