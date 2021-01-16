@@ -9,10 +9,10 @@ rzv <- sp_get_table("balance-sheet", 2019) %>%
   bind_rows(sp_get_table("balance-sheet-2", 2019))
 
 rzv_coded <- rzv %>%
-  sp_add_codelist("polvyk") %>%
+  sp_add_codelist(polvyk) %>%
   select(-kraj) %>%
   sp_add_codelist(orgs) %>%
-  sp_add_codelist("druhuj")
+  sp_add_codelist(druhuj)
 
 rzv %>%
   group_by(ico, per_yr) %>%

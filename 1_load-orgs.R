@@ -79,11 +79,18 @@ write_parquet(kraje, "data-transfer/kraj_codelist.parquet")
 nuts_codelist <- sp_get_codelist("nuts")
 write_parquet(okresy, "data-transfer/nuts_codelist.parquet")
 
+polvyk_codelist <- sp_get_codelist("polvyk")
+write_parquet(polvyk_codelist, "data-transfer/polvyk_codelist.parquet")
+
+druhuj_codelist <- sp_get_codelist("druhuj")
+write_parquet(druhuj_codelist, "data-transfer/druhuj_codelist.parquet")
+
 okresy <- nuts_codelist %>%
   filter(str_length(nuts_id) == 6) %>%
   filter(end_date > Sys.Date()) %>%
   select(nuts_id, okres_nazev = nuts_nazev)
 write_parquet(okresy, "data-transfer/okres_codelist.parquet")
+
 
 cohreg <- nuts_codelist %>%
   filter(str_length(nuts_id) == 4) %>%

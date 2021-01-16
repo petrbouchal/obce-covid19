@@ -29,6 +29,8 @@ okresy <- read_parquet("data-transfer/okres_codelist.parquet")
 nuts <- read_parquet("data-transfer/nuts_codelist.parquet")
 katobyv <- read_parquet("data-transfer/katobyv_codelist.parquet")
 obce_typy <- read_parquet("data-transfer/obce_typy.parquet")
+polvyk <- read_parquet("data-transfer/polvyk_codelist.parquet")
+druhuj <- read_parquet("data-transfer/druhuj_codelist.parquet")
 
 # budgeting codelist
 polozka <- read_parquet("data-transfer/polozka.parquet")

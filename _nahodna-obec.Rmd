@@ -22,9 +22,9 @@ b19_all <- sp_get_table("budget-local", 2019, 12)
 b19_all_coded <- b19_all %>%
   select(-kraj) %>% 
   sp_add_codelist(orgs) %>% 
-  sp_add_codelist("polozka") %>% 
+  sp_add_codelist(polozka) %>% 
   select(-kraj) %>% 
-  sp_add_codelist("nuts")
+  sp_add_codelist(nuts)
 ```
 
 
