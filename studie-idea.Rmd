@@ -218,9 +218,9 @@ indik_slctyr_res %>%
        subtitle = "Jako % ročních příjmů, rok 2019")
 ```
 
-```{r rezervy-hist}
+```{r rezervy-hist, include = FALSE}
 ggplot(indik_slctyr_res, aes(x = rezerva_to_spend)) +
-  geom_density() +
+  geom_histogram(aes(y = ..density..)) +
   facet_wrap(~typobce_wrapped) +
   scale_x_continuous(limits = c(0, 5)) +
   theme_studie("both", multiplot = T)
