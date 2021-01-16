@@ -24,6 +24,8 @@ rozvaha_keep <- c("AKTIVA","A.","A.I.","A.II.","A.III.","A.IV.","B.",
 
 ico_obce <- read_rds("data-transfer/ico_obce.rds")
 orgs <- read_parquet("data-transfer/orgs_selected_obce.parquet")
+kraje <- read_parquet("data-transfer/kraj_codelist.parquet")
+okresy <- read_parquet("data-transfer/okres_codelist.parquet")
 katobyv <- sp_get_codelist("katobyv", dest_dir = "data-input/sp/") %>%
   rename(katobyv_nazev = nazev)
 nuts <- sp_get_codelist("nuts", dest_dir = "data-input/sp/")
@@ -36,9 +38,11 @@ add_obce_meta <- function(data) {
   data$period_vykaz <- lubridate::make_date(data$per_yr, "12", "31")
   data %>%
     sp_add_codelist(orgs) %>%
-    select(-kraj) %>%
+    # select(-kraj) %>%
     sp_add_codelist(nuts, by = "nuts_id") %>%
     sp_add_codelist(katobyv) %>%
+    left_join(okresy) %>%
+    left_join(kraje) %>%
     select(-period_vykaz) %>%
     left_join(obce_typy) %>%
     ungroup() %>%

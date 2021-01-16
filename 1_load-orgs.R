@@ -65,3 +65,24 @@ levels(obce_typy$typobce_wrapped)
 
 obce_typy %>% distinct() %>% count(typobce)
 write_parquet(obce_typy, "data-processed/obce_typy.parquet")
+
+nuts_codelist <- sp_get_codelist("nuts")
+
+kraje <- nuts_codelist %>%
+  filter(str_length(nuts_id) == 5) %>%
+  filter(end_date > Sys.Date()) %>%
+  select(kraj = nuts_id, kraj_nazev = nuts_nazev)
+
+write_parquet(kraje, "data-transfer/kraj_codelist.parquet")
+
+okresy <- nuts_codelist %>%
+  filter(str_length(nuts_id) == 6) %>%
+  filter(end_date > Sys.Date()) %>%
+  select(nuts_id, okres_nazev = nuts_nazev)
+
+write_parquet(okresy, "data-transfer/okres_codelist.parquet")
+
+cohreg <- nuts_codelist %>%
+  filter(str_length(nuts_id) == 4) %>%
+  filter(end_date > Sys.Date()) %>%
+  select(kraj = nuts_id, kraj_nazev = nuts_nazev)
