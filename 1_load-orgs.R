@@ -73,7 +73,7 @@ write_parquet(obce_typy, "data-transfer/obce_typy.parquet")
 
 katobyv <- sp_get_codelist("katobyv") %>%
   rename(katobyv_nazev = nazev)
-write_parquet(okresy, "data-transfer/katobyv_codelist.parquet")
+write_parquet(katobyv, "data-transfer/katobyv_codelist.parquet")
 
 kraje <- nuts_codelist %>%
   filter(str_length(nuts_id) == 5) %>%
