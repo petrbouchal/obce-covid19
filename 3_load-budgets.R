@@ -32,5 +32,5 @@ budgets_expenditure_bare <- budgets_all_bare %>%
 write_parquet(budgets_expenditure_bare, "data-input/budgets_expenditure_bare.parquet")
 rm("budgets_expenditure_bare")
 
-budgets2020 <- sp_get_table("budget-local", 2020, 2)
-unique(budgets2020$ico) %>% length()
+# budgets2020 <- sp_get_table("budget-local", 2020, 2)
+# unique(budgets2020$ico) %>% length()
