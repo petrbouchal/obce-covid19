@@ -31,13 +31,13 @@ druhove <- bb %>%
 nrow(druhove)
 write_parquet(druhove, "data-processed/budgets_druhove.parquet")
 write_parquet(druhove %>%
-            filter(vtab == "000100"),
-          "data-processed/budgets_druhove_prijmy.parquet",
-          compress = "gz")
+                filter(vtab == "000100"),
+              "data-processed/budgets_druhove_prijmy.parquet",
+              compress = "gz")
 write_parquet(druhove %>%
-            filter(vtab == "000200"),
-          "data-processed/budgets_druhove_vydaje.parquet",
-          compress = "gz")
+                filter(vtab == "000200"),
+              "data-processed/budgets_druhove_vydaje.parquet",
+              compress = "gz")
 
 
 # Capital x current spend -------------------------------------------------
