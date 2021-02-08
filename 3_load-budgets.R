@@ -1,16 +1,10 @@
 library(tidyverse)
 library(statnipokladna)
 
-budgets <- sp_get_table("budget-local", c(2013:2016, 2019),
+budgets <- sp_get_table("budget-local", c(2013:2017, 2019),
                         c(3,6,9,12)) %>%
   janitor::remove_constant(na.rm = TRUE)
 write_parquet(budgets, "data-input/budgets.parquet")
-
-# na webu chybí Q3 2017, zbytek 2017 stáhnout zvlášť
-budgets_2017 <- sp_get_table("budget-local", 2017, c(3, 6, 12)) %>%
-  janitor::remove_constant(na.rm = TRUE)
-
-write_parquet(budgets_2017, "data-input/budgets_2017.parquet")
 
 # 2018 do zvláštního objektu, abychom mohli pořešit číselníky
 budgets_2018 <- sp_get_table("budget-local", 2018,
