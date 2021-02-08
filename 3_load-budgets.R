@@ -1,5 +1,6 @@
 library(tidyverse)
 library(statnipokladna)
+library(arrow)
 
 budgets <- sp_get_table("budget-local", c(2013:2017, 2019),
                         c(3,6,9,12)) %>%
