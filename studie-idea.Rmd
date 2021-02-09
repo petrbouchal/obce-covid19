@@ -301,11 +301,8 @@ V této studii jsme ukázali, že obce se v roce 2019 lišily v závislosti př�
 
 Naši deskriptivní analýzu roku 2019 motivujeme různorodostí obcí a jejich rozdílnou připraveností na nadcházející krizi, včetně poklesu příjmů obcí v důsledku hospodářského útlumu, protikrizových daňových opatření i snížení daní od ledna 2021. Samotnou probíhající krizi a její dopady na příjmy nebo investice obcí v této studii neanalyzujeme, což by ale mělo být předmětem dalšího zkoumání jakmile budou dostupná nová rozpočtová data za rok 2020. Stejně tak v této studii neprognózujeme budoucí vývoj a nerozšiřujeme existující simulace vývoje daňových příjmů obcí (viz kalkulačky Svazu měst a obcí České republiky a Sdružení místních samospráv).
 
-# Test citací
 
-Použili jsme balík na data [@R-statnipokladna].
 
-Jak říká @sedmihradska2016, rozpočty jsou těžký. Někdy dokonce nejtěžší [@sedmihradská-nitschová2004].
 
 # Apendix
 
