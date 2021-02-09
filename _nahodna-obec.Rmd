@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(statnipokladna)
+source("shared.R")
 orgs <- read_parquet("data-transfer/orgs_selected.parquet")
 ```
 
@@ -23,7 +24,6 @@ b19_all_coded <- b19_all %>%
   select(-kraj) %>% 
   sp_add_codelist(orgs) %>% 
   sp_add_codelist(polozka) %>% 
-  select(-kraj) %>% 
   sp_add_codelist(nuts)
 ```
 
@@ -41,6 +41,8 @@ obec_random$ucjed_nazev
 ```{r}
 b19_random <- b19_all_coded %>% 
   filter(ico %in% obec_random$ico)
+b19_praha <- b19_all_coded %>% 
+  filter(ico == "00064581")
 ```
 
 ```{r}
@@ -55,6 +57,15 @@ b19_random %>%
   count(wt = budget_spending) %>% 
   knitr::kable(format = "markdown", format.args = list(big.mark = " "))
 ```
+
+```{r}
+b19_praha %>% 
+  filter(!kon_pol) %>% 
+  group_by(druh) %>% 
+  count(wt = budget_spending) %>% 
+  knitr::kable(format = "markdown", format.args = list(big.mark = " "))
+```
+
 
 
 ```{r}
