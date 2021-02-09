@@ -12,7 +12,6 @@ obce_endyear_polozka_cons <- budget %>%
   # select(-kraj) %>%
   sp_add_codelist(nuts, by = "nuts_id") %>%
   sp_add_codelist(katobyv) %>%
-  rename(katobyv_nazev = nazev) %>%
   # konsolidovat na urovni ucetni jednotky
   filter(!kon_pol)
 
