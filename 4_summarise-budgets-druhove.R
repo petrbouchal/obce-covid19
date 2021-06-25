@@ -16,12 +16,10 @@ write_parquet(druhove_annual,
               "data-processed/budgets_druhove_annual.parquet")
 write_parquet(druhove_annual %>%
                 filter(vtab == "000100"),
-              "data-processed/budgets_druhove_prijmy_annual.parquet",
-              compress = "gz")
+              "data-processed/budgets_druhove_prijmy_annual.parquet")
 write_parquet(druhove_annual %>%
                 filter(vtab == "000200"),
-              "data-processed/budgets_druhove_vydaje_annual.parquet",
-              compress = "gz")
+              "data-processed/budgets_druhove_vydaje_annual.parquet")
 rm("druhove_annual")
 
 druhove <- bb %>%
@@ -32,12 +30,10 @@ nrow(druhove)
 write_parquet(druhove, "data-processed/budgets_druhove.parquet")
 write_parquet(druhove %>%
                 filter(vtab == "000100"),
-              "data-processed/budgets_druhove_prijmy.parquet",
-              compress = "gz")
+              "data-processed/budgets_druhove_prijmy.parquet")
 write_parquet(druhove %>%
                 filter(vtab == "000200"),
-              "data-processed/budgets_druhove_vydaje.parquet",
-              compress = "gz")
+              "data-processed/budgets_druhove_vydaje.parquet")
 
 
 # Capital x current spend -------------------------------------------------
