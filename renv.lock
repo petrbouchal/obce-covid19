@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.2",
+    "Version": "4.0.4",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -26,15 +26,15 @@
     },
     "CzechData": {
       "Package": "CzechData",
-      "Version": "0.3.0",
+      "Version": "0.5.6",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "JanCaha",
       "RemoteRepo": "CzechData",
       "RemoteRef": "master",
-      "RemoteSha": "3fd9f773f2adfd063c590db03de3b70981bbf3a0",
-      "Hash": "a3654b5cc865f2681e66a71e6db16692"
+      "RemoteSha": "ffb2c0073d0cc6ee2198e62d9c40d61fbda25af9",
+      "RemoteHost": "api.github.com",
+      "Hash": "c8994ed745a1ba767b1492eed2cf4b09"
     },
     "DBI": {
       "Package": "DBI",
@@ -1118,7 +1118,8 @@
       "Package": "renv",
       "Version": "0.12.5",
       "Source": "Repository",
-      "Repository": "CRAN"
+      "Repository": "CRAN",
+      "Hash": "5c0cdb37f063c58cdab3c7e9fbb8bd2c"
     },
     "repr": {
       "Package": "repr",

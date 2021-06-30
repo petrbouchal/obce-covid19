@@ -1,8 +1,8 @@
 ---
 title: "Rozpočty obcí a měst v předvečer krize"
 subtitle: "Covid-19, hospodářský útlum a pokles daňových příjmů"
-author: "Petr Bouchal a Petr Janský"
-date: "Únor 2021"
+author: "Petr Bouchal, Petr Janský a Jan Pintera"
+date: "Září 2021"
 output: 
   bookdown::word_document2:
     reference_docx: idea-template.docx
@@ -15,7 +15,7 @@ params:
   rok: 2019
   scen: "real"
 nocite: |
-  @monitor
+  @monitor, @SRR
 lang: cs
 ---
 
@@ -29,6 +29,7 @@ Sys.setlocale(locale = "cs_CZ.UTF-8")
 library(tidyverse)
 library(ptrr)
 library(colorblindr)
+library(RColorBrewer)
 
 library(statnipokladna)
 ```
@@ -43,12 +44,12 @@ knitr::write_bib(file = 'packages.bib')
 
 # Shrnutí
 
--   V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. Ukazujeme, v jak dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil COVID-19, hospodářskou krizi a pokles daňových příjmů.
--   V roce 2019 celkové příjmy obcí dosáhly `r nm(income)` miliard Kč a celkové výdaje `r nm(spend)` miliard Kč, což velikostně odpovídá téměř čtvrtině státního rozpočtu (výdaje 1552 miliard Kč v roce 2019).
+-   V této studii shrnujeme stav rozpočtů více než 6 000 českých obcí a měst v roce 2019. Ukazujeme, v jak dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil COVID-19, hospodářskou krizi a pokles daňových příjmů.
+-   V roce 2019 celkové příjmy obcí dosáhly `r nm(income)` miliard Kč a celkové výdaje `r nm(spend)` miliard Kč, což velikostně odpovídá téměř polovině státního rozpočtu (výdaje 1552 miliard Kč v roce 2019).
 -   Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
 -   Výdaje obcí se dělí na běžné (`r pc(1 - kap_share_total)`, `r nm(spend - kap)` miliard Kč) a kapitálové (`r pc(kap_share_total)`, `r nm(kap)` miliard Kč).
 -   Kapitálové výdaje měly v průměru nejvyšší běžné obce: jak relativně vůči běžným výdajům, tak v Kč na obyvatele měly investice vyšší než obce s pověřeným obecním úřadem, obce s rozšířenou působností nebo krajská města včetně Prahy (v průměru, ačkoliv ne podle mediánu, což ukazuje na vysoké investice menšího počtu běžných obcí a obecněji na různorodost obcí).
--   Deficitní rozpočet mělo `r pc(1 - bil_pos_share)` obcí (průměrný deficit u nich byl `r pc(bil_neg_avg)`, deficit v součtu `r nm(bil_neg_sum)` mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek unich 7 % a v součtu 28 mld. korun.
+-   Deficitní rozpočet mělo `r pc(1 - bil_pos_share)` obcí (průměrný deficit u nich byl `r pc(bil_neg_avg)`, deficit v součtu `r nm(bil_neg_sum)` mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek u nich 7 % a v součtu 28 mld. korun).
 -   Nenulový dluh mělo `r pc(dluh_pos_share)` % obcí (u nich dosahoval dluh v průměru `r pc(dluh_pos_mean)` % příjmů) a v součtu tento dluh činil `r nm(dluh)` miliard Kč.
 -   Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních výdajů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč (`r pc(rez_pha_share)` těchto rezerv připadá na Prahu a dalších `r pc(rez_krajska_share)` na krajská města).
 -   Obce zároveň měly `r nm(kzav)` miliard krátkodobých závazků.
@@ -58,13 +59,28 @@ knitr::write_bib(file = 'packages.bib')
 
 # Úvod
 
-V této studii shrnujeme stav rozpočtů více než 6000 obcí a měst v roce 2019. Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. Konkrétně v této studii upozorňujeme na následující tři fenomény.
+V této studii shrnujeme stav rozpočtů více než 6000 českých obcí a měst v roce 2019. Ukazujeme tedy, v jak moc dobré rozpočtové kondici vstupovaly různé obce a města do roku 2020, který pro ně připravil covid-19, hospodářskou krizi a pokles daňových příjmů. Konkrétně v této studii upozorňujeme na následující tři fenomény.
 
-**Různorodost obcí.** V mezinárodním srovnání je českých obcí velký počet vůči velikosti země a tyto obce se z rozpočtového hlediska mezi sebou velmi liší: v tom jak zadlužené jsou, jakou mají bilanci příjmů a výdajů a i toho, jak velké mají rezervy.
+**Různorodost obcí.** V mezinárodním srovnání je českých obcí velký počet vůči velikosti země a tyto obce se z rozpočtového hlediska mezi sebou velmi liší: v tom jak zadlužené jsou, jakou mají bilanci příjmů a výdajů a i toho, jak velké mají rezervy. Pro ilustraci různorodosti českých obcí - zatímco  běžných obcí bylo `r obec_info$pocet` a  žilo v nich v roce 2019 průměrně `r nm(obec_info$obyv_avg)` obyvatel, ve 13 krajských městech žilo průměrně `r nm(kraj_info$obyv_avg)` tisíc obyvatel. V grafu \@ref(fig:pocob-rozdeleni) je znázorněno statistické rozdělení počtu obyvatel v jednotlivých kategoriích.
 
-**Závislost na daňových příjmech.** Zásadním příjmem obcí jako celku je tzv. rozpočtové určení daní (RUD), ale to jak velký podíl má RUD na celkových příjmech konkrétní obce záleží především na jejích ostatních příjmech, jako je například daň z nemovitostí.
+```{r pocob-rozdeleni, fig.asp = .5, fig.cap="Populační rozdělení"}
+#indik_slctyr %>% group_by(typobce_wrapped) %>%
+#                  summarise(mean(as.numeric(pocob)), pocet = n())
 
-**Daňové příjmy v krizi.** Daňové příjmy obcí klesají a budou klesat z alespoň tří důvodů. Zaprvé, v návaznosti na epidemii covid-19 a související vládní opatření došlo k hospodářské krizi, která s sebou přináší pokles daňových příjmů. Zadruhé, některá vládní protikrizová opatření přímo snížila některé daňové příjmy. Zatřetí, parlament nejspíše od roku 2021 výrazně sníží daň z příjmů fyzických osob.
+
+ggplot(indik_slctyr, aes(x=log(as.numeric(pocob)), colour=typobce_wrapped,
+                         fill = after_scale(alpha(colour, 0.7)))) +
+  geom_density() +
+  theme_studie("x", plot.margin = unit(c(.5, .5, .5, 0), "cm"),
+               panel.spacing = unit(1, "cm")) +
+  colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  labs(title = "Populační rozdělení obcí podle jednotlivých kategorií", caption = 'Vodorovná osa představuje logaritmus počet obyvatel')
+```
+
+**Závislost na daňových příjmech.** Zásadním příjmem obcí jako celku je tzv. rozpočtové určení daní (RUD). Zároveň, to jak velký podíl má RUD na celkových příjmech konkrétní obce záleží především na jejích ostatních příjmech, jako je například daň z nemovitostí.
+
+**Daňové příjmy v ohrožení.** Výše daňových příjmů obcí je nejistá a je možné, že bude klesat z alespoň tří důvodů. Zaprvé, v návaznosti na epidemii covid-19 a související vládní opatření došlo k hospodářské krizi, která s sebou přináší pokles daňových příjmů. Zadruhé, některá vládní protikrizová opatření přímo snížila některé daňové příjmy. Zatřetí, parlament na podzim 2020 výrazně snížil daň z příjmů fyzických osob od roku 2021.
 
 # Příjmy a výdaje
 
@@ -84,7 +100,7 @@ ggplot(indik_slctyr) +
                                     name = NULL, darken = 0) +  
   scale_x_percent_cz() +
   theme_studie("y") +
-  labs(title = "Podíl RUD na rozpočtových příjmech obcí")
+  labs(title = "Podíl RUD na rozpočtových příjmech obcí", caption = "Obce spravují své záležitosti samostatně a rovněž je na ně přenesena část výkonu státní správy.\n Rozlišujeme tři kateogrie obcí podle míry přenesení státní správy: běžná obec,  obec s pověřeným úřadem\n a obec s rozšířenou působností. Obce s přenesenou působností mohou například vydávat občanské průkazy\n a cestovní doklady, na rozdíl od předchozím dvou stupňů. Samostatnou kategorii pak tvoří krajská města.") + annotate("text", x=c(0.515, 0.625, 0.7), y=c(4.5, 4.5, 4.5), label=c('1. kvartil', 'medián', '2. kvartil'), size = 2.35)
 ```
 
 ## Výdaje
@@ -94,88 +110,168 @@ Běžné výdaje (například na platy zaměstnanců) činily `r pc(1-kap_share_
 Menší část tvoří kapitálové výdaje (například investice do nemovitostí nebo infrastruktury), které činily zbylých `r pc(kap_share_total)` výdajů a v součtu `r nm(kap)` miliard Kč.
 
 ```{r}
-kap_ratio_typ <- indik_slctyr %>% 
-  group_by(typobce_wrapped) %>%
-  summarise(nevazeny = mean(rozp_v_kap_share),
-            vazeny = sum(rozp_v_kap)/sum(rozp_v_celkem),
-            median = median(rozp_v_kap_share))
+#kap_ratio_typ <- indik_slctyr %>% 
+#  group_by(typobce_wrapped) %>%
+#  summarise(nevazeny = mean(rozp_v_kap_share),
+#            vazeny = sum(rozp_v_kap)/sum(rozp_v_celkem),
+#            median = median(rozp_v_kap_share))
 
 ```
 
-Největší podíl investic na výdajích vykazují běžné obce, jak ukazuje graf \@ref(fig:kap-ratio); tento podíl klesá s rostoucí administrativní rolí obce, především kvůli odlišným povinnostem různých typů obcí; např. obce s rozšířenou působností poskytují některé sociální služby a další funkce pro širší okolí. Kategorie s nejnižším podílem investic na výdajích pak zahrnuje i Prahu, která plní i funkce kraje, což s sebou nese vyšší běžné výdaje (např. střední školství a částečně zdravotnictví.)
+Největší podíl investic na výdajích vykazují běžné obce a obce s obecním úřadem, jak ukazuje graf \@ref(fig:kap-ratio); tento podíl následně klesá s rostoucí administrativní rolí obce, především kvůli odlišným povinnostem různých typů obcí; např. obce s rozšířenou působností poskytují některé sociální služby a další funkce pro širší okolí (více [zde](https://cs.wikipedia.org/wiki/Obec_s_rozš%C3%ADřenou_působnost%C3%AD)). Kategorie s nejnižším podílem investic na výdajích pak zahrnuje i Prahu, která plní i funkce kraje, což s sebou nese vyšší běžné výdaje (např. střední školství a částečně zdravotnictví.)
 
 ```{r kap-ratio, fig.asp = 0.4, fig.cap="Kapitálové výdaje"}
-ggplot(kap_ratio_typ, aes(x = median, y = typobce_wrapped)) +
-  geom_col() +
-  geom_point(aes(x = nevazeny), pch = "|", size = 10) +
-  theme_studie("x") +
-  annotate("text", x = 0.295, y = "Běžná obec", label = "Průměr") +
-  annotate("text", x = 0.228, y = "Běžná obec", 
-           label = "Medián", colour = "white", hjust = 1) +
+ggplot(indik_slctyr) +
+  geom_boxplot(aes(y = typobce_wrapped, x = rozp_v_kap/rozp_v_celkem, colour = typobce_wrapped,
+               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
   scale_x_percent_cz() +
+  theme_studie("y") +
   labs(title = "Podíl kapitálových výdajů na výdajích obcí")
 ```
 
-Při zohlednění počtu obyvatel se ukazuje, že nejvyšší kapitálové výdaje na obyvatele mají běžné obce (průměr v grafu \@ref(fig:kap-percap)); při pohledu na mediánovou obec v každé kategorii ale více než běžné obce investují obce v ostatních kategoriích (sloupce "medián" tamtéž). To naznačuje, že mezi běžnými obcemi existuje relativně malé množství obcí s extrémně vysokými investicemi na obyvatele.
+Podobnou situaci vidíme při zohlednění počtu obyvatel v grafu \@ref(fig:kap-percap). Za povšimnutí rovněž stojí relativně velké množství běžných obcí s extrémními hodnotami investic
+na obyvatele.
 
 ```{r}
-kap_percap_typ <- indik_slctyr %>% 
-  group_by(typobce_wrapped) %>% 
-  mutate(kap_per_kap = rozp_v_kap/as.integer(pocob)) %>% 
-  summarise(nevazeny = mean(rozp_v_kap/as.integer(pocob)),
-            vazeny = sum(rozp_v_kap)/sum(as.integer(pocob)),
-            median = median(kap_per_kap)) %>% 
-  mutate_if(is.numeric, round)
+#kap_percap_typ <- indik_slctyr %>%
+#  group_by(typobce_wrapped) %>%
+#  mutate(kap_per_kap = rozp_v_kap/as.integer(pocob)) %>% 
+#  summarise(nevazeny = mean(rozp_v_kap/as.integer(pocob)),
+#            vazeny = sum(rozp_v_kap)/sum(as.integer(pocob)),
+#            median = median(kap_per_kap)) %>% 
+#  mutate_if(is.numeric, round)
 ```
 
 ```{r kap-percap, fig.asp=.4, fig.cap="Kapitálové výdaje na obyvatele"}
-ggplot(kap_percap_typ, aes(x = median, y = typobce_wrapped)) +
-  geom_col() +
-  geom_point(aes(x = vazeny), pch = "|", size = 10) +
+ggplot(indik_slctyr) +
+  geom_boxplot(aes(y = typobce_wrapped, x = log(rozp_v_kap/as.numeric(pocob)), colour = typobce_wrapped,
+               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
   theme_studie("x") +
-  scale_x_number_cz() +
-  annotate("text", x = 9000, y = "Běžná obec", label = "Průměr") +
-  annotate("text", x = 4300, y = "Běžná obec", 
-           label = "Medián", colour = "white", hjust = 1) +
-  labs(title = "Kapitálové výdaje na obyvatele (Kč)")
+  labs(title = "Kapitálové výdaje na obyvatele (Kč)", caption = "Vodorovná osa představuje logaritmus kapitálových výdajů na obyvatele")
 ```
 
 # Bilance rozpočtů
 
+Rozpočtová bilance porovnává příjmy a výdaje obecního rozpočtu. Deficitní rozpočet znamená, že výdaje obce převyšují příjmy, v opačném případě se jedná o rozpočet přebytkový. Schodek mohou obce uhradit například finančními prostředky z minulých let, půjčkou, úvěrem, návratnou finanční výpomocí.
 Deficitní rozpočet mělo za rok 2019 `r bil_neg_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(1 - bil_pos_share)`) obcí. Průměrný deficit u těchto obcí byl `r pc(bil_neg_avg)`, mediánový pak `r pc(bil_neg_median)`. Celkový deficit obcí s deficitním financováním byl `r nm(bil_neg_sum)` mld. korun. Obce v součtu měly přebytek `r pc(bilance_avg_total, .1)`, tedy `r nm(bilance_sum)` mld. korun.
 
-```{r deficit-podil, fig.cap="Podíl obcí s deficitním rozpočtem", fig.asp=.4}
-indik_slctyr %>% 
+Graf \@ref(fig:deficit-podil) ukazuje rozpočtovou bilanci jako procento příjmů. Opět vidíme, že největší extrémy hodnot zaznamáváme u běžných (a tedy i nejmenších) obcí. Tyto obce mají rovněž největší průměrné (a mediánové) hodnoty relativního přebytku. Naopak větší obce (s rozšířenou působností a krajská města) se více blíží vyrovnanému rozpočtu.
+
+```{r deficit-podil, fig.cap="Deficit relativně k příjmům v jednotlivých druzích obcí", fig.asp=.4}
+#indik_slctyr %>% group_by(typobce_wrapped) %>% summarize(mean(bilance/rozp_p_celkem, drop_na = True), median(bilance/rozp_p_celkem))
+  ggplot(indik_slctyr) +
+   #geom_boxplot(aes(y = typobce_wrapped, x = sign(bilance) * log(abs(bilance)), colour =
+  #geom_boxplot(aes(y = typobce_wrapped, x = bilance_rel, colour = typobce_wrapped, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  geom_boxplot(aes(y = typobce_wrapped, x = bilance/rozp_p_celkem, colour = typobce_wrapped, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("x") +
+  scale_x_percent_cz() +
+  labs(title = "Bilance rozpočtu v jednotlivých typech obcí jako procento příjmů")
+```
+
+
+Meziroční srovnání - grafy \@ref(fig:deficit-mezirocni) a \@ref(fig:deficit-podil-srovnani) ukazují tendenci k vyrovnání přebytků a deficitů v delším časovém období. Rozpočtová bilance za tříleté období (2017-2019) vykazuje nižší podíl deficitních obcí i vyrovnanější mediánové hodnoty rozpočtové bilance napříč kategoriemi obcí. Zejména v případě běžných obcí s deficitním rozpočtem za poslední tři roky pak vidíme nižší extrémní hodnoty relativních deficitů/přebytků.
+
+```{r deficit-mezirocni, fig.cap="Bilance rozpočtu v jednotlivých typech obcí za 3 roky", fig.asp=0.4}
+  indik_last3 %>%
+    group_by(ico) %>% summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>% merge(., indik_last3, by='ico')  %>% select(ico, obec, bilance_sum, prijmy_sum, typobce_wrapped) %>% distinct() %>%
+  ggplot() +
+   #geom_boxplot(aes(y = typobce_wrapped, x = sign(bilance_sum) * log(abs(bilance_sum)), colour =
+  geom_boxplot(aes(y = typobce_wrapped, x = bilance_sum/prijmy_sum, colour =typobce_wrapped, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("x") +
+  scale_x_percent_cz() +
+  labs(title = "Bilance rozpočtu v jednotlivých typech obcí (2017-2019)")
+```
+
+```{r deficit-podil-srovnani, fig.cap="Podíl obcí s deficitním rozpočtem za 3 roky", fig.asp=.4}
+deficit_podil_1yr <- indik_slctyr %>% 
   group_by(grp = typobce_wrapped) %>% 
   summarise(podil = mean(bilance < 0), .groups = "drop",
             pocet = n()) %>% 
-  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
-  ggplot(aes(podil, grp)) + 
-  geom_col() +
-  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
-  #                colour = "darkgrey", linetype = "dotted", size = .8) +
-  scale_x_percent_cz(expand = flush_axis) +
-  theme_studie(margin_side = 0) +
-  labs(title = "Podíl obcí s deficitním rozpočtem")
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet))
+  
+deficit_podil_3yr <- indik_last3 %>%
+    group_by(ico) %>% summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>%     merge(., indik_last3, by='ico')  %>% select(ico, obec, bilance_sum, prijmy_sum,typobce_wrapped)%>% distinct() %>% group_by(grp = typobce_wrapped) %>% 
+  summarise(podil = mean(bilance_sum < 0), .groups = "drop", pocet = n()) %>% 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet))
+
+ggplot() +
+geom_col(data=deficit_podil_1yr, aes(podil, grp), fill = "#999999") +
+geom_col(data=deficit_podil_3yr, aes(podil, grp), fill = "#56B4E9") +
+theme_studie("x") +
+scale_x_percent_cz() +
+labs(title = "Podíl obcí s deficitním rozpočtem 2019 a 2017-2019", caption = "Šedá - podíl obcí s deficitem za rok 2019, modrá - za roky 2017-2019")
 ```
+
+Situaci dále dokresluje graf níže, který zobrazuje vztah rozpočtových bilancí v po sobě následující letech (relativně k příjmům). Můžeme si povšimnout častého výskytu záznamů podél horních os grafu - ty značí situace, kdy jeden rok zaznamenala obec rozpočet deficitní a druhý přebytkový. To může souviset s plánováním investičních projektů v obcích, kdy se obec na projektech finančně podílí, ale vlastní finance musí vydávat jiný rok, než kdy obdrží dotace.
+
+
+```{r deficit-vykyvy, fig.cap="unikátní roční výkyvy"}
+indik_last3 %>% group_by(ico) %>% mutate(bilance_p_lag = lag(bilance/rozp_p_celkem, n=1), bilance_p_rel = bilance/rozp_p_celkem) %>% select(bilance, bilance_p_rel, bilance_p_lag, per_yr, ico, typobce_wrapped) %>%
+ggplot() + geom_point(aes(bilance_p_lag, bilance_p_rel, colour = typobce_wrapped)) +
+colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+theme_studie("y") +
+scale_x_percent_cz() +
+scale_y_percent_cz() + labs(title = "Meziroční rozpočtové výkyvy", caption = "Osy zobrazují relativní bilanci k příjmům v letech t a t-1")
+```
+
+Graf \@ref(fig:deficit-katobyv) ukazuje závislost výše deficitu na velikosti populace. Vidíme vyšší mediánové přebytky, avšak i značný rozptyl hodnot u menších obcí. 
+
+
+```{r deficit-katobyv, fig.cap="Podíl obcí s nenulovým dluhem podle velikosti obce"}
+ggplot(indik_slctyr) +
+  geom_boxplot(aes(y= katobyv_nazev, x = bilance/rozp_p_celkem, colour=katobyv_nazev,
+               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2)  +
+  scale_x_percent_cz() +
+  theme_studie() +
+  theme(legend.title=element_blank()) +
+  scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16]) +
+labs(title = "Bilace rozpočtu (relativní k velikosti příjmů) podle počtu obyvatel")
+```
+
+
 
 ## Dluh
 
+Dluh představuje naakumulované závazky obce z minulých let. Obce se snaží o vyrovnané rozpočty, nicméně existence dluhu je pro obce často nezbytná - kapitálové výdaje nutné pro zajištění infrastruktury jsou důležité pro kvalitu života v obci a její rozvoj. Udržitelnost dluhu se snaží ministerstvo financí sledovat pomocí vybraných ukazatelů. Nejnovějším z nich je takzvaná rozpočtová odpovědnost – podíl dluhu na průměru příjmů za poslední čtyři roky. Ten by neměl přesáhnout 60%. 
 Nenulový dluh mělo `r dluh_pos_count` z `r n_distinct(indik_slctyr$ico)` (`r pc(dluh_pos_share)`) obcí a v součtu tento dluh činil `r nm(dluh)` miliard Kč. Mezi obcemi s nenulovým dluhem dosahoval dluh v průměru `r pc(dluh_pos_mean)` příjmů.
 
-```{r dluh-podil, fig.cap="Podíl obcí s nenulovým dluhem", fig.asp=.4}
-indik_slctyr %>% 
-  group_by(grp = typobce_wrapped) %>% 
+```{r dluh-podil, fig.cap="Podíl obcí s nenulovým dluhem", fig.asp=0.4}
+indik_slctyr %>%
+  group_by(grp = typobce_wrapped) %>%
   summarise(podil = mean(dluh > 0, na.rm = T), .groups = "drop",
             pocet = n()) %>% 
-  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
-  ggplot(aes(podil, grp)) + 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>%
+  ggplot(aes(podil, grp)) +
   geom_col() +
   # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
   #                colour = "darkgrey", linetype = "dotted", size = .8) +
   scale_x_percent_cz(expand = flush_axis) +
   theme_studie(margin_side = 0) +
   labs(title = "Podíl obcí s nenulovým dluhem")
+```
+
+
+Následující graf zobrazuje míru zadlužení podle velikosti obce. V průměru, čím větší obec, tím vyšší míra zadlužení. Nejvyšší míru zadlužení se zdají vykazovatkrajská města nad 100 tisíc obyvatel.
+
+```{r dluh-katobyv, fig.cap="Podíl obcí s nenulovým dluhem podle velikosti obce"}
+ggplot(indik_slctyr) +
+  geom_boxplot(aes(y= katobyv_nazev, x = dluh / rozp_p_celkem, colour=katobyv_nazev,
+               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2)  +
+  scale_x_percent_cz() +
+  theme_studie() +
+  theme(legend.title=element_blank()) +
+  scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16]) +
+labs(title = "Dluh podle počtu obyvatel", y = "Počet obyvatel - kategorie",
+     x = "Poměr deficitu vůči výdajům")
 ```
 
 ```{r, eval = F}
@@ -188,9 +284,25 @@ indik_slctyr %>%
   count(kraj, wt = (rozp_odp > .6)/n())
 ```
 
+Graf \@ref(fig:dluh-vs-deficit) dává do souvislosti výši zadlužení obce (v roce 2017) s jejich rozpočtovou bilancí za následující tři roky. Z grafu vyplývá, že počátečně zadluženější obce, mají tendence k přebytkovému hospodaření.
+
+
+```{r dluh-vs-deficit, fig.cap = "3-letý definicit vůči počáteční výši dluhu"}
+indik_last3 %>%
+    group_by(ico) %>% summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>%     merge(., indik_last3, by='ico') %>% filter(per_yr==2017)  %>% select(ico, obec, bilance_sum, prijmy_sum, dluh, typobce_wrapped, rozp_p_celkem) %>%
+  ggplot() +
+  geom_point(aes(dluh / rozp_p_celkem, bilance_sum / prijmy_sum, colour = typobce_wrapped)) + colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("y") +
+  scale_x_percent_cz() +
+  scale_y_percent_cz() +
+  labs(title = "3-letý definicit vůči počáteční výši dluhu", caption = "Vodorovná osa zobrazuje relativní zadlužení obce vůči příjmu v roce 2017,\n svislá osa bilanci rozpočtu v letech 2017-2019 relativně k příjmům za stejné období")
+```
+
+
 # Rezervy
 
-Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech.
+Za rezervy považujeme krátkodobý finanční majetek, v němž dominují prostředky na běžných účtech. Obce tvoří rozpočtové rezervy v případě, že příjmová stránka rozpočtu je vyšší než výdajová, a to za účelem pokrytí neočekávaných provozních výdajů, na financování investic či jiných peněžních operací.
 
 Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních příjmů (viz graf \@ref(fig:rezervy)); v součtu tyto rezervy činí `r nm(rez)` miliard Kč.
 
@@ -202,24 +314,20 @@ indik_slctyr_res <- indik_slctyr %>%
          rezerva_to_zavazky = kratkodoby_fin_majetek/kratkodobe_zavazky)
 ```
 
-```{r rezervy, fig.cap="Rezervy obcí podle typu", fig.asp=.4}
-indik_slctyr_res %>% 
-  group_by(grp = typobce_wrapped) %>% 
-  summarise(median = median(rezerva_to_spend, na.rm = T), pocet = n(),
-            prumer = mean(rezerva_to_spend, na.rm = T)) %>%
-  ggplot(aes(y = grp)) + 
-  geom_col(aes(x = median)) +
-  geom_point(aes(x = prumer), pch = "|", size = 10) +
-  # geom_linerange(aes(xmin = pmax(podil - ci, 0), xmax = podil + ci),
-  #                colour = "darkgrey", linetype = "dotted", size = .8) +
-  theme_studie() +
-  scale_x_percent_cz(expand = flush_axis) +
-  annotate("text", x = .8, y = "Běžná obec", label = "Medián",
-           colour = "white") +
-  annotate("text", x = 1.25, y = "Běžná obec", 
-           label = "Průměr", colour = "black", hjust = 1) +
+```{r rezervy, fig.cap="Rezervy obcí podle typu", fig.asp= 0.4}
+#indik_slctyr_res %>% 
+#  group_by(grp = typobce_wrapped) %>% 
+#  summarise(median = median(rezerva_to_spend, na.rm = T), pocet = n(),
+#            prumer = mean(rezerva_to_spend, na.rm = T))
+  ggplot(indik_slctyr_res) +
+  geom_boxplot(aes(y = typobce_wrapped, x = rezerva_to_spend, colour = typobce_wrapped,
+               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  scale_x_percent_cz(limits = c(0, 3)) +
+  theme_studie("y") +
   labs(title = "Rezervy obcí podle typu",
-       subtitle = "Jako % ročních příjmů, rok 2019")
+       subtitle = "Jako % ročních výdajů, rok 2019", caption = "Obce s pozitivní bilancí nad 300 % výdajů vynechány")
 ```
 
 ```{r rezervy-hist, include = FALSE}
@@ -228,6 +336,22 @@ ggplot(indik_slctyr_res, aes(x = rezerva_to_spend)) +
   facet_wrap(~typobce_wrapped) +
   scale_x_continuous(limits = c(0, 5)) +
   theme_studie("both", multiplot = T)
+```
+
+V grafu níže vidíme rozdělení rezerv podle velikosti obce - relativně k příjmům držely v roce 2019 největší rezervy nejmenší obce, poté jejich velikost klesá a opětovný náznak růstu vidíme u měst na 50 tisíc obyvatel.
+
+```{r rezervy-katobyv, fig.cap="Rezervy podle poplačních kategorií"}
+ggplot(indik_slctyr_res) +
+  geom_boxplot(aes(y= katobyv_nazev, x = rezerva_to_spend, colour=katobyv_nazev, fill = after_scale(alpha(colour, 0.7))) , outlier.alpha = .2)  +
+  scale_x_percent_cz() +
+  theme_studie() +
+  theme(legend.title=element_blank()) +
+  #scale_colour_manual(values = colorRampPalette(brewer.pal(12, "Blues"))(12)) +
+  scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16]) +
+  #scale_colour_manual(values = colorRampPalette(palette_OkabeIto)(12)) +
+  #scale_colour_manual(values = colorRampPalette(c("blue", "purple"))(12))
+labs(title = "Rezervy podle počtu obyvatel", y = "Počet obyvatel - kategorie",
+     x = "Poměr rezerv vůči výdajům")
 ```
 
 Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží (viz graf \@ref(fig:rezervy-net)).
@@ -253,7 +377,7 @@ Ani zbylé rezervy často nejsou volné peníze; obce je často drží jako pros
 
 ## Podíl skupin obcí na objemech veřejných peněz
 
-Shrnující graf níže ukazuje podíly čtyř skupin obcí na celkovém počtu obcí, počtu obyvatel a výše diskutovaných rozpočtových ukazatelích. Samozřejmě, těch nejmenších, běžných obcí je výrazná většina, ačkoliv v nich žije méně než polovina všech obyvatel. Co je překvapivější, tyto běžné obce mají menší podíl než by odpovídal jejich podílu obyvatel úplně všeho - výdajů, příjmů z rozpočtového určení daní, rezerv, dluhu - kromě kapitálových výdajů a tedy investic.
+Shrnující grafy níže ukazují podíly čtyř skupin obcí na celkovém počtu obcí, počtu obyvatel a výše diskutovaných rozpočtových ukazatelích. Samozřejmě, těch nejmenších, běžných obcí je výrazná většina, ačkoliv v nich žije méně než polovina všech obyvatel. Co je překvapivější, tyto běžné obce mají menší podíl než by odpovídal jejich podílu obyvatel všech ukazatelů - výdajů, příjmů z rozpočtového určení daní, rezerv, dluhu - kromě kapitálových výdajů a tedy investic.
 
 ```{r}
 share_typ <- indik_slctyr %>% 
@@ -300,6 +424,81 @@ ggplot(share_typ, aes(x = value, fill = typobce_wrapped,
   labs(title = "Podíl různých typů obcí na objemech klíčových proměnných")
 ```
 
+```{r share-per-typobce}
+ggplot(share_typ) + 
+aes(x = share, y = variable, fill = typobce_wrapped) +
+  geom_col() +
+  theme_studie("x", legend.position = "top", plot.margin = unit(c(0.5, 1, 0.5, 0), "cm")) +
+  facet_wrap(~ typobce_wrapped) +
+  colorblindr::scale_fill_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  scale_x_percent_cz() +
+  labs(title = "Podíl různých typů obcí na objemech klíčových proměnných - Alternativní")
+```
+
+# Aglomerace
+V této části práce využíváme definici aglomeračních celků použité ve Strategii regionálního rozvoje ČR (SRR21+). Ta určuje 12 aglomerací a definuje tři metropole - Prahu, Ostravu a Brno.
+V aglomeracích krajských měst se nachází `r nm(nrow(aglo_areas)) ` obcí ze zhruba 6 tisíc obcí v ČR, tedy asi čtvrtina. V krajských městech a jejich aglomeracích žije `r format(round(sum(aglo_areas$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel a tedy zhruba `r pc(pocob_aglo_share)` obyvatel České republiky. Více než odpovídácí je podíl na příjmech a výdajích - kolem (`r pc(spend_aglo_share)` a `r pc(income_aglo_share)`) a rovněž podíl obecního dluhu (`r pc(dluh_aglo_share)`). Pokud rozlišíme mezi velkými městskými centry a jejich zázemím zjistíme, že aglomerace krajských měst mají zhruba `r format(round(sum(aglo_obec$pocob/1e6), digits = 1), decimal.mark=",")` mil. obyvatel, tedy více než krajská města samotná. Tyto obce představují `r pc(pocob_aglo_obec_share)` obyvatel republiky, jejich podíl na ostaních veličinách je ovšem pouze `r pc(spend_aglo_obec_share)` u výdajů, `r pc(income_aglo_obec_share)` příjmů a `r pc(rud_aglo_obec_share)` příjmů z RUD. Rovněž ovšem na tyto obce připadá pouze `r pc(dluh_aglo_obec_share)` z celkového dluhu.
+Další specifickou kategorií jsou aglomerace tří největších metropolí - Prahy, Brna a Ostravy, ty společně se svými centry mají zhruba `r format(round(sum(metro_cele$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel, samotné obce v jejich aglomeracích mají asi `r format(round(sum(metropole$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel. Jejich podíl na příjmech a výdajích činí `r pc(income_metro_share)` a `r pc(spend_metro_share)`. 
+Můžeme si tedy povšimnout, že zatímco aglomerace jako celek vykazují vyšší podíly sledovaných veličin než by odpovídalo jejich podílů na počtu obyvatel, obce v jejich okolí mají menší podíl těchto veličin než by odpovídalo počtu obyvatel.
+
+V grafy níže rozdělují obce do čtyř kategorií podle příslušnosti do aglomerací krajských měst, případně příslušnosti k sociálně a hospodářsky vyloučeným oblastem, jak je definuje Strategie regionálního rozvoje ČR (SRR21+).
+
+```{r kap-ratio-geo, fig.asp = 0.4, fig.cap="Kapitálové výdaje v aglomeracích a na ostatních územích"}
+ggplot(indik_geo) +
+  geom_boxplot(aes(y = typobce_aglomerace, x = rozp_v_kap/rozp_v_celkem, colour = typobce_aglomerace,
+               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  scale_x_percent_cz() +
+  theme_studie("y") +
+  labs(title = "Podíl kapitálových výdajů na výdajích obcí")
+```
+
+V grafech \@ref(fig:kap-ratio-geo) a \@ref(fig:dluh-podil-geo) vidíme, že obce v aglomeracích velkých měst nevykazují výrazně vyšší podíl kapitálových výdajů nebo zadlužení než obce mimo aglomerace. Zároveň graf \@ref(fig:dluh-podil-geo) ukazuje, že obce socio-ekonomicky znevýhodněných regionech nemají větší podíl s nenulovým dluhem než jiné typy obcí.
+
+
+```{r dluh-podil-geo, fig.cap="Podíl obcí s nenulovým dluhem v aglomeracích a na ostatních územích", fig.asp=0.4}
+indik_geo %>%
+  group_by(grp = typobce_aglomerace) %>%
+  summarise(podil = mean(dluh > 0, na.rm = T), .groups = "drop",
+            pocet = n()) %>% 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>%
+  ggplot(aes(podil, grp)) +
+  geom_col() +
+  scale_x_percent_cz(expand = flush_axis) +
+  theme_studie(margin_side = 0) +
+  labs(title = "Podíl obcí s nenulovým dluhem")
+```
+
+
+Následující grafy srovnávájí vybrané ukazatele ve třech největších metropolitních oblastech (Praha, Brno, Ostrava) a ostatních aglomeracích. Grafy \@ref(fig:kap-ratio-aglo) a \@ref(fig:dluh-podil-aglo) neukazují na výrazné rozdíly mezi obcemi v metropolitních oblastech a běžných aglomeracích.
+
+```{r kap-ratio-aglo, fig.asp = 0.4, fig.cap="Kapitálové výdaje v aglomeracích a metropolitních oblastech"}
+ggplot(indik_aglo) +
+  geom_boxplot(aes(y = typ_aglomerace, x = rozp_v_kap/rozp_v_celkem, colour = typ_aglomerace,
+               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  scale_x_percent_cz() +
+  theme_studie("y") +
+  labs(title = "Podíl kapitálových výdajů na výdajích obcí")
+```
+
+
+```{r dluh-podil-aglo, fig.cap="Podíl obcí s nenulovým dluhem v aglomeracích a metropolitních oblastech", fig.asp=0.4}
+indik_aglo %>%
+  group_by(grp = typ_aglomerace) %>%
+  summarise(podil = mean(dluh > 0, na.rm = T), .groups = "drop",
+            pocet = n()) %>% 
+  mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>%
+  ggplot(aes(podil, grp)) +
+  geom_col() +
+  scale_x_percent_cz(expand = flush_axis) +
+  theme_studie(margin_side = 0) +
+  labs(title = "Podíl obcí s nenulovým dluhem")
+```
+
 # Závěr
 
 Za každou z více než 6000 obcí je zodpovědné jiné zastupitelstvo a každá z nich vstupovala do krizového roku 2020 v jiné rozpočtové kondici. Některé z obcí již v rozpočtových problémech byly v roce 2019, jiným obcím by stačil i menší negativní šok, než krizový rok 2020, aby se do nich dostaly. Přílišné zadlužení a zadlužování trápilo již v roce 2019 řadu obcí a jejich počet během roku 2020 jistě nepoklesl. Mnohé obce hospodařily již v roce 2019 s deficitním rozpočtem a tyto i další obce kvůli udržení rovnováhy mezi výdaji a příjmy v roce 2020 nejspíše musely omezovat jimi poskytované veřejné služby, což bezprostředně ovlivnilo kvalitu života obyvatel. V důsledku probíhající krize většina obcí nejspíše snižuje své kapitálové výdaje a tyto nižší investice ovlivní negativně nejen konkrétní obyvatele těchto obcí, ale i celkový hospodářský vývoj.
@@ -330,25 +529,38 @@ ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
   geom_boxplot(aes(x = rozp_v_kap/as.integer(pocob),
                    colour = typobce_wrapped,
                    fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .4) +
-  paletteer::scale_colour_paletteer_d(palette = "colorblindr::OkabeIto", guide = "none") +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) + 
   theme_studie("x") +
   scale_x_number_cz() +
   labs(title = "Kapitálové výdaje na obyvatele (Kč)")
 ```
 
 ```{r kap-percap-box, fig.asp = 0.4, fig.cap="Kapitálové výdaje - podíl na výdajích"}
-ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
-  geom_boxplot(aes(x = rozp_v_kap_share, colour = typobce_wrapped,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
-  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +  
-  theme_studie("x") +
-  scale_x_percent_cz() +
-  labs(title = "Podíl kapitálových výdajů na výdajích obcí",
-       caption = "Podíl nad 100 % u několika obcí je následek záporných běžných výdajů v daném roce.")
+#ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
+#  geom_boxplot(aes(x = rozp_v_kap_share, colour = typobce_wrapped,
+#               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+#  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+#                                    name = NULL, darken = 0) +  
+#  theme_studie("x") +
+#  scale_x_percent_cz() +
+#  labs(title = "Podíl kapitálových výdajů na výdajích obcí",
+#       caption = "Podíl nad 100 % u několika obcí je následek záporných běžných výdajů v daném #roce.")
 ```
 
 ## Deficit
+```{r deficit-populace, fig.cap="Deficit a velikost populace", fig.asp=0.4}
+ ggplot(indik_slctyr) +
+  #geom_point(aes(log(as.integer(pocob)), sign(bilance) * log(abs(bilance)), colour =
+  #geom_point(aes(log(as.integer(pocob)), bilance_rel, colour = typobce_wrapped)) +
+  geom_point(aes(log(as.integer(pocob)), bilance/rozp_p_celkem, colour =typobce_wrapped)) +
+  colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("y") +
+  scale_y_percent_cz() +
+  labs(title = "Deficit (relativní k velikosti příjmů) a velikost populace", caption = "Vodorovná osa představuje logaritmus počet obyvatel")
+```
+
 
 ```{r deficit-hist, fig.asp = 0.4, fig.cap="Bilance obecních rozpočtů"}
 ggplot(indik_slctyr) +
@@ -357,7 +569,7 @@ ggplot(indik_slctyr) +
                fill = after_scale(alpha(colour, 0.7)))) +
   theme_studie("x", plot.margin = unit(c(.5, .5, .5, 0), "cm"),
                panel.spacing = unit(1, "cm")) +
-  facet_wrap(~ typobce %>% fct_rev()) +
+  facet_wrap(~ typobce %>% fct_rev()) + # TODO: nrow = 4 should do the trick but the plots do not render
   geom_vline(xintercept = 0, colour = "white", linetype = "dotted") +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
                                     name = NULL, darken = 0) +  
@@ -368,17 +580,13 @@ ggplot(indik_slctyr) +
 
 ## Rezervy
 
-```{r rezervy-box, fig.asp = 0.4, fig.cap="Rezervy - rozdělení"}
-ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
-  geom_boxplot(aes(x = kratkodoby_fin_majetek/rozp_v_celkem,
-               colour = typobce_wrapped,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
-  theme_studie("x", plot.margin = unit(c(.5, .5, .5, 0), "cm")) +
-  scale_x_percent_cz(limits = c(0, 3)) +
-  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +  
-  labs(title = "Rezervy obcí jako % ročních výdajů",
-       caption = "Obce s pozitivní bilancí nad 100 % příjmů vynechány")
+```{r rezervy-scatter, fig.cap="Rezervy podle populace", fig.asp=0.4}
+ggplot(indik_slctyr_res) +
+  geom_point(aes(log(as.integer(pocob)), rezerva_to_spend, colour = typobce_wrapped)) +
+  colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("y") +
+  labs(title = "Rezervy podle populace", caption = 'Vodorovná osa představuje logaritmus počtu obyvatel,\n svislá rezervy vůči výdajům')
 ```
 
 ## Krátkodobé závazky
@@ -413,7 +621,17 @@ ggplot(indik_slctyr, aes(colour = typobce)) +
        caption = "Obce s pozitivní bilancí nad 100 % příjmů vynechány")
 ```
 
-## Dluh 
+## Dluh
+```{r dluh-scatter, fig.cap="Míra zadlužení vůči počtu obytavel", fig.asp=0.4}
+ggplot(indik_slctyr) +
+  geom_point(aes(log(as.integer(pocob)), dluh / rozp_p_celkem, colour = typobce_wrapped)) +
+  colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("y") +
+  labs(title = "Míra zadlužení vůči počtu obytavel", caption = "Vodorovná osa představuje logaritmus počtu obyvatel,\n svislá dluh relativně vůči příjmům v roce 2019")
+```
+
+
 
 ```{r dluh-box, fig.asp = 0.4, fig.cap="Dluh - rozdělení"}
 ggplot(indik_slctyr, aes(x = median, y = typobce_wrapped,
@@ -428,5 +646,50 @@ ggplot(indik_slctyr, aes(x = median, y = typobce_wrapped,
                                     name = NULL, darken = 0) +  
   labs(title = "Dluh obcí jako % ročních příjmů")
 ```
-s
+
+# Aglomerace
+
+```{r rezervy-geo, fig.cap="Rezervy obcí v aglomeracích a ostatních územích", fig.asp= 0.4}
+  ggplot(indik_geo) +
+  geom_boxplot(aes(y = typobce_aglomerace, x = kratkodoby_fin_majetek/rozp_v_celkem, colour = typobce_aglomerace,
+               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  scale_x_percent_cz(limits = c(0, 3)) +
+  theme_studie("y") +
+  labs(title = "Rezervy obcí",
+       subtitle = "Jako % ročních výdajů, rok 2019", caption = "Obce s pozitivní bilancí nad 300 % výdajů vynechány")
+```
+
+```{r dluh-aglo, fig.cap="Deficit relativně k příjmům v aglomeracích a ostatních územích", fig.asp=.4}
+  ggplot(indik_geo) +
+  geom_boxplot(aes(y = typobce_aglomerace, x = dluh / rozp_p_celkem, colour = typobce_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("x") +
+  scale_x_percent_cz() +
+  labs(title = "Dluh vůči příjmům jako procento příjmů")
+```
+
+```{r deficit-podil-geo, fig.cap="Deficit relativně k příjmům v aglomeracích a ostatních územích", fig.asp=.4}
+  ggplot(indik_geo) +
+  geom_boxplot(aes(y = typobce_aglomerace, x = bilance/rozp_p_celkem, colour = typobce_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("x") +
+  scale_x_percent_cz() +
+  labs(title = "Bilance rozpočtu jako procento příjmů")
+```
+
+```{r deficit-podil-aglo, fig.cap="Deficit relativně k příjmům v aglomeracích a metropolitních oblastech", fig.asp=.4}
+  ggplot(indik_aglo) +
+  geom_boxplot(aes(y = typ_aglomerace, x = bilance/rozp_p_celkem, colour = typ_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +
+  theme_studie("x") +
+  scale_x_percent_cz() +
+  labs(title = "Bilance rozpočtu jako procento příjmů - aglomerace vs. metropole")
+```
+
+
 # Bibliografie
