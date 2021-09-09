@@ -32,6 +32,8 @@ library(colorblindr)
 library(RColorBrewer)
 
 library(statnipokladna)
+
+options(scipen = 99)
 ```
 
 ```{r load-numbers}
@@ -72,10 +74,11 @@ ggplot(indik_slctyr, aes(x=log(as.numeric(pocob)), colour=typobce_wrapped,
                          fill = after_scale(alpha(colour, 0.7)))) +
   geom_density() +
   theme_studie("x", plot.margin = unit(c(.5, .5, .5, 0), "cm"),
-               panel.spacing = unit(1, "cm")) +
+               panel.spacing = unit(1, "cm"), axis_titles = TRUE) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
                                      name = NULL, darken = 0) +
-  labs(title = "Populační rozdělení obcí podle jednotlivých kategorií", caption = 'Vodorovná osa představuje logaritmus počet obyvatel')
+  labs(title = "Populační rozdělení obcí podle jednotlivých kategorií", 
+       x = 'Logaritmus počet obyvatel', y = NULL)
 ```
 
 **Závislost na daňových příjmech.** Zásadním příjmem obcí jako celku je tzv. rozpočtové určení daní (RUD). Zároveň, to jak velký podíl má RUD na celkových příjmech konkrétní obce záleží především na jejích ostatních příjmech, jako je například daň z nemovitostí.
@@ -149,9 +152,11 @@ ggplot(indik_slctyr) +
   geom_boxplot(aes(y = typobce_wrapped, x = log(rozp_v_kap/as.numeric(pocob)), colour = typobce_wrapped,
                    fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
-  theme_studie("x") +
-  labs(title = "Kapitálové výdaje na obyvatele (Kč)", caption = "Vodorovná osa představuje logaritmus kapitálových výdajů na obyvatele")
+                                     name = NULL, darken = 0) +
+  theme_studie("x", axis_titles = TRUE) +
+  labs(title = "Kapitálové výdaje na obyvatele (Kč)", 
+       x = "logaritmus kapitálových výdajů na obyvatele",
+       y = NULL)
 ```
 
 # Bilance rozpočtů
@@ -220,7 +225,8 @@ indik_last3 %>% group_by(ico) %>%
   select(bilance, bilance_p_rel, bilance_p_lag, per_yr, ico, typobce_wrapped) %>%
   arrange(desc(typobce_wrapped)) %>% 
   ggplot() + 
-  geom_point(aes(bilance_p_lag, bilance_p_rel, colour = typobce_wrapped)) +
+  geom_point(aes(bilance_p_lag, bilance_p_rel, colour = typobce_wrapped),
+             alpha = .4) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
                                      name = NULL, darken = 0) +
   theme_studie("y", axis_titles = TRUE) +
@@ -302,12 +308,13 @@ indik_last3 %>%
   filter(per_yr==2017)  %>% 
   select(ico, obec, bilance_sum, prijmy_sum, dluh, 
          typobce_wrapped, rozp_p_celkem) %>%
+  arrange(desc(typobce_wrapped)) %>% 
   ggplot() +
   geom_point(aes(dluh / rozp_p_celkem, bilance_sum / prijmy_sum, 
-                 colour = typobce_wrapped)) + 
+                 colour = typobce_wrapped), alpha = .6) + 
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                                                                                                                 name = NULL, darken = 0) +
-  theme_studie("y") +
+                                     name = NULL, darken = 0.2) +
+  theme_studie("y", axis_titles = TRUE) +
   scale_x_percent_cz() +
   scale_y_percent_cz() +
   labs(title = "3-letý definicit vůči počáteční výši dluhu", 
@@ -358,15 +365,18 @@ V grafu níže vidíme rozdělení rezerv podle velikosti obce - relativně k p�
 
 ```{r rezervy-katobyv, fig.cap="Rezervy podle poplačních kategorií"}
 ggplot(indik_slctyr_res) +
-  geom_boxplot(aes(y= katobyv_nazev, x = rezerva_to_spend, colour=katobyv_nazev, fill = after_scale(alpha(colour, 0.7))) , outlier.alpha = .2)  +
+  geom_boxplot(aes(y= katobyv_nazev, x = rezerva_to_spend, 
+                   colour=katobyv_nazev, fill = after_scale(alpha(colour, 0.7))) , outlier.alpha = .2)  +
   scale_x_percent_cz() +
-  theme_studie() +
+  theme_studie(axis_titles = TRUE) +
   #scale_colour_manual(values = colorRampPalette(brewer.pal(12, "Blues"))(12)) +
   scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16],
                       guide = "none") +
   #scale_colour_manual(values = colorRampPalette(palette_OkabeIto)(12)) +
   #scale_colour_manual(values = colorRampPalette(c("blue", "purple"))(12))
-  labs(title = "Rezervy podle počtu obyvatel", y = "Počet obyvatel - kategorie",
+  labs(title = "Rezervy podle počtu obyvatel", 
+       # y = "Počet obyvatel - kategorie",
+       y = NULL,
        x = "Poměr rezerv vůči výdajům")
 ```
 
@@ -572,16 +582,20 @@ ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
 
 ## Deficit
 ```{r deficit-populace, fig.cap="Deficit a velikost populace", fig.asp=0.4}
-ggplot(indik_slctyr) +
+ggplot(indik_slctyr %>% 
+         arrange(desc(typobce_wrapped))) +
   #geom_point(aes(log(as.integer(pocob)), sign(bilance) * log(abs(bilance)), colour =
   #geom_point(aes(log(as.integer(pocob)), bilance_rel, colour = typobce_wrapped)) +
-  geom_point(aes(log(as.integer(pocob)), bilance/rozp_p_celkem, colour =typobce_wrapped)) +
+  geom_point(aes(pocob, bilance/rozp_p_celkem, 
+                 colour = typobce_wrapped), alpha = 0.4) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                     name = NULL, darken = 0) +
-  theme_studie("y") +
+                                     name = NULL, darken = 0.2) +
+  theme_studie("both", axis_titles = TRUE) +
   scale_y_percent_cz() +
-  labs(title = "Deficit (relativní k velikosti příjmů) a velikost populace", 
-       caption = "Vodorovná osa představuje logaritmus počet obyvatel")
+  scale_x_log10(labels = scales::label_number(big.mark = " "), 
+                breaks = scales::breaks_log(n = 7)) +
+  labs(title = "Bilance rozpočtu (relativní k velikosti příjmů) a velikost populace", 
+       x = "Počet obyvatel (logaritmické měřítko)", y = NULL)
 ```
 
 
@@ -605,12 +619,16 @@ ggplot(indik_slctyr) +
 
 ```{r rezervy-scatter, fig.cap="Rezervy podle populace", fig.asp=0.4}
 ggplot(indik_slctyr_res) +
-  geom_point(aes(log(as.integer(pocob)), rezerva_to_spend, colour = typobce_wrapped)) +
+  geom_point(aes(pocob, rezerva_to_spend, colour = typobce_wrapped),
+             alpha = .4) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                     name = NULL, darken = 0) +
-  theme_studie("y") +
-  labs(title = "Rezervy podle populace", 
-       caption = 'Vodorovná osa představuje logaritmus počtu obyvatel,\n svislá rezervy vůči výdajům')
+                                     name = NULL, darken = 0.2) +
+  theme_studie("both", axis_titles = TRUE) +
+  scale_x_log10(labels = scales::label_number(big.mark = " "), 
+                breaks = scales::breaks_log(n = 7)) +
+  labs(title = "Rezervy obcí podle populace a typu", 
+       subtitle = "Rezervy jako násobek ročních výdajů",
+       x = 'Počet obyvatel (logaritmické měřítko)', y = NULL)
 ```
 
 ## Krátkodobé závazky
@@ -646,14 +664,20 @@ ggplot(indik_slctyr, aes(colour = typobce)) +
 ```
 
 ## Dluh
+
 ```{r dluh-scatter, fig.cap="Míra zadlužení vůči počtu obytavel", fig.asp=0.4}
-ggplot(indik_slctyr) +
-  geom_point(aes(log(as.integer(pocob)), dluh / rozp_p_celkem, 
-                 colour = typobce_wrapped)) +
+ggplot(indik_slctyr %>% 
+         arrange(desc(typobce_wrapped))) +
+  geom_point(aes(pocob, dluh / rozp_p_celkem, 
+                 colour = typobce_wrapped), alpha = .4) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                     name = NULL, darken = 0) +
-  theme_studie("y") +
-  labs(title = "Míra zadlužení vůči počtu obytavel", caption = "Vodorovná osa představuje logaritmus počtu obyvatel,\n svislá dluh relativně vůči příjmům v roce 2019")
+                                     name = NULL, darken = 0.2) +
+  theme_studie("y", axis_titles = TRUE) +
+  scale_x_log10(labels = scales::label_number(big.mark = " "), 
+                breaks = scales::breaks_log(n = 7)) +
+  labs(title = "Míra zadlužení vůči počtu obyvatel", 
+       x = "Počet obyvatel (logaritmické měřítko)",
+       subtitle = "Dluh jako násobek příjmů v roce 2019")
 ```
 
 
