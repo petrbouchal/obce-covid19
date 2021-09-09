@@ -700,7 +700,9 @@ ggplot(indik_slctyr, aes(x = median, y = typobce_wrapped,
 
 ```{r rezervy-geo, fig.cap="Rezervy obcí v aglomeracích a ostatních územích", fig.asp= 0.4}
 ggplot(indik_geo) +
-  geom_boxplot(aes(y = typobce_aglomerace, x = kratkodoby_fin_majetek/rozp_v_celkem, colour = typobce_aglomerace,
+  geom_boxplot(aes(y = typobce_aglomerace, 
+                   x = kratkodoby_fin_majetek/rozp_v_celkem, 
+                   colour = typobce_aglomerace,
                    fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
                                      name = NULL, darken = 0) +
@@ -713,7 +715,9 @@ ggplot(indik_geo) +
 
 ```{r dluh-aglo, fig.cap="Deficit relativně k příjmům v aglomeracích a ostatních územích", fig.asp=.4}
 ggplot(indik_geo) +
-  geom_boxplot(aes(y = typobce_aglomerace, x = dluh / rozp_p_celkem, colour = typobce_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  geom_boxplot(aes(y = typobce_aglomerace, x = dluh / rozp_p_celkem, 
+                   colour = typobce_aglomerace, 
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
                                      name = NULL, darken = 0) +
   theme_studie("x") +
@@ -723,7 +727,9 @@ ggplot(indik_geo) +
 
 ```{r deficit-podil-geo, fig.cap="Deficit relativně k příjmům v aglomeracích a ostatních územích", fig.asp=.4}
 ggplot(indik_geo) +
-  geom_boxplot(aes(y = typobce_aglomerace, x = bilance/rozp_p_celkem, colour = typobce_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  geom_boxplot(aes(y = typobce_aglomerace, 
+                   x = bilance/rozp_p_celkem, colour = typobce_aglomerace, 
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
                                      name = NULL, darken = 0) +
   theme_studie("x") +
@@ -733,7 +739,9 @@ ggplot(indik_geo) +
 
 ```{r deficit-podil-aglo, fig.cap="Deficit relativně k příjmům v aglomeracích a metropolitních oblastech", fig.asp=.4}
 ggplot(indik_aglo) +
-  geom_boxplot(aes(y = typ_aglomerace, x = bilance/rozp_p_celkem, colour = typ_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  geom_boxplot(aes(y = typ_aglomerace, x = bilance/rozp_p_celkem, 
+                   colour = typ_aglomerace, 
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
                                      name = NULL, darken = 0) +
   theme_studie("x") +
