@@ -20,7 +20,8 @@ indik_subset_file <- here::here("data-transfer", "indik_slctyr.parquet")
 if(file.exists(indik_file)) {
   indikatory <- read_parquet(indik_file)
   indik_slctyr <- indikatory %>%
-    filter(per_yr == yr_slct)
+    filter(per_yr == yr_slct) %>%
+    mutate(pocob = as.numeric(pocob))
   if(!file.exists(indik_subset_file)) write_parquet(indik_slctyr, indik_subset_file)
 } else {
   indik_slctyr <- read_parquet(indik_subset_file)
