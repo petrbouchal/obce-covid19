@@ -74,7 +74,7 @@ ggplot(indik_slctyr, aes(x=log(as.numeric(pocob)), colour=typobce_wrapped,
   theme_studie("x", plot.margin = unit(c(.5, .5, .5, 0), "cm"),
                panel.spacing = unit(1, "cm")) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   labs(title = "Populační rozdělení obcí podle jednotlivých kategorií", caption = 'Vodorovná osa představuje logaritmus počet obyvatel')
 ```
 
@@ -95,9 +95,9 @@ Rozpočtové určení daní redistribuuje vybrané daně mezi obce, kraje a stá
 ```{r rud-podil, fig.asp = .5, fig.cap="RUD a příjmy"}
 ggplot(indik_slctyr) +
   geom_boxplot(aes(y = typobce_wrapped, x = rozp_p_rud/rozp_p_celkem, colour = typobce_wrapped,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +  
+                                     name = NULL, darken = 0) +  
   scale_x_percent_cz() +
   theme_studie("y") +
   labs(title = "Podíl RUD na rozpočtových příjmech obcí", caption = "Obce spravují své záležitosti samostatně a rovněž je na ně přenesena část výkonu státní správy.\n Rozlišujeme tři kateogrie obcí podle míry přenesení státní správy: běžná obec,  obec s pověřeným úřadem\n a obec s rozšířenou působností. Obce s přenesenou působností mohou například vydávat občanské průkazy\n a cestovní doklady, na rozdíl od předchozím dvou stupňů. Samostatnou kategorii pak tvoří krajská města.") + annotate("text", x=c(0.515, 0.625, 0.7), y=c(4.5, 4.5, 4.5), label=c('1. kvartil', 'medián', '2. kvartil'), size = 2.35)
@@ -123,9 +123,9 @@ Největší podíl investic na výdajích vykazují běžné obce a obce s obecn
 ```{r kap-ratio, fig.asp = 0.4, fig.cap="Kapitálové výdaje"}
 ggplot(indik_slctyr) +
   geom_boxplot(aes(y = typobce_wrapped, x = rozp_v_kap/rozp_v_celkem, colour = typobce_wrapped,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   scale_x_percent_cz() +
   theme_studie("y") +
   labs(title = "Podíl kapitálových výdajů na výdajích obcí")
@@ -147,7 +147,7 @@ na obyvatele.
 ```{r kap-percap, fig.asp=.4, fig.cap="Kapitálové výdaje na obyvatele"}
 ggplot(indik_slctyr) +
   geom_boxplot(aes(y = typobce_wrapped, x = log(rozp_v_kap/as.numeric(pocob)), colour = typobce_wrapped,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
                                     name = NULL, darken = 0) +
   theme_studie("x") +
@@ -163,12 +163,12 @@ Graf \@ref(fig:deficit-podil) ukazuje rozpočtovou bilanci jako procento příjm
 
 ```{r deficit-podil, fig.cap="Deficit relativně k příjmům v jednotlivých druzích obcí", fig.asp=.4}
 #indik_slctyr %>% group_by(typobce_wrapped) %>% summarize(mean(bilance/rozp_p_celkem, drop_na = True), median(bilance/rozp_p_celkem))
-  ggplot(indik_slctyr) +
-   #geom_boxplot(aes(y = typobce_wrapped, x = sign(bilance) * log(abs(bilance)), colour =
+ggplot(indik_slctyr) +
+  #geom_boxplot(aes(y = typobce_wrapped, x = sign(bilance) * log(abs(bilance)), colour =
   #geom_boxplot(aes(y = typobce_wrapped, x = bilance_rel, colour = typobce_wrapped, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   geom_boxplot(aes(y = typobce_wrapped, x = bilance/rozp_p_celkem, colour = typobce_wrapped, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   theme_studie("x") +
   scale_x_percent_cz() +
   labs(title = "Bilance rozpočtu v jednotlivých typech obcí jako procento příjmů")
@@ -178,13 +178,13 @@ Graf \@ref(fig:deficit-podil) ukazuje rozpočtovou bilanci jako procento příjm
 Meziroční srovnání - grafy \@ref(fig:deficit-mezirocni) a \@ref(fig:deficit-podil-srovnani) ukazují tendenci k vyrovnání přebytků a deficitů v delším časovém období. Rozpočtová bilance za tříleté období (2017-2019) vykazuje nižší podíl deficitních obcí i vyrovnanější mediánové hodnoty rozpočtové bilance napříč kategoriemi obcí. Zejména v případě běžných obcí s deficitním rozpočtem za poslední tři roky pak vidíme nižší extrémní hodnoty relativních deficitů/přebytků.
 
 ```{r deficit-mezirocni, fig.cap="Bilance rozpočtu v jednotlivých typech obcí za 3 roky", fig.asp=0.4}
-  indik_last3 %>%
-    group_by(ico) %>% summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>% merge(., indik_last3, by='ico')  %>% select(ico, obec, bilance_sum, prijmy_sum, typobce_wrapped) %>% distinct() %>%
+indik_last3 %>%
+  group_by(ico) %>% summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>% merge(., indik_last3, by='ico')  %>% select(ico, obec, bilance_sum, prijmy_sum, typobce_wrapped) %>% distinct() %>%
   ggplot() +
-   #geom_boxplot(aes(y = typobce_wrapped, x = sign(bilance_sum) * log(abs(bilance_sum)), colour =
+  #geom_boxplot(aes(y = typobce_wrapped, x = sign(bilance_sum) * log(abs(bilance_sum)), colour =
   geom_boxplot(aes(y = typobce_wrapped, x = bilance_sum/prijmy_sum, colour =typobce_wrapped, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   theme_studie("x") +
   scale_x_percent_cz() +
   labs(title = "Bilance rozpočtu v jednotlivých typech obcí (2017-2019)")
@@ -196,31 +196,38 @@ deficit_podil_1yr <- indik_slctyr %>%
   summarise(podil = mean(bilance < 0), .groups = "drop",
             pocet = n()) %>% 
   mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet))
-  
+
 deficit_podil_3yr <- indik_last3 %>%
-    group_by(ico) %>% summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>%     merge(., indik_last3, by='ico')  %>% select(ico, obec, bilance_sum, prijmy_sum,typobce_wrapped)%>% distinct() %>% group_by(grp = typobce_wrapped) %>% 
+  group_by(ico) %>% summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>%     merge(., indik_last3, by='ico')  %>% select(ico, obec, bilance_sum, prijmy_sum,typobce_wrapped)%>% distinct() %>% group_by(grp = typobce_wrapped) %>% 
   summarise(podil = mean(bilance_sum < 0), .groups = "drop", pocet = n()) %>% 
   mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet))
 
 ggplot() +
-geom_col(data=deficit_podil_1yr, aes(podil, grp), fill = "#999999") +
-geom_col(data=deficit_podil_3yr, aes(podil, grp), fill = "#56B4E9") +
-theme_studie("x") +
-scale_x_percent_cz() +
-labs(title = "Podíl obcí s deficitním rozpočtem 2019 a 2017-2019", caption = "Šedá - podíl obcí s deficitem za rok 2019, modrá - za roky 2017-2019")
+  geom_col(data=deficit_podil_1yr, aes(podil, grp), fill = "#999999") +
+  geom_col(data=deficit_podil_3yr, aes(podil, grp), fill = "#56B4E9") +
+  theme_studie("x") +
+  scale_x_percent_cz() +
+  labs(title = "Podíl obcí s deficitním rozpočtem 2019 a 2017-2019", caption = "Šedá - podíl obcí s deficitem za rok 2019, modrá - za roky 2017-2019")
 ```
 
 Situaci dále dokresluje graf níže, který zobrazuje vztah rozpočtových bilancí v po sobě následující letech (relativně k příjmům). Můžeme si povšimnout častého výskytu záznamů podél horních os grafu - ty značí situace, kdy jeden rok zaznamenala obec rozpočet deficitní a druhý přebytkový. To může souviset s plánováním investičních projektů v obcích, kdy se obec na projektech finančně podílí, ale vlastní finance musí vydávat jiný rok, než kdy obdrží dotace.
 
 
 ```{r deficit-vykyvy, fig.cap="unikátní roční výkyvy"}
-indik_last3 %>% group_by(ico) %>% mutate(bilance_p_lag = lag(bilance/rozp_p_celkem, n=1), bilance_p_rel = bilance/rozp_p_celkem) %>% select(bilance, bilance_p_rel, bilance_p_lag, per_yr, ico, typobce_wrapped) %>%
-ggplot() + geom_point(aes(bilance_p_lag, bilance_p_rel, colour = typobce_wrapped)) +
-colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
-theme_studie("y") +
-scale_x_percent_cz() +
-scale_y_percent_cz() + labs(title = "Meziroční rozpočtové výkyvy", caption = "Osy zobrazují relativní bilanci k příjmům v letech t a t-1")
+indik_last3 %>% group_by(ico) %>% 
+  mutate(bilance_p_lag = lag(bilance/rozp_p_celkem, n=1), 
+         bilance_p_rel = bilance/rozp_p_celkem) %>% 
+  select(bilance, bilance_p_rel, bilance_p_lag, per_yr, ico, typobce_wrapped) %>%
+  arrange(desc(typobce_wrapped)) %>% 
+  ggplot() + 
+  geom_point(aes(bilance_p_lag, bilance_p_rel, colour = typobce_wrapped)) +
+  colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
+                                     name = NULL, darken = 0) +
+  theme_studie("y", axis_titles = TRUE) +
+  scale_x_percent_cz() +
+  scale_y_percent_cz() + 
+  labs(title = "Meziroční rozpočtové výkyvy", 
+       caption = "Osy zobrazují relativní bilanci k příjmům v letech t a t-1")
 ```
 
 Graf \@ref(fig:deficit-katobyv) ukazuje závislost výše deficitu na velikosti populace. Vidíme vyšší mediánové přebytky, avšak i značný rozptyl hodnot u menších obcí. 
@@ -229,12 +236,12 @@ Graf \@ref(fig:deficit-katobyv) ukazuje závislost výše deficitu na velikosti 
 ```{r deficit-katobyv, fig.cap="Podíl obcí s nenulovým dluhem podle velikosti obce"}
 ggplot(indik_slctyr) +
   geom_boxplot(aes(y= katobyv_nazev, x = bilance/rozp_p_celkem, colour=katobyv_nazev,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2)  +
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2)  +
   scale_x_percent_cz() +
   theme_studie() +
   theme(legend.title=element_blank()) +
   scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16]) +
-labs(title = "Bilace rozpočtu (relativní k velikosti příjmů) podle počtu obyvatel")
+  labs(title = "Bilace rozpočtu (relativní k velikosti příjmů) podle počtu obyvatel")
 ```
 
 
@@ -265,13 +272,13 @@ Následující graf zobrazuje míru zadlužení podle velikosti obce. V průměr
 ```{r dluh-katobyv, fig.cap="Podíl obcí s nenulovým dluhem podle velikosti obce"}
 ggplot(indik_slctyr) +
   geom_boxplot(aes(y= katobyv_nazev, x = dluh / rozp_p_celkem, colour=katobyv_nazev,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2)  +
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2)  +
   scale_x_percent_cz() +
   theme_studie() +
   theme(legend.title=element_blank()) +
   scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16]) +
-labs(title = "Dluh podle počtu obyvatel", y = "Počet obyvatel - kategorie",
-     x = "Poměr deficitu vůči výdajům")
+  labs(title = "Dluh podle počtu obyvatel", y = "Počet obyvatel - kategorie",
+       x = "Poměr deficitu vůči výdajům")
 ```
 
 ```{r, eval = F}
@@ -289,10 +296,17 @@ Graf \@ref(fig:dluh-vs-deficit) dává do souvislosti výši zadlužení obce (v
 
 ```{r dluh-vs-deficit, fig.cap = "3-letý definicit vůči počáteční výši dluhu"}
 indik_last3 %>%
-    group_by(ico) %>% summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>%     merge(., indik_last3, by='ico') %>% filter(per_yr==2017)  %>% select(ico, obec, bilance_sum, prijmy_sum, dluh, typobce_wrapped, rozp_p_celkem) %>%
+  group_by(ico) %>% 
+  summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>%
+  merge(., indik_last3, by='ico') %>% 
+  filter(per_yr==2017)  %>% 
+  select(ico, obec, bilance_sum, prijmy_sum, dluh, 
+         typobce_wrapped, rozp_p_celkem) %>%
   ggplot() +
-  geom_point(aes(dluh / rozp_p_celkem, bilance_sum / prijmy_sum, colour = typobce_wrapped)) + colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+  geom_point(aes(dluh / rozp_p_celkem, bilance_sum / prijmy_sum, 
+                 colour = typobce_wrapped)) + 
+  colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
+                                                                                                                                 name = NULL, darken = 0) +
   theme_studie("y") +
   scale_x_percent_cz() +
   scale_y_percent_cz() +
@@ -319,11 +333,11 @@ indik_slctyr_res <- indik_slctyr %>%
 #  group_by(grp = typobce_wrapped) %>% 
 #  summarise(median = median(rezerva_to_spend, na.rm = T), pocet = n(),
 #            prumer = mean(rezerva_to_spend, na.rm = T))
-  ggplot(indik_slctyr_res) +
+ggplot(indik_slctyr_res) +
   geom_boxplot(aes(y = typobce_wrapped, x = rezerva_to_spend, colour = typobce_wrapped,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   scale_x_percent_cz(limits = c(0, 3)) +
   theme_studie("y") +
   labs(title = "Rezervy obcí podle typu",
@@ -350,8 +364,8 @@ ggplot(indik_slctyr_res) +
   scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16]) +
   #scale_colour_manual(values = colorRampPalette(palette_OkabeIto)(12)) +
   #scale_colour_manual(values = colorRampPalette(c("blue", "purple"))(12))
-labs(title = "Rezervy podle počtu obyvatel", y = "Počet obyvatel - kategorie",
-     x = "Poměr rezerv vůči výdajům")
+  labs(title = "Rezervy podle počtu obyvatel", y = "Počet obyvatel - kategorie",
+       x = "Poměr rezerv vůči výdajům")
 ```
 
 Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazků, k jejichž hrazení mj. hotovost na účtech slouží (viz graf \@ref(fig:rezervy-net)).
@@ -359,7 +373,8 @@ Ve stejný moment ovšem obce měly `r nm(kzav)` miliard krátkodobých závazk�
 ```{r rezervy-net, fig.cap="Čisté rezervy obcí", fig.asp=.4}
 indik_slctyr %>% 
   group_by(grp = typobce_wrapped) %>% 
-  summarise(podil = mean((kratkodoby_fin_majetek - kratkodobe_zavazky) < 0, na.rm = T), 
+  summarise(podil = mean((kratkodoby_fin_majetek - kratkodobe_zavazky) < 0, 
+                         na.rm = T), 
             .groups = "drop",
             pocet = n()) %>% 
   mutate(ci = 1.96 * sqrt(podil * (1-podil)/pocet)) %>% 
@@ -403,7 +418,7 @@ share_typ <- indik_slctyr %>%
              `Kapitálové výdaje` = "kap",
              `Rezervy` = "rezervy",
              `Dluh` = "dluh"
-             ) %>% 
+           ) %>% 
            fct_rev()) %>% 
   group_by(variable) %>% 
   mutate(share = value/sum(value))
@@ -413,25 +428,27 @@ share_typ <- indik_slctyr %>%
 ggplot(share_typ, aes(x = value, fill = typobce_wrapped, 
                       # alpha = !variable %in% c("Počet obcí", "Počet obyvatel"),
                       y = variable)
-       ) +
+) +
   geom_col(position = "fill") +
   scale_alpha_manual(values = c(`TRUE` = 1, `FALSE` = 0.6), guide = "none") +
-  theme_studie("x", legend.position = "top", plot.margin = unit(c(0.5, 1, 0.5, 0), "cm")) +
+  theme_studie("x", legend.position = "top", 
+               plot.margin = unit(c(0.5, 1, 0.5, 0), "cm")) +
   guides(fill = guide_legend(reverse = T, keywidth = .5, keyheight = .1)) +
   colorblindr::scale_fill_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                   name = NULL, darken = 0) +
   scale_x_percent_cz() +
   labs(title = "Podíl různých typů obcí na objemech klíčových proměnných")
 ```
 
 ```{r share-per-typobce}
 ggplot(share_typ) + 
-aes(x = share, y = variable, fill = typobce_wrapped) +
+  aes(x = share, y = variable, fill = typobce_wrapped) +
   geom_col() +
-  theme_studie("x", legend.position = "top", plot.margin = unit(c(0.5, 1, 0.5, 0), "cm")) +
+  theme_studie("x", legend.position = "top", 
+               plot.margin = unit(c(0.5, 1, 0.5, 0), "cm")) +
   facet_wrap(~ typobce_wrapped) +
   colorblindr::scale_fill_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                   name = NULL, darken = 0) +
   scale_x_percent_cz() +
   labs(title = "Podíl různých typů obcí na objemech klíčových proměnných - Alternativní")
 ```
@@ -446,10 +463,11 @@ V grafy níže rozdělují obce do čtyř kategorií podle příslušnosti do ag
 
 ```{r kap-ratio-geo, fig.asp = 0.4, fig.cap="Kapitálové výdaje v aglomeracích a na ostatních územích"}
 ggplot(indik_geo) +
-  geom_boxplot(aes(y = typobce_aglomerace, x = rozp_v_kap/rozp_v_celkem, colour = typobce_aglomerace,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  geom_boxplot(aes(y = typobce_aglomerace, x = rozp_v_kap/rozp_v_celkem, 
+                   colour = typobce_aglomerace,
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   scale_x_percent_cz() +
   theme_studie("y") +
   labs(title = "Podíl kapitálových výdajů na výdajích obcí")
@@ -476,10 +494,11 @@ Následující grafy srovnávájí vybrané ukazatele ve třech největších me
 
 ```{r kap-ratio-aglo, fig.asp = 0.4, fig.cap="Kapitálové výdaje v aglomeracích a metropolitních oblastech"}
 ggplot(indik_aglo) +
-  geom_boxplot(aes(y = typ_aglomerace, x = rozp_v_kap/rozp_v_celkem, colour = typ_aglomerace,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  geom_boxplot(aes(y = typ_aglomerace, x = rozp_v_kap/rozp_v_celkem, 
+                   colour = typ_aglomerace,
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   scale_x_percent_cz() +
   theme_studie("y") +
   labs(title = "Podíl kapitálových výdajů na výdajích obcí")
@@ -515,10 +534,11 @@ Apendix obsahuje podrobnější zobrazení stejných ukazatelů stavu rozpočtů
 
 ```{r rud-podil-box, fig.asp = .5, fig.cap="RUD a příjmy"}
 ggplot(indik_slctyr) +
-  geom_boxplot(aes(y = typobce_wrapped, x = rozp_p_rud/rozp_p_celkem, colour = typobce_wrapped,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+  geom_boxplot(aes(y = typobce_wrapped, x = rozp_p_rud/rozp_p_celkem, 
+                   colour = typobce_wrapped,
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +  
+                                     name = NULL, darken = 0) +  
   scale_x_percent_cz() +
   theme_studie("y") +
   labs(title = "Podíl RUD na rozpočtových příjmech obcí")
@@ -530,7 +550,7 @@ ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
                    colour = typobce_wrapped,
                    fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .4) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) + 
+                                     name = NULL, darken = 0) + 
   theme_studie("x") +
   scale_x_number_cz() +
   labs(title = "Kapitálové výdaje na obyvatele (Kč)")
@@ -550,15 +570,16 @@ ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
 
 ## Deficit
 ```{r deficit-populace, fig.cap="Deficit a velikost populace", fig.asp=0.4}
- ggplot(indik_slctyr) +
+ggplot(indik_slctyr) +
   #geom_point(aes(log(as.integer(pocob)), sign(bilance) * log(abs(bilance)), colour =
   #geom_point(aes(log(as.integer(pocob)), bilance_rel, colour = typobce_wrapped)) +
   geom_point(aes(log(as.integer(pocob)), bilance/rozp_p_celkem, colour =typobce_wrapped)) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   theme_studie("y") +
   scale_y_percent_cz() +
-  labs(title = "Deficit (relativní k velikosti příjmů) a velikost populace", caption = "Vodorovná osa představuje logaritmus počet obyvatel")
+  labs(title = "Deficit (relativní k velikosti příjmů) a velikost populace", 
+       caption = "Vodorovná osa představuje logaritmus počet obyvatel")
 ```
 
 
@@ -566,13 +587,13 @@ ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
 ggplot(indik_slctyr) +
   geom_density(aes(x = (kratkodoby_fin_majetek - kratkodobe_zavazky)/rozp_p_celkem,
                    colour = typobce_wrapped,
-               fill = after_scale(alpha(colour, 0.7)))) +
+                   fill = after_scale(alpha(colour, 0.7)))) +
   theme_studie("x", plot.margin = unit(c(.5, .5, .5, 0), "cm"),
                panel.spacing = unit(1, "cm")) +
   facet_wrap(~ typobce %>% fct_rev()) + # TODO: nrow = 4 should do the trick but the plots do not render
   geom_vline(xintercept = 0, colour = "white", linetype = "dotted") +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +  
+                                     name = NULL, darken = 0) +  
   scale_x_percent_cz(limits = c(-1, 1)) +
   labs(title = "Bilance rozpočtů obcí jako % ročních příjmů",
        caption = "Obce s pozitivní bilancí nad 100 % příjmů vynechány")
@@ -584,9 +605,10 @@ ggplot(indik_slctyr) +
 ggplot(indik_slctyr_res) +
   geom_point(aes(log(as.integer(pocob)), rezerva_to_spend, colour = typobce_wrapped)) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   theme_studie("y") +
-  labs(title = "Rezervy podle populace", caption = 'Vodorovná osa představuje logaritmus počtu obyvatel,\n svislá rezervy vůči výdajům')
+  labs(title = "Rezervy podle populace", 
+       caption = 'Vodorovná osa představuje logaritmus počtu obyvatel,\n svislá rezervy vůči výdajům')
 ```
 
 ## Krátkodobé závazky
@@ -599,7 +621,7 @@ ggplot(indik_slctyr, aes(x = median, y = typobce_wrapped)) +
   theme_studie("x", plot.margin = unit(c(.5, .5, .5, 0), "cm")) +
   scale_x_percent_cz(limits = c(0, 0.5)) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +  
+                                     name = NULL, darken = 0) +  
   labs(title = "Krátkodobé závazky obcí jako % ročních příjmů",
        caption = "Obce s pozitivní bilancí nad 50 % příjmů vynechány")
 ```
@@ -616,7 +638,7 @@ ggplot(indik_slctyr, aes(colour = typobce)) +
   geom_vline(xintercept = 0, colour = "white", linetype = "dotted") +
   scale_x_percent_cz(limits = c(-1, 1)) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +  
+                                     name = NULL, darken = 0) +  
   labs(title = "Rezervy minus krátk. závazky jako % ročních příjmů",
        caption = "Obce s pozitivní bilancí nad 100 % příjmů vynechány")
 ```
@@ -624,9 +646,10 @@ ggplot(indik_slctyr, aes(colour = typobce)) +
 ## Dluh
 ```{r dluh-scatter, fig.cap="Míra zadlužení vůči počtu obytavel", fig.asp=0.4}
 ggplot(indik_slctyr) +
-  geom_point(aes(log(as.integer(pocob)), dluh / rozp_p_celkem, colour = typobce_wrapped)) +
+  geom_point(aes(log(as.integer(pocob)), dluh / rozp_p_celkem, 
+                 colour = typobce_wrapped)) +
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   theme_studie("y") +
   labs(title = "Míra zadlužení vůči počtu obytavel", caption = "Vodorovná osa představuje logaritmus počtu obyvatel,\n svislá dluh relativně vůči příjmům v roce 2019")
 ```
@@ -635,7 +658,7 @@ ggplot(indik_slctyr) +
 
 ```{r dluh-box, fig.asp = 0.4, fig.cap="Dluh - rozdělení"}
 ggplot(indik_slctyr, aes(x = median, y = typobce_wrapped,
-       colour = typobce_wrapped)) +
+                         colour = typobce_wrapped)) +
   geom_boxplot(aes(x = dluh/rozp_p_celkem,
                    fill = after_scale(alpha(colour, 0.7))), 
                outlier.alpha = .2) +
@@ -643,49 +666,50 @@ ggplot(indik_slctyr, aes(x = median, y = typobce_wrapped,
                plot.margin = unit(c(.5, .5, .5, 0), "cm")) +
   scale_x_percent_cz(limits = c(0, 5)) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +  
+                                     name = NULL, darken = 0) +  
   labs(title = "Dluh obcí jako % ročních příjmů")
 ```
 
 # Aglomerace
 
 ```{r rezervy-geo, fig.cap="Rezervy obcí v aglomeracích a ostatních územích", fig.asp= 0.4}
-  ggplot(indik_geo) +
+ggplot(indik_geo) +
   geom_boxplot(aes(y = typobce_aglomerace, x = kratkodoby_fin_majetek/rozp_v_celkem, colour = typobce_aglomerace,
-               fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
+                   fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   scale_x_percent_cz(limits = c(0, 3)) +
   theme_studie("y") +
   labs(title = "Rezervy obcí",
-       subtitle = "Jako % ročních výdajů, rok 2019", caption = "Obce s pozitivní bilancí nad 300 % výdajů vynechány")
+       subtitle = "Jako % ročních výdajů, rok 2019", 
+       caption = "Obce s pozitivní bilancí nad 300 % výdajů vynechány")
 ```
 
 ```{r dluh-aglo, fig.cap="Deficit relativně k příjmům v aglomeracích a ostatních územích", fig.asp=.4}
-  ggplot(indik_geo) +
+ggplot(indik_geo) +
   geom_boxplot(aes(y = typobce_aglomerace, x = dluh / rozp_p_celkem, colour = typobce_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   theme_studie("x") +
   scale_x_percent_cz() +
   labs(title = "Dluh vůči příjmům jako procento příjmů")
 ```
 
 ```{r deficit-podil-geo, fig.cap="Deficit relativně k příjmům v aglomeracích a ostatních územích", fig.asp=.4}
-  ggplot(indik_geo) +
+ggplot(indik_geo) +
   geom_boxplot(aes(y = typobce_aglomerace, x = bilance/rozp_p_celkem, colour = typobce_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   theme_studie("x") +
   scale_x_percent_cz() +
   labs(title = "Bilance rozpočtu jako procento příjmů")
 ```
 
 ```{r deficit-podil-aglo, fig.cap="Deficit relativně k příjmům v aglomeracích a metropolitních oblastech", fig.asp=.4}
-  ggplot(indik_aglo) +
+ggplot(indik_aglo) +
   geom_boxplot(aes(y = typ_aglomerace, x = bilance/rozp_p_celkem, colour = typ_aglomerace, fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2) +
   colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
-                                    name = NULL, darken = 0) +
+                                     name = NULL, darken = 0) +
   theme_studie("x") +
   scale_x_percent_cz() +
   labs(title = "Bilance rozpočtu jako procento příjmů - aglomerace vs. metropole")
