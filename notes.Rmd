@@ -33,8 +33,12 @@ library(fontawesome)
 
 #### Dočasný sklad jinde neodkázaných zdrojů
 
+- [TZ k pokladnímu plnění SR 2020 vč info o investicích ](https://www.mfcr.cz/cs/aktualne/tiskove-zpravy/2020/pokladni-plneni-sr-37026)
 
-- https://www.mfcr.cz/cs/legislativa/legislativni-dokumenty/2019/vyhlaska-c-219-2019-sb-36077
+- [Procentní rozdělení RUD obcí na 2020](https://www.mfcr.cz/cs/legislativa/legislativni-dokumenty/2019/vyhlaska-c-219-2019-sb-36077) a [totéž na 2019](https://www.mfcr.cz/cs/legislativa/legislativni-dokumenty/2018/vyhlaska-c-192-2018-sb-32987)
+
+- [Počty dětí a žáků pro RUD](https://www.mfcr.cz/cs/verejny-sektor/uzemni-rozpocty/prijmy-kraju-a-obci/financovani-materskych-a-zakladnich-skol/2021/pocty-deti-a-zaku-ve-skolach-zrizovanych-40779)
+
 - https://www.mfcr.cz/cs/verejny-sektor/uzemni-rozpocty/prijmy-kraju-a-obci/zakladni-informace/2019/predikce-vybranych-danovych-prijmu-obci-36369
 
 - https://www.mfcr.cz/cs/zahranicni-sektor/pristoupeni-cr-k-eurozone/konvergencni-program/2020/konvergencni-program-ceske-republiky-dub-38380
