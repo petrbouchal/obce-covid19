@@ -19,7 +19,7 @@ budgets_old <- sp_get_table("budget-local",
   janitor::remove_constant(na.rm = TRUE)
 write_parquet(budgets_old, "data-input/budgets_old.parquet")
 
-budgets_all_bare <- bind_rows(budgets_2017, budgets_2018, budgets_old, budgets)
+budgets_all_bare <- bind_rows(budgets, budgets_2018, budgets_old)
 write_parquet(budgets_all_bare, "data-input/budgets_all_bare.parquet")
 
 budgets_income_bare <- budgets_all_bare %>%
