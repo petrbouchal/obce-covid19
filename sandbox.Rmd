@@ -1,0 +1,87 @@
+---
+title: "Sandbox"
+author: "Petr Bouchal"
+date: "2/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F,
+                      dev = "ragg_png", dpi = 300, fig.asp = .6,
+                      fig.width = (21-2*2.205)/2.54)
+
+Sys.setlocale(locale = "cs_CZ.UTF-8")
+
+library(tidyverse)
+library(ptrr)
+library(colorblindr)
+
+library(statnipokladna)
+```
+
+```{r load-numbers}
+source("cisla_report_stav.R")
+```
+
+```{r}
+prijmy_druhove <- read_parquet(here::here("data-processed/budgets_druhove_prijmy_annual.parquet"), 
+                               col_select = c("ico", "polozka", "period_vykaz", "budget_spending"))
+dznem_2018 <- prijmy_druhove %>% 
+  filter(polozka == "1511", period_vykaz == "2019-12-31") %>% 
+  select(ico, rozp_p_dznem = budget_spending)
+```
+
+```{r}
+indik_slctyr2 <- indik_slctyr %>% 
+  left_join(dznem_2018)
+```
+
+```{r, fig.asp = .4}
+indik_slctyr2 %>% 
+  mutate(rozp_p_dznem_percap = rozp_p_dznem/pocob) %>% 
+  select(typobce, pocob, rozp_p_dznem_percap) %>% 
+  ungroup() %>% 
+  ggplot() +
+  geom_hex(aes(x = pocob/1e3, y = rozp_p_dznem_percap)) +
+  scale_x_log10(labels = c(0, 0.1, 1, 10, 100, 1000),
+                breaks = c(0, 0.1, 1, 10, 100, 1000)) +
+  scale_y_log10() +
+  scale_fill_viridis_c() +
+  facet_grid(. ~ typobce) +
+  theme_studie("both", multiplot = T, legend.position = "bottom")
+```
+```{r, fig.asp = .4}
+indik_slctyr2 %>% 
+  mutate(rozp_p_dznem_percap = rozp_p_dznem/pocob) %>% 
+  select(typobce, pocob, rozp_v_kap_share) %>% 
+  ungroup() %>% 
+  ggplot() +
+  geom_hex(aes(x = pocob/1e3, y = rozp_v_kap_share)) +
+  scale_x_log10(labels = c(0, 0.1, 1, 10, 100, 1000),
+                breaks = c(0, 0.1, 1, 10, 100, 1000)) +
+  # scale_y_log10() +
+  scale_fill_viridis_c() +
+  facet_grid(. ~ typobce) +
+  theme_studie("both", multiplot = T, legend.position = "bottom")
+```
+
+```{r}
+library(ggforce)
+indik_slctyr3 <- indik_slctyr %>% 
+  mutate(yv = "a")
+
+ggplot(indik_slctyr3,
+       aes(y = pocob/1e3, x = yv, group = yv, colour = typobce,
+             alpha = if_else(typobce == "Běžná obec", 0.05, 1))) +
+  scale_y_log10(labels = c(0, 0.1, 1, 10, 100, 1000),
+                breaks = c(0, 0.1, 1, 10, 100, 1000)) +
+  geom_sina(data = indik_slctyr3[indik_slctyr$typobce == "Běžná obec",]) +
+  geom_sina(data = indik_slctyr3[indik_slctyr$typobce != "Běžná obec",]) +
+  scale_alpha_continuous(range = c(.1, .4), guide = F) +
+  colorblindr::scale_colour_OkabeIto(guide = "none", order = c(7, 5, 2, 8),
+                                    name = NULL, darken = 0) +  
+  theme_studie("x", axis_titles = T, axis.title.y = element_blank()) +
+  labs(y = "Počet obyvatel (v tisících)") +
+  coord_flip()
+```
+
