@@ -310,7 +310,8 @@ indik_last3 %>%
   theme_studie("y") +
   scale_x_percent_cz() +
   scale_y_percent_cz() +
-  labs(title = "3-letý definicit vůči počáteční výši dluhu", caption = "Vodorovná osa zobrazuje relativní zadlužení obce vůči příjmu v roce 2017,\n svislá osa bilanci rozpočtu v letech 2017-2019 relativně k příjmům za stejné období")
+  labs(title = "3-letý definicit vůči počáteční výši dluhu", 
+       caption = "Vodorovná osa zobrazuje relativní zadlužení obce vůči příjmu v roce 2017,\n svislá osa bilanci rozpočtu v letech 2017-2019 relativně k příjmům za stejné období")
 ```
 
 
@@ -341,7 +342,8 @@ ggplot(indik_slctyr_res) +
   scale_x_percent_cz(limits = c(0, 3)) +
   theme_studie("y") +
   labs(title = "Rezervy obcí podle typu",
-       subtitle = "Jako % ročních výdajů, rok 2019", caption = "Obce s pozitivní bilancí nad 300 % výdajů vynechány")
+       subtitle = "Jako % ročních výdajů, rok 2019", 
+       caption = "Obce s pozitivní bilancí nad 300 % výdajů vynechány")
 ```
 
 ```{r rezervy-hist, include = FALSE}
