@@ -283,8 +283,9 @@ ggplot(indik_slctyr) +
                    fill = after_scale(alpha(colour, 0.7))), outlier.alpha = .2)  +
   scale_x_percent_cz() +
   theme_studie() +
-  theme(legend.title=element_blank()) +
-  scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16]) +
+  theme(legend.title = element_blank()) +
+  scale_colour_manual(values = colorRampPalette(brewer.pal(15, "Blues"))(16)[5:16],
+                      guide = "none") +
   labs(title = "Dluh podle počtu obyvatel", y = "Počet obyvatel - kategorie",
        x = "Poměr deficitu vůči výdajům")
 ```
