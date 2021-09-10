@@ -469,6 +469,7 @@ ggplot(share_typ) +
 ```
 
 # Aglomerace
+
 V této části práce využíváme definici aglomeračních celků použité ve Strategii regionálního rozvoje ČR (SRR21+). Ta určuje 12 aglomerací a definuje tři metropole - Prahu, Ostravu a Brno.
 V aglomeracích krajských měst se nachází `r nm(nrow(aglo_areas)) ` obcí ze zhruba 6 tisíc obcí v ČR, tedy asi čtvrtina. V krajských městech a jejich aglomeracích žije `r format(round(sum(aglo_areas$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel a tedy zhruba `r pc(pocob_aglo_share)` obyvatel České republiky. Více než odpovídácí je podíl na příjmech a výdajích - kolem (`r pc(spend_aglo_share)` a `r pc(income_aglo_share)`) a rovněž podíl obecního dluhu (`r pc(dluh_aglo_share)`). Pokud rozlišíme mezi velkými městskými centry a jejich zázemím zjistíme, že aglomerace krajských měst mají zhruba `r format(round(sum(aglo_obec$pocob/1e6), digits = 1), decimal.mark=",")` mil. obyvatel, tedy více než krajská města samotná. Tyto obce představují `r pc(pocob_aglo_obec_share)` obyvatel republiky, jejich podíl na ostaních veličinách je ovšem pouze `r pc(spend_aglo_obec_share)` u výdajů, `r pc(income_aglo_obec_share)` příjmů a `r pc(rud_aglo_obec_share)` příjmů z RUD. Rovněž ovšem na tyto obce připadá pouze `r pc(dluh_aglo_obec_share)` z celkového dluhu.
 Další specifickou kategorií jsou aglomerace tří největších metropolí - Prahy, Brna a Ostravy, ty společně se svými centry mají zhruba `r format(round(sum(metro_cele$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel, samotné obce v jejich aglomeracích mají asi `r format(round(sum(metropole$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel. Jejich podíl na příjmech a výdajích činí `r pc(income_metro_share)` a `r pc(spend_metro_share)`. 
@@ -584,6 +585,7 @@ ggplot(indik_slctyr, aes(y = typobce_wrapped, fill = typobce_wrapped)) +
 ```
 
 ## Deficit
+
 ```{r deficit-populace, fig.cap="Deficit a velikost populace", fig.asp=0.4}
 ggplot(indik_slctyr %>% 
          arrange(desc(typobce_wrapped))) +
