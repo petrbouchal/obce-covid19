@@ -302,7 +302,7 @@ indik_slctyr %>%
 Graf \@ref(fig:dluh-vs-deficit) dává do souvislosti výši zadlužení obce (v roce 2017) s jejich rozpočtovou bilancí za následující tři roky. Z grafu vyplývá, že počátečně zadluženější obce, mají tendence k přebytkovému hospodaření.
 
 
-```{r dluh-vs-deficit, fig.cap = "3-letý definicit vůči počáteční výši dluhu"}
+```{r dluh-vs-deficit, fig.cap = "Tříletý deficit vůči počáteční výši dluhu"}
 indik_last3 %>%
   group_by(ico) %>% 
   summarise(bilance_sum = sum(bilance), prijmy_sum = sum(rozp_p_celkem)) %>%
