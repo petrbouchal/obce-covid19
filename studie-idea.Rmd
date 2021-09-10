@@ -472,8 +472,6 @@ ggplot(share_typ) +
 
 V této části práce využíváme definici aglomeračních celků použité ve Strategii regionálního rozvoje ČR (SRR21+). Ta určuje 12 aglomerací a definuje tři metropole - Prahu, Ostravu a Brno.
 V aglomeracích krajských měst se nachází `r nm(nrow(aglo_areas)) ` obcí ze zhruba 6 tisíc obcí v ČR, tedy asi čtvrtina. V krajských městech a jejich aglomeracích žije `r format(round(sum(aglo_areas$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel a tedy zhruba `r pc(pocob_aglo_share)` obyvatel České republiky. Více než odpovídácí je podíl na příjmech a výdajích - kolem (`r pc(spend_aglo_share)` a `r pc(income_aglo_share)`) a rovněž podíl obecního dluhu (`r pc(dluh_aglo_share)`). Pokud rozlišíme mezi velkými městskými centry a jejich zázemím zjistíme, že aglomerace krajských měst mají zhruba `r format(round(sum(aglo_obec$pocob/1e6), digits = 1), decimal.mark=",")` mil. obyvatel, tedy více než krajská města samotná. Tyto obce představují `r pc(pocob_aglo_obec_share)` obyvatel republiky, jejich podíl na ostaních veličinách je ovšem pouze `r pc(spend_aglo_obec_share)` u výdajů, `r pc(income_aglo_obec_share)` příjmů a `r pc(rud_aglo_obec_share)` příjmů z RUD. Rovněž ovšem na tyto obce připadá pouze `r pc(dluh_aglo_obec_share)` z celkového dluhu.
-Další specifickou kategorií jsou aglomerace tří největších metropolí - Prahy, Brna a Ostravy, ty společně se svými centry mají zhruba `r format(round(sum(metro_cele$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel, samotné obce v jejich aglomeracích mají asi `r format(round(sum(metropole$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel. Jejich podíl na příjmech a výdajích činí `r pc(income_metro_share)` a `r pc(spend_metro_share)`. 
-Můžeme si tedy povšimnout, že zatímco aglomerace jako celek vykazují vyšší podíly sledovaných veličin než by odpovídalo jejich podílů na počtu obyvatel, obce v jejich okolí mají menší podíl těchto veličin než by odpovídalo počtu obyvatel.
 
 V grafy níže rozdělují obce do čtyř kategorií podle příslušnosti do aglomerací krajských měst, případně příslušnosti k sociálně a hospodářsky vyloučeným oblastem, jak je definuje Strategie regionálního rozvoje ČR (SRR21+).
 
@@ -505,8 +503,9 @@ indik_geo %>%
   labs(title = "Podíl obcí s nenulovým dluhem")
 ```
 
+Další specifickou kategorií jsou aglomerace tří největších metropolí - Prahy, Brna a Ostravy, ty společně se svými centry mají zhruba `r format(round(sum(metro_cele$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel, samotné obce v jejich aglomeracích mají asi `r format(round(sum(metropole$pocob/1e6), digits = 1), decimal.mark=",")` milionu obyvatel. Jejich podíl na příjmech a výdajích činí `r pc(income_metro_share)` a `r pc(spend_metro_share)`. 
+Můžeme si tedy povšimnout, že zatímco aglomerace jako celek vykazují vyšší podíly sledovaných veličin než by odpovídalo jejich podílů na počtu obyvatel, obce v jejich okolí mají menší podíl těchto veličin než by odpovídalo počtu obyvatel.
 
-Následující grafy srovnávájí vybrané ukazatele ve třech největších metropolitních oblastech (Praha, Brno, Ostrava) a ostatních aglomeracích. Grafy \@ref(fig:kap-ratio-aglo) a \@ref(fig:dluh-podil-aglo) neukazují na výrazné rozdíly mezi obcemi v metropolitních oblastech a běžných aglomeracích.
 
 ```{r kap-ratio-aglo, fig.asp = 0.4, fig.cap="Kapitálové výdaje v aglomeracích a metropolitních oblastech"}
 ggplot(indik_aglo) +
@@ -520,6 +519,8 @@ ggplot(indik_aglo) +
   labs(title = "Podíl kapitálových výdajů na výdajích obcí")
 ```
 
+
+Grafy \@ref(fig:kap-ratio-aglo) a \@ref(fig:dluh-podil-aglo) srovnávájí vybrané ukazatele ve třech největších metropolitních oblastech (Praha, Brno, Ostrava) a ostatních aglomeracích. Grafy neukazují na výrazné rozdíly mezi obcemi v metropolitních oblastech a běžných aglomeracích.
 
 ```{r dluh-podil-aglo, fig.cap="Podíl obcí s nenulovým dluhem v aglomeracích a metropolitních oblastech", fig.asp=0.4}
 indik_aglo %>%
