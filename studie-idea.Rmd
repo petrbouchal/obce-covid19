@@ -313,7 +313,7 @@ indik_last3 %>%
   arrange(desc(typobce_wrapped)) %>% 
   ggplot() +
   geom_point(aes(dluh / rozp_p_celkem, bilance_sum / prijmy_sum, 
-                 colour = typobce_wrapped), alpha = .6) + 
+                 colour = typobce_wrapped), alpha = .4) + 
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
                                      name = NULL, darken = 0.2) +
   theme_studie("y", axis_titles = TRUE) +
