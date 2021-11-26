@@ -51,8 +51,8 @@ knitr::write_bib(file = 'packages.bib')
 -   Nejdůležitějším zdrojem příjmů obcí je rozpočtové určení daní (RUD), které tvořilo `r pc(rud_share)` všech příjmů obcí a v součtu `r nm(rud)` miliard Kč.
 -   Výdaje obcí se dělí na běžné (`r pc(1 - kap_share_total)`, `r nm(spend - kap)` miliard Kč) a kapitálové (`r pc(kap_share_total)`, `r nm(kap)` miliard Kč).
 -   Kapitálové výdaje měly v průměru nejvyšší běžné obce: jak relativně vůči běžným výdajům, tak v Kč na obyvatele měly investice vyšší než obce s pověřeným obecním úřadem, obce s rozšířenou působností nebo krajská města včetně Prahy (v průměru, ačkoliv ne podle mediánu, což ukazuje na vysoké investice menšího počtu běžných obcí a obecněji na různorodost obcí).
--   Deficitní rozpočet mělo `r pc(1 - bil_pos_share)` obcí (průměrný deficit u nich byl `r pc(bil_neg_avg)`, deficit v součtu `r nm(bil_neg_sum)` mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek u nich 7 % a v součtu 28 mld. korun).
--   Nenulový dluh mělo `r pc(dluh_pos_share)` % obcí (u nich dosahoval dluh v průměru `r pc(dluh_pos_mean)` % příjmů) a v součtu tento dluh činil `r nm(dluh)` miliard Kč.
+-   Deficitní rozpočet mělo `r pc(1 - bil_pos_share)` obcí (průměrný deficit u nich byl `r pc(bil_neg_avg)`, deficit v součtu `r nm(bil_neg_sum)` mld. korun), ostatní obce měly vyrovnaný nebo přebytkový rozpočet (průměrný přebytek u nich `r pc(bil_pos_avg, .1)` a v součtu `r nm(bil_pos_sum)` mld. korun).
+-   Nenulový dluh mělo `r pc(dluh_pos_share)` obcí (u nich dosahoval dluh v průměru `r pc(dluh_pos_mean)` % příjmů) a v součtu tento dluh činil `r nm(dluh)` miliard Kč.
 -   Mediánová obec měla rezervy odpovídající `r pc(rez_to_spend_median)` svých ročních výdajů; v součtu tyto rezervy činí `r nm(rez)` miliard Kč (`r pc(rez_pha_share)` těchto rezerv připadá na Prahu a dalších `r pc(rez_krajska_share)` na krajská města).
 -   Obce zároveň měly `r nm(kzav)` miliard krátkodobých závazků.
 -   Průměrné hodnoty zakrývají velké rozdíly mezi obcemi, na které poukazujeme v grafech.
@@ -78,7 +78,7 @@ ggplot(indik_slctyr, aes(x=log(as.numeric(pocob)), colour=typobce_wrapped,
   colorblindr::scale_colour_OkabeIto(order = c(7, 5, 2, 8),
                                      name = NULL, darken = 0) +
   labs(title = "Populační rozdělení obcí podle jednotlivých kategorií", 
-       x = 'Logaritmus počet obyvatel', y = NULL)
+       x = 'Počet obyvatel (logaritmické měřítko)', y = NULL)
 ```
 
 **Závislost na daňových příjmech.** Zásadním příjmem obcí jako celku je tzv. rozpočtové určení daní (RUD). Zároveň, to jak velký podíl má RUD na celkových příjmech konkrétní obce záleží především na jejích ostatních příjmech, jako je například daň z nemovitostí.

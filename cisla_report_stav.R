@@ -64,10 +64,19 @@ bilance_avg_total <- bilance_sum / spend
 bil_neg <- indik_slctyr %>%
   filter(bilance < 0)
 
+bil_pos <- indik_slctyr %>%
+  filter(bilance >= 0)
+
 bil_neg_sum <- bil_neg %>%
   count(wt = bilance/1e9) %>% pull() %>% abs()
 
+bil_pos_sum <- bil_pos %>%
+  count(wt = bilance/1e9) %>% pull() %>% abs()
+
 bil_neg_avg <- bil_neg %>%
+  summarise(m = mean(bilance_rel, na.rm = T)) %>% pull() %>% abs()
+
+bil_pos_avg <- bil_pos %>%
   summarise(m = mean(bilance_rel, na.rm = T)) %>% pull() %>% abs()
 
 bil_neg_median <- bil_neg %>%
